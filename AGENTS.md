@@ -37,6 +37,8 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
 - `make setup`: install the locked local environment (including development tools).
 - `make lint`: Ruff lint and formatting checks.
 - `make test`: pytest, using the installed package without a source-path override.
+- Standalone café API: `uv run --locked uvicorn cafe_agent.backend.app:create_app --factory`.
+  This is the backend only; the demo `make serve` target remains Phase 6.
 - `make data`, `make push-data`: Phase 2.
 - `make eval-local`: Phase 3 harness, extended for CPU GGUF in Phase 5.
 - `make report`: Phase 5.
@@ -65,3 +67,19 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
   unless a later decision justifies it.
 - Never invent results. README numbers, charts and CV bullets must come from
   code reading `results/`. State clearly when an experiment has not run.
+
+## Phase 1 implementation conventions
+
+- Use `CafeService.call` for validated tool dispatch and `snapshot()` for
+  reproducible state. New services default to isolated in-memory SQLite.
+- State progresses only through explicit `advance_time(minutes)`; status
+  observations never mutate the logical clock. Persist the clock with orders.
+- Money uses Decimal and serialises to decimal strings; preserve this across
+  data generation, replay and both execution transports.
+- `tools.schemas` is the single argument/schema registry. The strict parser
+  preserves omitted optional arguments and never repairs invalid JSON.
+- Use the shared prompt and tokenizer renderer for all systems. Full tokenizer
+  and sequence-length checks belong to Phase 2.
+- The `cpu` extra is pinned but not installed by normal setup. Keep llama.cpp
+  lazy and CPU-only; actual model inference remains unverified until Phase 5.
+- Configs are bundled in wheels; checkout configs take precedence locally.

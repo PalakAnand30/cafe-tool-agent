@@ -5,7 +5,7 @@ Updated: 2026-10-14 (Europe/London).
 ## Phase checklist
 
 - [x] Phase 0: scaffold.
-- [ ] Phase 1: domain, backend, tools, parser and agent loop.
+- [x] Phase 1: domain, backend, tools, parser and agent loop.
 - [ ] Phase 2: dataset and human-test annotation workflow.
 - [ ] Phase 3: evaluation harness and Groq baseline.
 - [ ] Phase 4: Kaggle training and GPU evaluation notebooks.
@@ -67,15 +67,91 @@ foundation imports, lint, tests and distribution builds pass with Python
 - CI is configured for pushes and pull requests, but has not run on GitHub.
 - No dataset generation, model inference, training or evaluation has run.
 
+## Phase 1 implementation and decisions
+
+- Re-read `AGENTS.md`, this file and the full spec before implementation;
+  followed Sections 0, 4 and the Phase 1 scope in Section 11.
+- Added a validated menu with 25 items across all five categories, three fixed
+  out-of-stock items, near-duplicate latte names, per-size drink prices,
+  unsized food prices and per-item modifier deltas.
+- Added Pydantic domain/order/result models and a transactional SQLite backend.
+  Monetary arithmetic uses Decimal; JSON money fields are decimal strings.
+- Order progress uses persisted logical minutes, advanced explicitly with
+  `advance_time`. Read operations never advance time. Per-order ETA jitter is
+  deterministically seeded from the configured seed and order ID.
+- Creation is atomic across all lines. Cancellation is allowed before ready;
+  repeated cancellation is idempotent. Snapshots include every order and the clock.
+- Implemented five shared function schemas with inlined definitions, one
+  argument registry, in-process/HTTP executors and FastAPI REST/tool routes.
+  Errors include all six spec codes plus invalid arguments, invalid size,
+  ambiguous item, unknown tool and exhausted five-digit order-ID capacity.
+- Added repair-free Qwen-tag, bare-JSON and native-call parsing, including
+  multiple calls, mixed text, duplicate-key rejection, schema validation,
+  truncated-output detection and protocol ID checks.
+- Added shared behaviour/menu prompt and a tokenizer-only rendering interface.
+  The caller supplies the tokenizer; downloading and measuring it remains Phase 2.
+- Added a bounded agent loop with complete-response validation before execution,
+  matching call/result IDs, caller-owned history and an execution trace.
+- Implemented Groq native calls with atomic on-disk response caching by request
+  hash and bounded 429/5xx exponential retries with seeded jitter. Credentials
+  load via python-dotenv only on cache miss; cached runs need no credentials.
+- Implemented a lazy `LlamaCppClient` fixed to `n_gpu_layers=0`, using the shared
+  Qwen renderer. Added explicit HF/vLLM notebook stubs without local GPU imports.
+- Added `configs/runtime.yaml` for decoding, retry, cache, CPU, API and round
+  limits. Bundled all YAML configs in the wheel for installs outside this checkout.
+
+## Phase 1 dependency pins
+
+All release dates were verified on PyPI and precede the release cutoff.
+Installed dependencies were tested together; llama.cpp remains an optional,
+uninstalled extra, with its client tested using an injected fake engine.
+
+| Dependency | Pin | Release date | Evidence |
+| --- | --- | --- | --- |
+| AnyIO | 4.9.0 | 2025-03-17 | [PyPI](https://pypi.org/project/anyio/4.9.0/) |
+| FastAPI | 0.115.12 | 2025-03-23 | [PyPI](https://pypi.org/project/fastapi/0.115.12/) |
+| Groq SDK | 0.28.0 | 2025-06-12 | [PyPI](https://pypi.org/project/groq/0.28.0/) |
+| HTTPX | 0.28.1 | 2024-12-06 | [PyPI](https://pypi.org/project/httpx/0.28.1/) |
+| Uvicorn | 0.34.3 | 2025-06-01 | [PyPI](https://pypi.org/project/uvicorn/0.34.3/) |
+| llama-cpp-python (optional `cpu`) | 0.3.9 | 2025-05-08 | [PyPI](https://pypi.org/project/llama-cpp-python/0.3.9/) |
+
+AnyIO is pinned explicitly because the newest allowed transitive release emitted
+a deprecated alias warning from the chosen Starlette release under our strict
+warnings-as-errors test policy. The compatible pin passes without warning filters.
+
+## Phase 1 verification
+
+- `make setup`: passed with the locked Python 3.11 local stack; no GPU packages
+  or optional llama.cpp engine installed. Lockfile release timestamps checked.
+- `make test`: 123 passed, including every error code, atomic failures, exact
+  totals, persistence, deterministic replay, concurrency, cancellation at state
+  boundaries, parser adversarial cases, HTTP parity and agent feedback/limits.
+- Groq tests use the real SDK with HTTPX MockTransport to verify native payloads,
+  cache-key inputs, cache hits, credential-free replay, transient retries and
+  permanent-error handling. No live Groq request was made.
+- CPU-client tests verify lazy construction, `n_gpu_layers=0`, deterministic
+  decoding and the shared renderer with a fake engine/tokenizer. No real model
+  inference, tokenizer download, training or dataset generation was performed.
+- `uv build --offline`: built source and wheel distributions. Imported every
+  package module from the wheel, loaded its bundled configs and exercised its
+  in-memory backend. Archive checks excluded secrets, caches, virtualenvs and Git.
+- Final `make lint`: passed lint and format checks (32 Python files).
+- Final `make test`: 123 passed with warnings treated as errors.
+- `git diff --check`: passed; the supplied spec is unchanged, and secrets,
+  cache files and runtime databases remain ignored.
+
 ## Known issues and user actions
 
-- No blocking issues. No accounts, uploads or secret values are required for Phase 0.
+- No blocking issues. No accounts, uploads or secret values are required for Phase 1.
 - The sandbox required permission for PyPI access and writes to `.git`.
 - uv warns that its in-project cache may enter source distributions; archive
   inspection confirmed the ignore rules exclude it.
 - The existing local `.env` must remain untracked and must not be printed.
+- Actual Groq service/model availability, tokenizer lengths and GGUF inference
+  remain unverified; those checks belong to their later phases. Prompt size must
+  be checked against the full rendered-token budget during Phase 2 validation.
 
 ## Next step
 
-Stop after the Phase 0 local commit. Start Phase 1 only after the user says
-`continue to Phase 1`. No remote has been added and nothing has been pushed.
+Stop after the Phase 1 local commit. Start Phase 2 only after the user says
+`continue to Phase 2`. No remote has been added and nothing has been pushed.

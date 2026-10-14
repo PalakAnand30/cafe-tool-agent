@@ -1,0 +1,19 @@
+seed: 42
+generation:
+  temperature: 0
+  max_tokens: 512
+groq:
+  model: llama-3.3-70b-versatile
+  cache_dir: data/cache
+  timeout_seconds: 60
+  max_attempts: 5
+  backoff_base_seconds: 1
+  backoff_cap_seconds: 30
+llama:
+  n_ctx: 2048
+  n_threads: 4
+  stop: ['<|im_end|>']
+agent:
+  max_rounds: 8
+api:
+  database_path: data/cafe.sqlite3

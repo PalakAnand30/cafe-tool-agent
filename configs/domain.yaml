@@ -1,2 +1,111 @@
-# Phase 1: menu, sizes, modifiers, prices and deterministic stock.
-{}
+seed: 42
+currency: GBP
+preparing_after_minutes: 1
+ready_after_minutes: 5
+collected_after_minutes: 12
+eta_jitter_minutes: 2
+alternatives_limit: 3
+items:
+  - name: espresso
+    category: coffee
+    prices: {small: '2.20', medium: '2.60', large: '3.00'}
+    modifiers: {extra_shot: '0.60', decaf: '0.00', no_sugar: '0.00'}
+  - name: americano
+    category: coffee
+    prices: {small: '2.50', medium: '2.90', large: '3.30'}
+    modifiers: {oat_milk: '0.40', soy_milk: '0.40', extra_shot: '0.60', decaf: '0.00'}
+  - name: latte
+    category: coffee
+    prices: {small: '3.00', medium: '3.50', large: '4.00'}
+    modifiers: {oat_milk: '0.40', soy_milk: '0.40', extra_shot: '0.60', decaf: '0.00', no_sugar: '0.00', vanilla_syrup: '0.50', iced: '0.20'}
+  - name: cappuccino
+    category: coffee
+    prices: {small: '3.00', medium: '3.50', large: '4.00'}
+    modifiers: {oat_milk: '0.40', soy_milk: '0.40', extra_shot: '0.60', decaf: '0.00'}
+  - name: flat white
+    category: coffee
+    prices: {small: '3.10', medium: '3.60', large: '4.10'}
+    modifiers: {oat_milk: '0.40', soy_milk: '0.40', extra_shot: '0.60', decaf: '0.00'}
+  - name: mocha
+    category: coffee
+    prices: {small: '3.40', medium: '3.90', large: '4.40'}
+    modifiers: {oat_milk: '0.40', soy_milk: '0.40', extra_shot: '0.60', decaf: '0.00'}
+  - name: filter coffee
+    category: coffee
+    available: false
+    prices: {small: '2.00', medium: '2.40', large: '2.80'}
+    modifiers: {oat_milk: '0.40', no_sugar: '0.00'}
+  - name: english breakfast tea
+    category: tea
+    prices: {small: '2.00', medium: '2.40', large: '2.80'}
+    modifiers: {oat_milk: '0.40', soy_milk: '0.40', no_sugar: '0.00'}
+  - name: earl grey tea
+    category: tea
+    prices: {small: '2.10', medium: '2.50', large: '2.90'}
+    modifiers: {oat_milk: '0.40', no_sugar: '0.00'}
+  - name: green tea
+    category: tea
+    prices: {small: '2.10', medium: '2.50', large: '2.90'}
+    modifiers: {no_sugar: '0.00', iced: '0.20'}
+  - name: peppermint tea
+    category: tea
+    prices: {small: '2.10', medium: '2.50', large: '2.90'}
+    modifiers: {no_sugar: '0.00'}
+  - name: chai latte
+    category: tea
+    prices: {small: '3.20', medium: '3.70', large: '4.20'}
+    modifiers: {oat_milk: '0.40', soy_milk: '0.40', no_sugar: '0.00', iced: '0.20'}
+  - name: iced latte
+    category: cold_drinks
+    prices: {small: '3.20', medium: '3.70', large: '4.20'}
+    modifiers: {oat_milk: '0.40', soy_milk: '0.40', extra_shot: '0.60', decaf: '0.00', vanilla_syrup: '0.50'}
+  - name: cold brew
+    category: cold_drinks
+    prices: {small: '3.00', medium: '3.50', large: '4.00'}
+    modifiers: {oat_milk: '0.40', no_sugar: '0.00', vanilla_syrup: '0.50'}
+  - name: lemonade
+    category: cold_drinks
+    prices: {small: '2.40', medium: '2.90', large: '3.40'}
+    modifiers: {no_sugar: '0.00'}
+  - name: orange juice
+    category: cold_drinks
+    available: false
+    prices: {small: '2.60', medium: '3.10', large: '3.60'}
+    modifiers: {}
+  - name: iced tea
+    category: cold_drinks
+    prices: {small: '2.40', medium: '2.90', large: '3.40'}
+    modifiers: {no_sugar: '0.00', vanilla_syrup: '0.50'}
+  - name: butter croissant
+    category: bakery
+    price: '2.50'
+    modifiers: {warmed: '0.00'}
+  - name: almond croissant
+    category: bakery
+    available: false
+    price: '3.00'
+    modifiers: {warmed: '0.00'}
+  - name: blueberry muffin
+    category: bakery
+    price: '2.80'
+    modifiers: {warmed: '0.00'}
+  - name: chocolate brownie
+    category: bakery
+    price: '2.90'
+    modifiers: {warmed: '0.00'}
+  - name: cinnamon roll
+    category: bakery
+    price: '3.10'
+    modifiers: {warmed: '0.00'}
+  - name: cheese sandwich
+    category: sandwiches
+    price: '4.50'
+    modifiers: {warmed: '0.00'}
+  - name: ham and cheese sandwich
+    category: sandwiches
+    price: '5.00'
+    modifiers: {warmed: '0.00'}
+  - name: hummus sandwich
+    category: sandwiches
+    price: '4.80'
+    modifiers: {warmed: '0.00'}
