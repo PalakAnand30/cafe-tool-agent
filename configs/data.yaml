@@ -21,10 +21,15 @@ progress_every: 100
 max_tokens: 4096
 paraphrase_max_tokens: 192
 paraphrase_batch_size: 12
-output_dir: data/generated
+output_dir: data/generated-independent-v1
 human_path: data/human_test/human_test.jsonl
 human_min_conversations: 60
 human_max_conversations: 100
+independent_path: data/human_test/independent_test.jsonl
+independent_authoring_path: data/human_test/human_test_authoring.yaml
+independent_overrides_path: data/human_test/gold_overrides.yaml
+independent_min_conversations: 60
+independent_max_conversations: 100
 tokenizer_cache: .cache/huggingface
 quantities: [1, 2, 3]
 first_names: [Alex, Jamie, Morgan, Taylor, Jordan, Casey, Sam, Robin, Quinn, Drew, Riley, Avery, Cameron, Charlie, Devon, Ellis, Finley, Harper, Jesse, Rowan]

@@ -1,0 +1,429 @@
+# Customer messages remain unchanged; these are Codex-reviewed gold revisions for the current domain.
+source_sha256: 81043d3fef0e2e71825ad3c6eaaef6a95e8815f4aae7837bfbecba80726f9d6a
+domain_sha256: 82188d972382d0856bea212added38add753e4a106a28b5e50f6249705b3ee4d
+annotator: codex
+cases:
+  h003:
+    reason: Flat white requires a size in the current domain.
+    turns:
+      1:
+        action: clarify
+        about: size
+    intent: clarification
+  h004:
+    reason: Earl grey tea does not support lemon.
+    turns:
+      1:
+        action: decline
+        reason: unsupported_modifier
+        text: Earl grey tea does not support lemon. Would you like it without lemon?
+    intent: unsupported
+  h005:
+    reason: Croissant is ambiguous between butter and almond croissants.
+    turns:
+      1:
+        action: clarify
+        about: item
+        text: Would you like butter croissants or almond croissants?
+    intent: clarification
+  h007:
+    reason: Iced latte does not support caramel syrup.
+    turns:
+      1:
+        action: decline
+        reason: unsupported_modifier
+        text: Caramel syrup is unavailable for iced latte. Would you like vanilla
+          syrup instead?
+    intent: unsupported
+  h010:
+    reason: Green tea does not support honey.
+    turns:
+      1:
+        action: decline
+        reason: unsupported_modifier
+        text: Green tea does not support honey. Would you like it without honey?
+    intent: unsupported
+  h011:
+    reason: Toasties and gluten-free bread are not on the current menu.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve that toastie or gluten-free bread. Would you like a
+          ham and cheese sandwich?
+    intent: unsupported
+  h012:
+    reason: Chai latte does not support almond milk.
+    turns:
+      1:
+        action: decline
+        reason: unsupported_modifier
+        text: Almond milk is unavailable for chai latte. Would you like oat or soy
+          milk?
+    intent: unsupported
+  h013:
+    reason: Pain au chocolat is off-menu; do not place a partial order without consent.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve pain au chocolat. Would you like a blueberry muffin
+          with your lattes instead?
+    intent: unsupported
+  h015:
+    reason: Sparkling water is off-menu and espresso also needs a size.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve sparkling water. Would you like lemonade instead? I
+          would also need your espresso size.
+    intent: unsupported
+  h016:
+    reason: Banana bread is off-menu and flat white requires a size.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve banana bread. Would you like a blueberry muffin instead?
+          I would also need your flat white size.
+    intent: unsupported
+  h017:
+    reason: The requested croissants require an exact item choice.
+    turns:
+      1:
+        action: clarify
+        about: item
+        text: For the four croissants, would you like butter or almond?
+    intent: clarification
+  h018:
+    reason: Iced americano and chicken pesto panini are off-menu.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve iced americano or chicken pesto panini. Would you like
+          an iced latte and a ham and cheese sandwich?
+    intent: unsupported
+  h019:
+    reason: Orange juice does not support the no_ice modifier; stock must not be invented.
+    turns:
+      1:
+        action: decline
+        reason: unsupported_modifier
+        text: Orange juice does not support a no-ice modifier. Would you like to omit
+          that modifier?
+    intent: unsupported
+  h020:
+    reason: Matcha latte is off-menu.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve matcha latte. Would you like two large oat chai lattes
+          instead?
+    intent: unsupported
+  h021:
+    reason: Caramel macchiato is off-menu.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve caramel macchiato. Would you like a decaf latte instead?
+    intent: unsupported
+  h022:
+    reason: Hummus wrap is off-menu.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve hummus wraps. Would you like a hummus sandwich instead?
+    intent: unsupported
+  h023:
+    reason: Cappuccino does not support almond milk.
+    turns:
+      1:
+        action: decline
+        reason: unsupported_modifier
+        text: Almond milk is unavailable for cappuccino. Would you like oat or soy
+          milk for that cappuccino?
+    intent: unsupported
+  h024:
+    reason: Peppermint tea does not support lemon; the croissant type is also unresolved.
+    turns:
+      1:
+        action: decline
+        reason: unsupported_modifier
+        text: Peppermint tea does not support lemon. Would you like it plain? For
+          the croissant, would you like butter or almond?
+    intent: unsupported
+  h028:
+    reason: After resolving quantity, the croissant item is still ambiguous.
+    turns:
+      2:
+        action: clarify
+        about: item
+        text: Would you like four butter croissants or four almond croissants?
+  h029:
+    reason: Earl grey tea does not support lemon.
+    turns:
+      2:
+        action: decline
+        reason: unsupported_modifier
+        text: Earl grey tea does not support lemon. Would you like it without lemon?
+  h034:
+    reason: Fresh backends contain no seeded orders; ORD-10002 must return ORDER_NOT_FOUND.
+    turns:
+      2:
+        action: tool_call
+        tool: get_order_status
+        args:
+          order_id: ORD-10002
+        after_tool: inform_error
+  h035:
+    reason: Fresh backends contain no seeded orders; ORD-10001 must return ORDER_NOT_FOUND.
+    turns:
+      2:
+        action: tool_call
+        tool: cancel_order
+        args:
+          order_id: ORD-10001
+        after_tool: inform_error
+  h036:
+    reason: Toastie is off-menu; the later size reply does not authorize omitting
+      it.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve toasties. Would you like a ham and cheese sandwich instead?
+          What size orange juice would you like?
+      2:
+        action: clarify
+        about: item
+        text: Medium orange juice, understood. Would you like a ham and cheese sandwich
+          instead of the toastie, or should I leave it out?
+    intent: unsupported
+  h038:
+    reason: Tuna melt is off-menu, so decline rather than issue an invalid availability
+      call.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve tuna melt. Would you like a cheese sandwich instead?
+    intent: unsupported
+  h039:
+    reason: Matcha latte is off-menu, so decline rather than issue an invalid availability
+      call.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve matcha latte. Would you like a chai latte instead?
+    intent: unsupported
+  h040:
+    reason: Banana bread is off-menu, so decline rather than issue an invalid availability
+      call.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve banana bread. Would you like a blueberry muffin instead?
+    intent: unsupported
+  h041:
+    reason: Mango smoothie is off-menu, so decline rather than issue an invalid availability
+      call.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve mango smoothie. Would you like lemonade instead?
+    intent: unsupported
+  h043:
+    reason: Fresh backends contain no seeded orders; the supplied ID must return ORDER_NOT_FOUND.
+    turns:
+      1:
+        action: tool_call
+        tool: get_order_status
+        args:
+          order_id: ORD-10002
+        after_tool: inform_error
+  h044:
+    reason: Fresh backends contain no seeded orders; the supplied ID must return ORDER_NOT_FOUND.
+    turns:
+      1:
+        action: tool_call
+        tool: get_order_status
+        args:
+          order_id: ORD-10003
+        after_tool: inform_error
+  h045:
+    reason: Fresh backends contain no seeded orders; the supplied ID must return ORDER_NOT_FOUND.
+    turns:
+      1:
+        action: tool_call
+        tool: get_order_status
+        args:
+          order_id: ORD-10001
+        after_tool: inform_error
+  h047:
+    reason: Fresh backends contain no seeded orders; the supplied ID must return ORDER_NOT_FOUND.
+    turns:
+      1:
+        action: tool_call
+        tool: get_order_status
+        args:
+          order_id: ORD-10004
+        after_tool: inform_error
+  h049:
+    reason: Fresh backends contain no seeded orders; the supplied ID must return ORDER_NOT_FOUND.
+    turns:
+      1:
+        action: tool_call
+        tool: cancel_order
+        args:
+          order_id: ORD-10001
+        after_tool: inform_error
+  h050:
+    reason: Fresh backends contain no seeded orders; the supplied ID must return ORDER_NOT_FOUND.
+    turns:
+      1:
+        action: tool_call
+        tool: cancel_order
+        args:
+          order_id: ORD-10002
+        after_tool: inform_error
+  h048:
+    reason: Flat white requires a size and the croissant type is ambiguous; no order
+      has been created.
+    turns:
+      1:
+        action: clarify
+        about: size
+        text: What size flat white would you like, and would you like a butter or
+          almond croissant?
+      2:
+        action: clarify
+        about: size
+        text: I have not placed an order yet. What size flat white would you like,
+          and which croissant?
+    intent: clarification
+  h051:
+    reason: The current backend has no seeded ready order; cancellation returns ORDER_NOT_FOUND,
+      not CANNOT_CANCEL.
+    turns:
+      1:
+        action: tool_call
+        tool: cancel_order
+        args:
+          order_id: ORD-10003
+        after_tool: inform_error
+  h063:
+    reason: Hummus wrap itself is off-menu, regardless of extra cheese.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve hummus wraps. Would you like a hummus sandwich? It does
+          not support extra cheese.
+  h068:
+    reason: Iced americano itself is off-menu, regardless of whipped cream.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve iced americano or whipped cream. Would you like an iced
+          latte?
+  h069:
+    reason: The first stock error remains valid; the requested replacement pain au
+      chocolat is off-menu.
+    turns:
+      2:
+        action: decline
+        reason: off_menu
+        text: We do not serve pain au chocolat. Would you like a butter croissant
+          instead?
+  h070:
+    reason: Tuna melt and toastie are both off-menu; neither failed request should
+      reach create_order.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve tuna melts. Would you like a cheese sandwich with the
+          latte instead?
+      2:
+        action: decline
+        reason: off_menu
+        text: We do not serve toasties either. Would you like a ham and cheese sandwich
+          with your medium latte?
+    intent: unsupported
+  h071:
+    reason: Mango smoothie is off-menu; orange juice is on-menu but out of stock.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve mango smoothies. Would you like orange juice or lemonade?
+      2:
+        action: tool_call
+        tool: create_order
+        args:
+          items:
+          - item_name: orange juice
+            size: large
+            quantity: 1
+            modifiers: []
+        after_tool: inform_error
+  h072:
+    reason: Required flat-white size is missing in both turns; clarify before any
+      backend call.
+    turns:
+      1:
+        action: clarify
+        about: size
+      2:
+        action: clarify
+        about: size
+        text: What size flat white would you like?
+    intent: clarification
+  h073:
+    reason: Tuna melt and chicken pesto panini are both off-menu.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve tuna melts. Would you like a ham and cheese sandwich?
+      2:
+        action: decline
+        reason: off_menu
+        text: We do not serve chicken pesto panini. Would you like a cheese sandwich?
+    intent: unsupported
+  h074:
+    reason: Mango smoothie is off-menu; the customer then explicitly requests only
+      the supported muffin.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve mango smoothies. Would you like lemonade instead, or
+          just the blueberry muffin?
+    intent: unsupported
+  h082:
+    reason: Pain au chocolat is off-menu.
+    turns:
+      1:
+        action: decline
+        reason: off_menu
+        text: We do not serve pain au chocolat. Would you like two blueberry muffins
+          with the americano instead?
+    intent: unsupported
+  h084:
+    reason: Earl grey tea supports oat milk but not soy milk.
+    turns:
+      1:
+        action: decline
+        reason: unsupported_modifier
+        text: Earl grey tea does not support soy milk. Would you like oat milk instead?
+    intent: unsupported

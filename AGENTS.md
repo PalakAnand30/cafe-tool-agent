@@ -40,7 +40,8 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
 - Standalone café API: `uv run --locked uvicorn cafe_agent.backend.app:create_app --factory`.
   This is the backend only; the demo `make serve` target remains Phase 6.
 - `make data`: generate and replay/token-validate resumable synthetic splits.
-- `make push-data`: user-run private Hub publication after the human benchmark.
+- `make benchmark`: convert the supplied Claude-authored set with reviewed gold.
+- `make push-data`: private Hub publication after independent benchmark validation.
 - Human annotation: `uv run --locked python scripts/annotate_human_test.py`.
 - `make eval-local`: Phase 3 harness, extended for CPU GGUF in Phase 5.
 - `make report`: Phase 5.
@@ -105,7 +106,12 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
   records. Changed inputs/code require a new output directory. Keep API cache.
 - Reserve test template families and item/modifier pairs before sampling;
   check normalized user text across every synthetic split.
-- Human records must be written by the user before seeing model results.
-  Always exclude `author=codex_example`; never invent human-authored examples.
-- The user runs `make push-data` after annotating the required human benchmark.
-  Prepare/dry-run locally; do not upload automatically in this phase.
+- User-approved follow-up replaces the human-written requirement with the supplied
+  independent Claude-authored benchmark. Keep all customer messages and `author=claude`;
+  record Codex gold-label annotation provenance. Keep the current domain and revise
+  gold labels, without adopting the supplied replacement menu or seeded orders.
+- Score the separate `independent_test` split. Never describe LLM-written cases as
+  human evidence. Always exclude `author=codex_example`. Optional future human data
+  must remain genuinely human-authored and be reported separately.
+- The user explicitly requested help with the private upload; complete validation
+  and the dry run, then run `make push-data`. No GitHub push is authorized.

@@ -1,0 +1,664 @@
+# Independent test set for the café ordering agent.
+# Place at data/human_test/human_test_authoring.yaml.
+#
+# Authorship: cases with `author: claude` were written by Claude (an LLM), independently of the
+# training templates and paraphrases. Add your own with `author: palak` (or a friend's name) and
+# report the human-written slice separately in the README.
+#
+# Format
+#   turns: user messages in order. Each has `expect`, the correct FIRST action for that turn:
+#     {action: tool_call, tool: <name>, args: {...}}
+#     {action: clarify, about: size | item | quantity | order_id}
+#     {action: decline, reason: off_menu | unsupported_modifier | out_of_scope}
+#   after_tool: inform_error   -> the tool returns an error; the reply must explain it
+#                                 (and offer the returned alternatives when there are any).
+#   "$LAST_ORDER_ID"           -> the order_id returned by the most recent successful create_order.
+#   Unsized items omit `size`. `modifiers` order does not matter. Omit `customer_name` unless given.
+#
+# A converter script turns this file into the JSONL schema in PROJECT_SPEC.md Section 5 by replaying
+# the expected calls against a fresh backend (that also yields expected tool results and final state).
+
+cases:
+
+  # ---------- single-item orders ----------
+  - id: h001
+    intent: single_item
+    author: claude
+    turns:
+      - user: "Can I get a large latte with oat milk please?"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: latte, size: large, quantity: 1, modifiers: [oat_milk]}]}}
+
+  - id: h002
+    intent: single_item
+    author: claude
+    turns:
+      - user: "medium cappuccino pls"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: cappuccino, size: medium, quantity: 1, modifiers: []}]}}
+
+  - id: h003
+    intent: single_item
+    author: claude
+    turns:
+      - user: "One flat white, extra shot, thanks"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: flat white, quantity: 1, modifiers: [extra_shot]}]}}
+
+  - id: h004
+    intent: single_item
+    author: claude
+    turns:
+      - user: "Could I have a small earl grey with lemon?"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: earl grey, size: small, quantity: 1, modifiers: [lemon]}]}}
+
+  - id: h005
+    intent: single_item
+    author: claude
+    turns:
+      - user: "2 croissants, warmed up if possible"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: croissant, quantity: 2, modifiers: [warmed]}]}}
+
+  - id: h006
+    intent: single_item
+    author: claude
+    turns:
+      - user: "hiya, regular americano with a splash of soy"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: americano, size: medium, quantity: 1, modifiers: [soy_milk]}]}}
+
+  - id: h007
+    intent: single_item
+    author: claude
+    turns:
+      - user: "I'd like a big iced latte w/ caramel syrup"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: iced latte, size: large, quantity: 1, modifiers: [caramel_syrup]}]}}
+
+  - id: h008
+    intent: single_item
+    author: claude
+    turns:
+      - user: "Just a cinnamon roll for me"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: cinnamon roll, quantity: 1, modifiers: []}]}}
+
+  - id: h009
+    intent: single_item
+    author: claude
+    turns:
+      - user: "Can I grab a large decaf mocha? Name's Priya"
+        expect: {action: tool_call, tool: create_order, args: {customer_name: Priya, items: [{item_name: mocha, size: large, quantity: 1, modifiers: [decaf]}]}}
+
+  - id: h010
+    intent: single_item
+    author: claude
+    turns:
+      - user: "three small green teas with honey"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: green tea, size: small, quantity: 3, modifiers: [honey]}]}}
+
+  - id: h011
+    intent: single_item
+    author: claude
+    turns:
+      - user: "ham and cheese toastie on gluten free bread please"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: ham and cheese toastie, quantity: 1, modifiers: [gluten_free_bread]}]}}
+
+  - id: h012
+    intent: single_item
+    author: claude
+    turns:
+      - user: "lemme get a medium chai with almond milk"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: chai latte, size: medium, quantity: 1, modifiers: [almond_milk]}]}}
+
+  # ---------- multi-item orders ----------
+  - id: h013
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "Two large lattes and a pain au chocolat please"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: latte, size: large, quantity: 2, modifiers: []}, {item_name: pain au chocolat, quantity: 1, modifiers: []}]}}
+
+  - id: h014
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "A small cappuccino with oat milk and a medium americano with an extra shot"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: cappuccino, size: small, quantity: 1, modifiers: [oat_milk]}, {item_name: americano, size: medium, quantity: 1, modifiers: [extra_shot]}]}}
+
+  - id: h015
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "can i get an espresso, a blueberry muffin warmed, and a sparkling water"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: espresso, quantity: 1, modifiers: []}, {item_name: blueberry muffin, quantity: 1, modifiers: [warmed]}, {item_name: sparkling water, quantity: 1, modifiers: []}]}}
+
+  - id: h016
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "One oat flat white and a slice of banana bread"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: flat white, quantity: 1, modifiers: [oat_milk]}, {item_name: banana bread, quantity: 1, modifiers: []}]}}
+
+  - id: h017
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "Office order: 3 large americanos, 2 medium lattes with soy, and 4 croissants. Name is Tom."
+        expect: {action: tool_call, tool: create_order, args: {customer_name: Tom, items: [{item_name: americano, size: large, quantity: 3, modifiers: []}, {item_name: latte, size: medium, quantity: 2, modifiers: [soy_milk]}, {item_name: croissant, quantity: 4, modifiers: []}]}}
+
+  - id: h018
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "Large iced americano with vanilla, and a chicken pesto panini with extra cheese"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: iced americano, size: large, quantity: 1, modifiers: [vanilla_syrup]}, {item_name: chicken pesto panini, quantity: 1, modifiers: [extra_cheese]}]}}
+
+  - id: h019
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "a medium english breakfast with oat milk and a small orange juice, no ice"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: english breakfast, size: medium, quantity: 1, modifiers: [oat_milk]}, {item_name: orange juice, size: small, quantity: 1, modifiers: [no_ice]}]}}
+
+  - id: h020
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "One large matcha latte with oat milk and one large chai latte with oat milk please"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: matcha latte, size: large, quantity: 1, modifiers: [oat_milk]}, {item_name: chai latte, size: large, quantity: 1, modifiers: [oat_milk]}]}}
+
+  - id: h021
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "can I have a regular mocha and a big caramel macchiato, both decaf"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: mocha, size: medium, quantity: 1, modifiers: [decaf]}, {item_name: caramel macchiato, size: large, quantity: 1, modifiers: [decaf]}]}}
+
+  - id: h022
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "a hummus wrap, a medium lemonade and a cinnamon roll"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: hummus wrap, quantity: 1, modifiers: []}, {item_name: lemonade, size: medium, quantity: 1, modifiers: []}, {item_name: cinnamon roll, quantity: 1, modifiers: []}]}}
+
+  - id: h023
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "Two medium cappuccinos, one with almond milk and one normal"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: cappuccino, size: medium, quantity: 1, modifiers: [almond_milk]}, {item_name: cappuccino, size: medium, quantity: 1, modifiers: []}]}}
+
+  - id: h024
+    intent: multi_item
+    author: claude
+    turns:
+      - user: "small peppermint tea w lemon + a warm croissant pls, it's for Aisha"
+        expect: {action: tool_call, tool: create_order, args: {customer_name: Aisha, items: [{item_name: peppermint tea, size: small, quantity: 1, modifiers: [lemon]}, {item_name: croissant, quantity: 1, modifiers: [warmed]}]}}
+
+  # ---------- clarification ----------
+  - id: h025
+    intent: clarification
+    author: claude
+    turns:
+      - user: "Can I get a latte?"
+        expect: {action: clarify, about: size}
+      - user: "Large please"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: latte, size: large, quantity: 1, modifiers: []}]}}
+
+  - id: h026
+    intent: clarification
+    author: claude
+    turns:
+      - user: "I'll have a coffee"
+        expect: {action: clarify, about: item}
+      - user: "a medium americano"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: americano, size: medium, quantity: 1, modifiers: []}]}}
+
+  - id: h027
+    intent: clarification
+    author: claude
+    turns:
+      - user: "iced coffee please, large"
+        expect: {action: clarify, about: item}
+      - user: "the iced latte"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: iced latte, size: large, quantity: 1, modifiers: []}]}}
+
+  - id: h028
+    intent: clarification
+    author: claude
+    turns:
+      - user: "Can I get some croissants?"
+        expect: {action: clarify, about: quantity}
+      - user: "four"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: croissant, quantity: 4, modifiers: []}]}}
+
+  - id: h029
+    intent: clarification
+    author: claude
+    turns:
+      - user: "A tea please"
+        expect: {action: clarify, about: item}
+      - user: "earl grey, small, with lemon"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: earl grey, size: small, quantity: 1, modifiers: [lemon]}]}}
+
+  - id: h030
+    intent: clarification
+    author: claude
+    turns:
+      - user: "two cappuccinos and a muffin"
+        expect: {action: clarify, about: size}
+      - user: "both medium"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: cappuccino, size: medium, quantity: 2, modifiers: []}, {item_name: blueberry muffin, quantity: 1, modifiers: []}]}}
+
+  - id: h031
+    intent: clarification
+    author: claude
+    turns:
+      - user: "a chai with oat milk"
+        expect: {action: clarify, about: size}
+      - user: "small"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: chai latte, size: small, quantity: 1, modifiers: [oat_milk]}]}}
+
+  - id: h032
+    intent: clarification
+    author: claude
+    turns:
+      - user: "Can I have a few lattes, large?"
+        expect: {action: clarify, about: quantity}
+
+  - id: h033
+    intent: clarification
+    author: claude
+    turns:
+      - user: "One orange juice please"
+        expect: {action: clarify, about: size}
+
+  - id: h034
+    intent: clarification
+    author: claude
+    turns:
+      - user: "where's my order?"
+        expect: {action: clarify, about: order_id}
+      - user: "It's ORD-10002"
+        expect: {action: tool_call, tool: get_order_status, args: {order_id: ORD-10002}}
+
+  - id: h035
+    intent: clarification
+    author: claude
+    turns:
+      - user: "please cancel my order"
+        expect: {action: clarify, about: order_id}
+      - user: "ORD-10001"
+        expect: {action: tool_call, tool: cancel_order, args: {order_id: ORD-10001}}
+
+  - id: h036
+    intent: clarification
+    author: claude
+    turns:
+      - user: "a large latte, a toastie and an orange juice"
+        expect: {action: clarify, about: size}
+      - user: "medium for the juice"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: latte, size: large, quantity: 1, modifiers: []}, {item_name: ham and cheese toastie, quantity: 1, modifiers: []}, {item_name: orange juice, size: medium, quantity: 1, modifiers: []}]}}
+
+  # ---------- availability ----------
+  - id: h037
+    intent: availability
+    author: claude
+    turns:
+      - user: "do you have almond croissants today?"
+        expect: {action: tool_call, tool: check_availability, args: {item_name: almond croissant}}
+
+  - id: h038
+    intent: availability
+    author: claude
+    turns:
+      - user: "Is the tuna melt available?"
+        expect: {action: tool_call, tool: check_availability, args: {item_name: tuna melt}}
+
+  - id: h039
+    intent: availability
+    author: claude
+    turns:
+      - user: "have you got large matcha lattes right now?"
+        expect: {action: tool_call, tool: check_availability, args: {item_name: matcha latte, size: large}}
+
+  - id: h040
+    intent: availability
+    author: claude
+    turns:
+      - user: "any banana bread left?"
+        expect: {action: tool_call, tool: check_availability, args: {item_name: banana bread}}
+
+  - id: h041
+    intent: availability
+    author: claude
+    turns:
+      - user: "is the mango smoothie back in stock"
+        expect: {action: tool_call, tool: check_availability, args: {item_name: mango smoothie}}
+
+  - id: h042
+    intent: availability
+    author: claude
+    turns:
+      - user: "Are cinnamon rolls available this morning?"
+        expect: {action: tool_call, tool: check_availability, args: {item_name: cinnamon roll}}
+
+  # ---------- order status ----------
+  - id: h043
+    intent: order_status
+    author: claude
+    turns:
+      - user: "What's the status of ORD-10002?"
+        expect: {action: tool_call, tool: get_order_status, args: {order_id: ORD-10002}}
+
+  - id: h044
+    intent: order_status
+    author: claude
+    turns:
+      - user: "is order ORD-10003 ready yet"
+        expect: {action: tool_call, tool: get_order_status, args: {order_id: ORD-10003}}
+
+  - id: h045
+    intent: order_status
+    author: claude
+    turns:
+      - user: "hey, how long for ORD-10001?"
+        expect: {action: tool_call, tool: get_order_status, args: {order_id: ORD-10001}}
+
+  - id: h046
+    intent: order_status
+    author: claude
+    turns:
+      - user: "Can you check on order number ORD-99999"
+        expect: {action: tool_call, tool: get_order_status, args: {order_id: ORD-99999}, after_tool: inform_error}
+
+  - id: h047
+    intent: order_status
+    author: claude
+    turns:
+      - user: "ord-10004 status pls"
+        expect: {action: tool_call, tool: get_order_status, args: {order_id: ORD-10004}}
+
+  - id: h048
+    intent: order_status
+    author: claude
+    turns:
+      - user: "A flat white and a croissant please, name's Ben"
+        expect: {action: tool_call, tool: create_order, args: {customer_name: Ben, items: [{item_name: flat white, quantity: 1, modifiers: []}, {item_name: croissant, quantity: 1, modifiers: []}]}}
+      - user: "how long will that take?"
+        expect: {action: tool_call, tool: get_order_status, args: {order_id: "$LAST_ORDER_ID"}}
+
+  # ---------- cancel ----------
+  - id: h049
+    intent: cancel
+    author: claude
+    turns:
+      - user: "Please cancel ORD-10001"
+        expect: {action: tool_call, tool: cancel_order, args: {order_id: ORD-10001}}
+
+  - id: h050
+    intent: cancel
+    author: claude
+    turns:
+      - user: "I need to cancel order ORD-10002, sorry"
+        expect: {action: tool_call, tool: cancel_order, args: {order_id: ORD-10002}}
+
+  - id: h051
+    intent: cancel
+    author: claude
+    turns:
+      - user: "cancel ORD-10003"
+        expect: {action: tool_call, tool: cancel_order, args: {order_id: ORD-10003}, after_tool: inform_error}
+
+  - id: h052
+    intent: cancel
+    author: claude
+    turns:
+      - user: "can you cancel ORD-99999"
+        expect: {action: tool_call, tool: cancel_order, args: {order_id: ORD-99999}, after_tool: inform_error}
+
+  - id: h053
+    intent: cancel
+    author: claude
+    turns:
+      - user: "a medium mocha please"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: mocha, size: medium, quantity: 1, modifiers: []}]}}
+      - user: "actually cancel that"
+        expect: {action: tool_call, tool: cancel_order, args: {order_id: "$LAST_ORDER_ID"}}
+
+  - id: h054
+    intent: cancel
+    author: claude
+    turns:
+      - user: "Two large americanos"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: americano, size: large, quantity: 2, modifiers: []}]}}
+      - user: "Sorry, can you cancel that? I'll order something else"
+        expect: {action: tool_call, tool: cancel_order, args: {order_id: "$LAST_ORDER_ID"}}
+      - user: "One large americano and one large latte"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: americano, size: large, quantity: 1, modifiers: []}, {item_name: latte, size: large, quantity: 1, modifiers: []}]}}
+
+  # ---------- menu browsing ----------
+  - id: h055
+    intent: menu
+    author: claude
+    turns:
+      - user: "What's on the menu?"
+        expect: {action: tool_call, tool: get_menu, args: {}}
+
+  - id: h056
+    intent: menu
+    author: claude
+    turns:
+      - user: "what pastries have you got"
+        expect: {action: tool_call, tool: get_menu, args: {category: bakery}}
+
+  - id: h057
+    intent: menu
+    author: claude
+    turns:
+      - user: "Which teas do you do?"
+        expect: {action: tool_call, tool: get_menu, args: {category: tea}}
+
+  - id: h058
+    intent: menu
+    author: claude
+    turns:
+      - user: "show me your sandwiches"
+        expect: {action: tool_call, tool: get_menu, args: {category: sandwiches}}
+
+  - id: h059
+    intent: menu
+    author: claude
+    turns:
+      - user: "anything cold to drink?"
+        expect: {action: tool_call, tool: get_menu, args: {category: cold_drinks}}
+
+  # ---------- unsupported / off-menu ----------
+  - id: h060
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "Can I get a pumpkin spice latte?"
+        expect: {action: decline, reason: off_menu}
+
+  - id: h061
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "Large latte with hazelnut syrup please"
+        expect: {action: decline, reason: unsupported_modifier}
+
+  - id: h062
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "a hot chocolate please"
+        expect: {action: decline, reason: off_menu}
+
+  - id: h063
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "hummus wrap with extra cheese"
+        expect: {action: decline, reason: unsupported_modifier}
+
+  - id: h064
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "do you sell bubble tea"
+        expect: {action: decline, reason: off_menu}
+
+  - id: h065
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "medium green tea with oat milk"
+        expect: {action: decline, reason: unsupported_modifier}
+
+  - id: h066
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "a burger and fries"
+        expect: {action: decline, reason: off_menu}
+
+  - id: h067
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "an espresso with caramel syrup"
+        expect: {action: decline, reason: unsupported_modifier}
+
+  - id: h068
+    intent: unsupported
+    author: claude
+    turns:
+      - user: "small iced americano with whipped cream on top"
+        expect: {action: decline, reason: unsupported_modifier}
+
+  # ---------- tool-error recovery ----------
+  - id: h069
+    intent: error_recovery
+    author: claude
+    turns:
+      - user: "One almond croissant please"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: almond croissant, quantity: 1, modifiers: []}]}, after_tool: inform_error}
+      - user: "ok a pain au chocolat then"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: pain au chocolat, quantity: 1, modifiers: []}]}}
+
+  - id: h070
+    intent: error_recovery
+    author: claude
+    turns:
+      - user: "Tuna melt and a medium latte"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: tuna melt, quantity: 1, modifiers: []}, {item_name: latte, size: medium, quantity: 1, modifiers: []}]}, after_tool: inform_error}
+      - user: "Swap the tuna melt for a toastie then, and keep the latte"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: ham and cheese toastie, quantity: 1, modifiers: []}, {item_name: latte, size: medium, quantity: 1, modifiers: []}]}}
+
+  - id: h071
+    intent: error_recovery
+    author: claude
+    turns:
+      - user: "large mango smoothie"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: mango smoothie, size: large, quantity: 1, modifiers: []}]}, after_tool: inform_error}
+      - user: "fine, a large orange juice"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: orange juice, size: large, quantity: 1, modifiers: []}]}}
+
+  - id: h072
+    intent: error_recovery
+    author: claude
+    turns:
+      - user: "two almond croissants and a flat white"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: almond croissant, quantity: 2, modifiers: []}, {item_name: flat white, quantity: 1, modifiers: []}]}, after_tool: inform_error}
+      - user: "leave the croissants, just the flat white"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: flat white, quantity: 1, modifiers: []}]}}
+
+  - id: h073
+    intent: error_recovery
+    author: claude
+    turns:
+      - user: "Is the tuna melt available? If so I'll have one"
+        expect: {action: tool_call, tool: check_availability, args: {item_name: tuna melt}}
+      - user: "chicken pesto panini then"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: chicken pesto panini, quantity: 1, modifiers: []}]}}
+
+  - id: h074
+    intent: error_recovery
+    author: claude
+    turns:
+      - user: "Medium mango smoothie and a blueberry muffin"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: mango smoothie, size: medium, quantity: 1, modifiers: []}, {item_name: blueberry muffin, quantity: 1, modifiers: []}]}, after_tool: inform_error}
+      - user: "No worries, just the muffin"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: blueberry muffin, quantity: 1, modifiers: []}]}}
+
+  # ---------- out of scope ----------
+  - id: h075
+    intent: out_of_scope
+    author: claude
+    turns:
+      - user: "What's the wifi password?"
+        expect: {action: decline, reason: out_of_scope}
+
+  - id: h076
+    intent: out_of_scope
+    author: claude
+    turns:
+      - user: "I want a refund for yesterday's order"
+        expect: {action: decline, reason: out_of_scope}
+
+  - id: h077
+    intent: out_of_scope
+    author: claude
+    turns:
+      - user: "what's the weather like in Edinburgh today"
+        expect: {action: decline, reason: out_of_scope}
+
+  - id: h078
+    intent: out_of_scope
+    author: claude
+    turns:
+      - user: "Tell me a joke"
+        expect: {action: decline, reason: out_of_scope}
+
+  - id: h079
+    intent: out_of_scope
+    author: claude
+    turns:
+      - user: "My latte was cold earlier and I want to make a complaint"
+        expect: {action: decline, reason: out_of_scope}
+
+  - id: h080
+    intent: out_of_scope
+    author: claude
+    turns:
+      - user: "Can you help me with my maths homework?"
+        expect: {action: decline, reason: out_of_scope}
+
+  # ---------- noisy phrasing (robustness) ----------
+  - id: h081
+    intent: single_item
+    author: claude
+    tags: [noisy]
+    turns:
+      - user: "cn i hav a lrge capuccino w oat"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: cappuccino, size: large, quantity: 1, modifiers: [oat_milk]}]}}
+
+  - id: h082
+    intent: multi_item
+    author: claude
+    tags: [noisy]
+    turns:
+      - user: "2x pain au choc + 1 small americano"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: pain au chocolat, quantity: 2, modifiers: []}, {item_name: americano, size: small, quantity: 1, modifiers: []}]}}
+
+  - id: h083
+    intent: single_item
+    author: claude
+    tags: [noisy]
+    turns:
+      - user: "LARGE LATTE EXTRA SHOT PLEASE"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: latte, size: large, quantity: 1, modifiers: [extra_shot]}]}}
+
+  - id: h084
+    intent: single_item
+    author: claude
+    tags: [noisy]
+    turns:
+      - user: "erm could I possibly get, like, a medium earl grey? with soy milk if that's ok x"
+        expect: {action: tool_call, tool: create_order, args: {items: [{item_name: earl grey, size: medium, quantity: 1, modifiers: [soy_milk]}]}}

@@ -85,9 +85,18 @@ class ClockAdvance(StrictModel):
     minutes: int = Field(ge=0)
 
 
+class AnnotationProvenance(StrictModel):
+    annotator: Literal["codex"]
+    source_file: str
+    source_sha256: str
+    domain_sha256: str
+    original_intent: str
+    revision_reason: str | None = None
+
+
 class Conversation(StrictModel):
     id: str = Field(min_length=1)
-    split: Literal["train", "validation", "test", "human_test"]
+    split: Literal["train", "validation", "test", "human_test", "independent_test"]
     intent: Intent
     template_id: str
     tools: list[dict[str, Any]]
@@ -97,10 +106,16 @@ class Conversation(StrictModel):
     actions: list[GoldAction]
     provenance: list[TurnProvenance] = Field(default_factory=list)
     clock_advances: list[ClockAdvance] = Field(default_factory=list)
-    author: Literal["synthetic", "codex_example", "human"] = "synthetic"
+    author: Literal["synthetic", "codex_example", "human", "claude"] = "synthetic"
+    annotation_provenance: AnnotationProvenance | None = None
 
     @model_validator(mode="after")
     def check_alignment(self) -> "Conversation":
+        if self.author == "claude" or self.split == "independent_test":
+            if self.author != "claude" or self.split != "independent_test":
+                raise ValueError("Claude-authored cases belong only in independent_test")
+            if self.annotation_provenance is None:
+                raise ValueError("Independent benchmark requires annotation provenance")
         users = [message.content for message in self.messages if message.role == "user"]
         if users != self.scripted_user_turns:
             raise ValueError("Scripted turns must exactly match user messages")

@@ -52,7 +52,7 @@ Fine-tune a small open model with QLoRA so that it acts as a café ordering assi
 
 Success criteria:
 - Reproducible pipeline: `make data`, Kaggle training, Kaggle GPU eval, `make eval-local`, `make report`, `make serve`.
-- Results table comparing 5 systems (Section 6) on a synthetic held-out test set and a human-written test set, with 95% bootstrap confidence intervals on the human set.
+- Results table comparing 5 systems (Section 6) on a synthetic held-out test set and an independent LLM-authored test set, with 95% bootstrap confidence intervals on the independent set. Do not describe this benchmark as human-written evidence.
 - Public artefacts: GitHub repo, Hugging Face dataset, LoRA adapter, merged model, GGUF model, and a live Hugging Face Space demo.
 
 ---
@@ -202,15 +202,17 @@ About 25% of conversations are multi-turn (e.g. clarification then completion, o
 - Reserve 20% of templates and a set of (item, modifier) combinations exclusively for the test split.
 - Deduplicate by normalised user text across all splits; assert no overlap in tests.
 
-**Validation**: every example must (a) pass schema validation for every tool call, (b) replay against a fresh backend and reproduce the stored tool results and `expected_final_state`, (c) render with the Qwen tokenizer chat template under 4,096 tokens. Write `data/generated/stats.md` with counts per intent, turn lengths, token lengths and paraphrase rejection rate.
+**Validation**: every example must (a) pass schema validation for every tool call, (b) replay against a fresh backend and reproduce the stored tool results and `expected_final_state`, (c) render with the Qwen tokenizer chat template under 4,096 tokens. Write `stats.md` under the configured output directory with counts per intent, turn lengths, token lengths and paraphrase rejection rate. The Phase 2 follow-up uses `data/generated-independent-v1/`, preserving the original `data/generated/` run and API cache after the source/schema revision.
 
 **User-approved adjustment (Phase 2)**: use a 4,096-token full-conversation limit while retaining full domain coverage. The pinned tokenizer measured 2,555 tokens for the original prompt alone; even a compact full-menu prompt used 1,023 tokens before the assistant response. Inference context must accommodate this budget plus generated output.
 
 **User-approved model replacement (Phase 2)**: use `openai/gpt-oss-120b` through Groq for paraphrasing and S3, with low reasoning effort. The originally specified `llama-3.3-70b-versatile` returned `model_not_found` and was absent from the configured key's model catalog. Do not claim any Llama baseline or Llama-generated data was run.
 
-**Human test set** (`data/human_test/human_test.jsonl`): 60–100 conversations written by the user, not generated. Build `scripts/annotate_human_test.py`, an interactive CLI where the user types customer messages and selects or types the expected behaviour (tool + arguments, clarify, decline) and expected final state; it validates entries against the schema and backend. Seed the file with 5 examples written by you, clearly marked `"author": "codex_example"`, which are excluded from scoring.
+**Independent LLM-authored test set** (`data/human_test/independent_test.jsonl`): 60–100 conversations supplied independently by another LLM. **User-approved Phase 2 revision:** use the supplied 84 Claude-authored cases instead of requiring 60–100 human-written conversations. Preserve every customer message and `author=claude`. The current `configs/domain.yaml` remains authoritative; do not adopt the supplied replacement menu or seed its orders. Revise gold actions and intent labels for the current domain, with explicit `annotator=codex` provenance, immutable source YAML, reviewed overrides, hashes and reasons. Convert by replaying against fresh backends and validating the full conversations. Keep this split out of training, check normalized customer text against every synthetic split, and never claim it measures human-written or real-customer performance. Report the actual intent distribution and limited successful-order coverage after relabelling.
 
-**Publishing**: `scripts/push_dataset.py` pushes train/validation/test (and human test, separately) to `HF_USERNAME/cafe-tool-calls` with a dataset card. Start private; the user makes it public at the end. The Kaggle notebooks load data from this HF dataset.
+The existing human annotation CLI remains available for optional future genuine human data. Its five `author=codex_example` records remain excluded from scoring. Never relabel LLM text as human. Human data, if collected later, must be reported separately.
+
+**Publishing**: `scripts/push_dataset.py` pushes train/validation/test and the separate `independent_test` configuration to `HF_USERNAME/cafe-tool-calls` with a dataset card and benchmark provenance. Keep the excluded worked examples in the legacy `human_test` configuration. Require 60–100 validated independent cases before upload. Start private; the user makes it public at the end. The Kaggle notebooks load data from this HF dataset. The user authorized assistance with the private upload in this Phase 2 follow-up.
 
 ---
 
@@ -234,9 +236,9 @@ All systems use the same system prompt and tool schemas from `cafe_agent.prompti
 
 **Metrics**: valid tool-call rate (parses and validates against schema); action accuracy (correct tool vs clarify vs decline); argument exact match and field-level F1 (item, size, quantity, modifiers); clarification precision and recall; decline precision and recall; end-to-end task success; latency p50/p95 (S5 locally on CPU; S3 recorded but flagged as including network time); estimated cost per 1,000 conversations (S3 from Groq's published paid token prices with the date noted; S5 as local compute, stated as an assumption).
 
-**Rigour**: 95% bootstrap confidence intervals (1,000 resamples) for all metrics on the human test set; per-intent breakdown; intent confusion matrix; `results/error_analysis.md` with failure categories and 10 representative failures for S4 vs S2.
+**Rigour**: 95% bootstrap confidence intervals (1,000 resamples) for all metrics on the independent LLM-authored test set; per-intent breakdown; intent confusion matrix; `results/error_analysis.md` with failure categories and 10 representative failures for S4 vs S2. These intervals describe case-sampling uncertainty on LLM-authored text, not real-customer generalization. State the shared-model wording/annotation biases and actual coverage limits.
 
-**Charts** (`results/charts/`): system comparison bar chart with CI whiskers (human set), per-intent accuracy heatmap, confusion matrix, latency vs accuracy scatter (systems as points), optional ablation curves.
+**Charts** (`results/charts/`): system comparison bar chart with CI whiskers (independent LLM-authored set), per-intent accuracy heatmap, confusion matrix, latency vs accuracy scatter (systems as points), optional ablation curves.
 
 ---
 
@@ -254,7 +256,7 @@ All systems use the same system prompt and tool schemas from `cafe_agent.prompti
 ## 7b. GPU evaluation (Kaggle notebook `eval_gpu_kaggle.ipynb`)
 
 - Installs the package from GitHub and vLLM (pinned for T4, `dtype="float16"`, `max_model_len=8192`, `gpu_memory_utilization=0.85`). If vLLM fails to install or load, fall back automatically to `transformers.generate` and record which backend was used.
-- Runs S1, S2, S4 on the synthetic test and human test sets in turn-level and end-to-end modes, using the in-process backend from the package.
+- Runs S1, S2, S4 on the synthetic test and independent LLM-authored test sets in turn-level and end-to-end modes, using the in-process backend from the package.
 - Writes prediction JSONL files with the shared schema, zips them, and prints download instructions. The user downloads the zip into `results/predictions/`.
 
 ---
@@ -277,7 +279,7 @@ All systems use the same system prompt and tool schemas from `cafe_agent.prompti
 
 ## 10. README
 
-Sections: one-paragraph summary with headline result; demo GIF placeholder and Space link; architecture diagram (Mermaid: user → agent → tool parser → café API, plus the training pipeline); results table and charts (auto-inserted by `scripts/update_readme.py` between `<!-- RESULTS:START -->` and `<!-- RESULTS:END -->` markers); dataset design; training details; evaluation method; reproduce steps (local + Kaggle); limitations (synthetic training data, small human test set, single domain); licences (Qwen and GPT-OSS Apache-2.0; record paraphrase provenance). Also generate `results/cv_bullets.md` with 3 CV bullets filled from `metrics.json`.
+Sections: one-paragraph summary with headline result; demo GIF placeholder and Space link; architecture diagram (Mermaid: user → agent → tool parser → café API, plus the training pipeline); results table and charts (auto-inserted by `scripts/update_readme.py` between `<!-- RESULTS:START -->` and `<!-- RESULTS:END -->` markers); dataset design; training details; evaluation method; reproduce steps (local + Kaggle); limitations (synthetic training data, independent LLM-authored benchmark with Codex labels rather than human evidence, limited successful-order coverage, single domain); licences (Qwen and GPT-OSS Apache-2.0; record paraphrase provenance). Also generate `results/cv_bullets.md` with 3 CV bullets filled from `metrics.json`.
 
 ---
 
@@ -296,10 +298,10 @@ Accept: thorough unit tests, including every error code and parser edge cases (m
 **Phase 2: Dataset**
 Templates, generator, noise, cached Groq paraphraser with entity verification, validator, splitter with leakage checks, stats report, label-masking utility with tests, human-test annotation CLI, `push_dataset.py`.
 Accept: `make data` produces all splits; validator passes 100%; leakage tests pass; stats.md written.
-User actions: write the human test set with the CLI (do this now, before seeing any model results); run `make push-data`.
+User-approved follow-up: convert the supplied Claude-authored set with reviewed current-domain gold before any model evaluation; run `make push-data` privately. The human-written requirement is superseded by the explicit revision in Section 5.
 
 **Phase 3: Local evaluation harness and Groq baseline**
-Prediction schema, turn-level and end-to-end evaluators, metrics, bootstrap CIs, run S3 on both test sets (cached, resumable), first metrics table.
+Prediction schema, turn-level and end-to-end evaluators, metrics, bootstrap CIs, run S3 on synthetic test and independent_test (cached, resumable), first metrics table. Use the independent loader and preserve Claude/Codex provenance; exclude the legacy Codex worked examples.
 Accept: metrics computed for S3; evaluator unit-tested on hand-built prediction fixtures (perfect, partially wrong, invalid JSON).
 
 **Phase 4: Kaggle notebooks**

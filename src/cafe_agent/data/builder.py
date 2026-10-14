@@ -8,6 +8,7 @@ from cafe_agent.prompting.prompts import system_prompt
 from cafe_agent.tools.schemas import tool_schemas
 
 from .schema import (
+    AnnotationProvenance,
     ChatFunction,
     ChatMessage,
     ChatToolCall,
@@ -67,6 +68,7 @@ class ConversationBuilder:
         intent: Intent,
         template_id: str,
         author: str = "synthetic",
+        annotation_provenance: AnnotationProvenance | None = None,
     ) -> Conversation:
         return Conversation(
             id=record_id,
@@ -81,6 +83,7 @@ class ConversationBuilder:
             provenance=self.provenance,
             clock_advances=self.clock_advances,
             author=author,
+            annotation_provenance=annotation_provenance,
         )
 
     def close(self) -> None:

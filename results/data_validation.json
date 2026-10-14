@@ -29,5 +29,8 @@
   "paraphrase_rejection_rate": 0.11388355726167626,
   "retained_paraphrase_turns": 1384,
   "human_scoreable": 0,
-  "codex_examples_excluded": 5
+  "codex_examples_excluded": 5,
+  "independent_scoreable": 84,
+  "independent_customer_author": "claude",
+  "independent_gold_annotator": "codex"
 }

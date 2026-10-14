@@ -1,4 +1,4 @@
-"""Validate and prepare private Hub dataset files with a separate human config."""
+"""Validate and privately publish synthetic data and the independent LLM benchmark."""
 
 import argparse
 import json
@@ -12,9 +12,10 @@ from huggingface_hub import HfApi
 
 from .config import DataConfig, load_data_config
 from .human import load_human_records
+from .independent import convert_authoring, load_independent_records
 from .io import read_jsonl
 from .schema import Conversation
-from .splitter import check_leakage
+from .splitter import check_leakage, normalise_user_text
 from .tokenization import load_tokenizer
 from .validator import validate_conversation
 
@@ -31,7 +32,27 @@ def prepare_dataset(config: DataConfig, destination: Path, tokenizer: Any) -> di
         records.extend(group)
     check_leakage(records, config)
     human = load_human_records(config.human_path, scoreable_only=False)
-    for record in [*records, *human]:
+    independent = load_independent_records(config.independent_path)
+    if independent:
+        reviewed, report = convert_authoring(
+            config.independent_authoring_path, config.independent_overrides_path, tokenizer
+        )
+        if independent != reviewed:
+            raise ValueError("Independent JSONL differs from reviewed source; reconvert it")
+        benchmark_texts = {
+            normalise_user_text(text)
+            for record in independent
+            for text in record.scripted_user_turns
+        }
+        if any(
+            normalise_user_text(text) in benchmark_texts
+            for record in records
+            for text in record.scripted_user_turns
+        ):
+            raise ValueError("Independent benchmark overlaps synthetic user text")
+    else:
+        report = {"conversations": 0, "validated": 0, "human_authored": 0}
+    for record in [*records, *human, *independent]:
         validate_conversation(record, tokenizer, config.max_tokens)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "data").mkdir(exist_ok=True)
@@ -42,8 +63,20 @@ def prepare_dataset(config: DataConfig, destination: Path, tokenizer: Any) -> di
     (destination / "data/human_test.jsonl").write_text(
         "".join(record.model_dump_json() + "\n" for record in human), encoding="utf-8"
     )
+    (destination / "data/independent_test.jsonl").write_text(
+        "".join(record.model_dump_json() + "\n" for record in independent), encoding="utf-8"
+    )
+    (destination / "independent_validation.json").write_text(json.dumps(report, indent=2) + "\n")
+    if independent:
+        (destination / "provenance").mkdir(exist_ok=True)
+        shutil.copyfile(
+            config.independent_authoring_path, destination / "provenance/authoring.yaml"
+        )
+        shutil.copyfile(
+            config.independent_overrides_path, destination / "provenance/gold_overrides.yaml"
+        )
     scored = sum(record.scoreable for record in human)
-    card = """---
+    card = f"""---
 language: [en]
 task_categories: [text-generation]
 tags: [tool-calling, synthetic, cafe, qwen]
@@ -57,6 +90,10 @@ configs:
         path: data/validation.jsonl
       - split: test
         path: data/test.jsonl
+  - config_name: independent_test
+    data_files:
+      - split: test
+        path: data/independent_test.jsonl
   - config_name: human_test
     data_files:
       - split: test
@@ -67,7 +104,11 @@ configs:
 Synthetic café conversations with deterministic backend-derived tool calls,
 results and final state. User text is template-based with verified Groq GPT-OSS
 120B paraphrases and surface noise. Assistant labels and replies are programmatic.
-The default config contains train/validation/test; human_test is a separate config.
+The default config contains train/validation/test. independent_test is a separate
+evaluation config: customer messages were written by Claude, with gold annotations
+reviewed by Codex for the current menu. It is not a human-written benchmark.
+The legacy human_test config contains {len(human) - scored} excluded Codex worked
+examples and {scored} genuine human-authored cases. Do not score the worked examples.
 All five function schemas and the full system prompt are included per conversation.
 Use the raw JSONL files (hf_hub_download plus the shared JSONL reader) to preserve
 omitted argument fields; Arrow table inference may fill absent struct keys with null.
@@ -78,12 +119,24 @@ Records replay against a fresh SQLite backend, validate every tool call and stay
 under the user-approved 4,096-token full-conversation budget at the pinned Qwen
 revision. Reserved templates and item/modifier pairs occur only in synthetic test.
 Normalised user text is deduplicated across all synthetic splits.
+Independent customer text has zero normalized overlap with the synthetic splits.
 
-## Human benchmark
+## Independent LLM-authored benchmark
 
-Only author=human is scored. Always exclude author=codex_example; the five worked
-examples demonstrate the format and are not human-authored evidence. Human authors
-must write the benchmark before seeing model evaluation results.
+The user approved replacing the original human-written benchmark requirement with
+this independent LLM-authored set before any model evaluation. Score author=claude
+records in independent_test. Preserve author=claude and annotation_provenance:
+annotator=codex; never describe these as human-written conversations or evidence.
+The preserved source targeted another menu. Current-domain gold overrides retain
+all customer messages unchanged and record revised actions/intents and reasons.
+No initial orders are seeded; unknown order IDs return ORDER_NOT_FOUND.
+See independent_validation.json for measured counts and the intent distribution.
+Several original order cases become declines, so this set is weighted toward
+unsupported requests and provides limited coverage of successful multi-item orders.
+LLM-written wording and Codex labels can introduce shared model biases. Bootstrap
+intervals on this set describe case-sampling variation, not real-customer performance.
+Always exclude author=codex_example. Genuine human records, if later collected,
+must remain separate and be reported separately.
 
 ## Provenance, limitations and use
 
@@ -101,6 +154,7 @@ This dataset starts private; the owner decides when to make it public.
     return {
         "synthetic": len(records),
         "human_scored": scored,
+        "independent_scored": len(independent),
         "examples_excluded": len(human) - scored,
     }
 
@@ -132,12 +186,12 @@ def main() -> None:
         print("Dry run complete; no Hub repository was created or changed.")
         return
     if (
-        not config.human_min_conversations
-        <= counts["human_scored"]
-        <= config.human_max_conversations
+        not config.independent_min_conversations
+        <= counts["independent_scored"]
+        <= config.independent_max_conversations
     ):
         raise ValueError(
-            "Write the required human-authored benchmark with the annotation CLI before publishing"
+            "Convert the required independent LLM-authored benchmark before publishing"
         )
     load_dotenv(".env")
     token, username = os.environ.get("HF_TOKEN"), os.environ.get("HF_USERNAME")

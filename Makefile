@@ -4,10 +4,10 @@ UV ?= uv
 export UV_CACHE_DIR ?= $(CURDIR)/.cache/uv
 export TOKENIZERS_PARALLELISM ?= false
 
-.PHONY: help setup lint test data push-data eval-local report serve docker-build docker-run
+.PHONY: help setup lint test benchmark data push-data eval-local report serve docker-build docker-run
 
 help:
-	@echo "Available now: setup, lint, test, data, push-data"
+	@echo "Available now: setup, lint, test, benchmark, data, push-data"
 	@echo "Later phases: eval-local, report, serve, docker-build, docker-run"
 
 setup:
@@ -22,6 +22,9 @@ test:
 
 data:
 	$(UV) run --locked python -m cafe_agent.data.generator
+
+benchmark:
+	$(UV) run --locked python scripts/convert_independent_test.py
 
 push-data:
 	$(UV) run --locked python scripts/push_dataset.py

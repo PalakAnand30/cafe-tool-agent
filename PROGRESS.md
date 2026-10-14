@@ -252,13 +252,63 @@ All direct pins predate the release cutoff; transitive versions remain in
   byte-for-byte. Final source/wheel builds pass and exclude the full generated
   corpus and all secrets/caches. `git diff --check` passes.
 
+## Phase 2 follow-up: independent benchmark and private publication
+
+- User requested help completing benchmark preparation and private upload.
+  They explicitly approved replacing the human-written requirement with an
+  independently LLM-authored benchmark, then chose to keep the current domain
+  and revise benchmark gold actions. Updated the spec and working rules.
+- Preserved the supplied 84 Claude-authored cases byte-for-byte at
+  `data/human_test/human_test_authoring.yaml`. No customer message was rewritten,
+  no LLM case was relabelled human, and the supplied replacement domain was not
+  adopted. Existing menu, prices, stock and fresh unseeded backends remain authoritative.
+- Initial compatibility audit is in `results/human_authoring_audit.json`.
+  Codex reviewed gold actions/intents, with overrides and reasons in
+  `data/human_test/gold_overrides.yaml`, pinned to source/domain hashes.
+  Revised 45 cases and 50 turn expectations for the current menu.
+- Added strict Pydantic authoring/override models, deterministic conversion,
+  stale-review rejection, `$LAST_ORDER_ID` resolution, actual tool-error outcome
+  checks, programmatic replies, backend replay and tokenizer validation.
+  `make benchmark` generates `data/human_test/independent_test.jsonl` with
+  `author=claude`, `split=independent_test` and `annotator=codex` provenance.
+- All 84 cases validate; token lengths range from 1,175 to 2,801. The measured
+  intent distribution is in `results/independent_validation.json`: 34 unsupported,
+  16 clarification, seven single-order, one multi-order, two availability,
+  five status, six cancellation, five menu, two tool-error and six out-of-scope.
+  The successful multi-item-order coverage is limited. Dataset docs explicitly
+  describe the LLM wording/annotation bias and do not claim human evidence.
+- Preserve the original generated run and API cache. Rebuilt and validated all
+  4,200 synthetic records under the current schema/source fingerprint in
+  `data/generated-independent-v1/`. All are equal to the original records after
+  schema loading; no Groq cache files were created or modified during the rebuild.
+  Split sizes, paraphrase/noise statistics and token lengths remain unchanged.
+- Publisher verifies independent records against reviewed source/overrides and
+  checks zero normalized customer-text overlap with every synthetic split.
+  Upload packet includes a separate independent_test config, immutable source,
+  overrides and validation report. Five legacy codex_example records remain
+  separately available and excluded; actual human-authored count remains zero.
+- `make benchmark`, `make data` and the upload dry run passed. `make lint` passed
+  (57 Python files); `make test` passed all 210 tests in 4.37 seconds, including
+  current-domain gold, unchanged customer text, provenance separation, stale
+  review, missing prior order, unexpected tool errors and publication integrity.
+- `make push-data` completed after allowing the required network access. The
+  dataset was uploaded privately with 4,200 synthetic records, 84 independent
+  LLM-authored cases and five excluded examples. A read-only Hub check confirmed
+  private visibility and matching remote sizes/content hashes for all 12 staged
+  files. Receipt: `results/dataset_upload.json`, Hub revision
+  `5a626daa659b2455861e6a8d5a891c6dbe14e36d`.
+- No new dependencies, model inference, baseline evaluation, training, public
+  publication or GitHub push. Credentials remained undisplayed and Git-ignored.
+- Offline source/wheel builds passed. Archive checks confirm the independent
+  module and current configs are included while secrets, caches, full synthetic
+  datasets and model weights are excluded. `git diff --check` passed.
+
 ## Known issues and user actions
 
-- Write the configured 60–100 human-authored conversations with the annotation
-  CLI before seeing any model evaluation results, then run `make push-data` to
-  publish privately. HF_TOKEN and HF_USERNAME are already present in `.env`;
-  their values were not displayed. Dataset-write permission is checked when the
-  user actually uploads. These are user actions from Phase 2.
+- Benchmark preparation and private dataset upload are complete under the
+  approved independent LLM-authored revision. Genuine human data is optional
+  future work and must be labelled/reported separately. Keep the dataset private
+  until the final publication checklist.
 - The sandbox required permission for PyPI access and writes to `.git`.
 - uv warns that its in-project cache may enter source distributions; archive
   inspection confirmed the ignore rules exclude it.
@@ -274,5 +324,6 @@ All direct pins predate the release cutoff; transitive versions remain in
 ## Next step
 
 Stop after the Phase 2 local commit. Start Phase 3 only after the user says
-`continue to Phase 3`; the human benchmark must be written before model
-evaluation. No GitHub remote/push or HF upload has been performed.
+`continue to Phase 3`. Evaluate synthetic test and independent_test, retain the
+Claude/Codex provenance and exclude the five worked examples. The private HF
+dataset is ready; no GitHub remote or push has been performed.

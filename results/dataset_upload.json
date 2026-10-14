@@ -1,0 +1,59 @@
+{
+  "uploaded": true,
+  "private": true,
+  "revision": "5a626daa659b2455861e6a8d5a891c6dbe14e36d",
+  "synthetic_conversations": 4200,
+  "independent_llm_conversations": 84,
+  "excluded_codex_examples": 5,
+  "human_conversations": 0,
+  "verified_files": {
+    "README.md": {
+      "bytes": 3561,
+      "sha256": "48ef839ff527615646aa86965970a7260be70eadee8bfe4585095e754189d22c"
+    },
+    "data/human_test.jsonl": {
+      "bytes": 26158,
+      "sha256": "2d647ef19500409343d48ca2110add1a0c5e00ded7f0495df2408ff3c5f7a19d"
+    },
+    "data/independent_test.jsonl": {
+      "bytes": 461872,
+      "sha256": "344b3436285d0864d4c56a7601ba2430bb425d344ec24c473e18455262d2fe73"
+    },
+    "data/test.jsonl": {
+      "bytes": 2397542,
+      "sha256": "662e3d6a609b850ea7a2b36756edddd950df716ec2f9c8a7ad3d9ef5d2746754"
+    },
+    "data/train.jsonl": {
+      "bytes": 20893152,
+      "sha256": "1326a0dc1c8db4cee0f4a745e86ad9af505c7f562c9b99cdea2cafb24e3bbf84"
+    },
+    "data/validation.jsonl": {
+      "bytes": 1787254,
+      "sha256": "c83e6b580bf18b91b88c84b11eb965aae00db4aaa7d9512619d546465f08dfa8"
+    },
+    "independent_validation.json": {
+      "bytes": 851,
+      "sha256": "2848167acc478a39dae85e98a53432cfd407d548469c36f65bf809098989ef85"
+    },
+    "manifest.json": {
+      "bytes": 14056,
+      "sha256": "b010f38d9551e3afb4e5b3df6b5ad5a2d945094b88e6dfc308dcb1da417d7be6"
+    },
+    "provenance/authoring.yaml": {
+      "bytes": 25515,
+      "sha256": "81043d3fef0e2e71825ad3c6eaaef6a95e8815f4aae7837bfbecba80726f9d6a"
+    },
+    "provenance/gold_overrides.yaml": {
+      "bytes": 13412,
+      "sha256": "297f3b28cd733b6e6cc82d4d26d80a5f1801e27edce76d1f18f005a8187a0b2f"
+    },
+    "stats.md": {
+      "bytes": 2220,
+      "sha256": "08d012cf5becb8757a6f7f2432c5d9d84e074282640840aa3c0e5989ed58fb3b"
+    },
+    "validation_summary.json": {
+      "bytes": 675,
+      "sha256": "640882a323b7050adec961805a6ba3d1a1bdb360971ac276b890665208a8eca8"
+    }
+  }
+}

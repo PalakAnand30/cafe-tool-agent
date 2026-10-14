@@ -6,6 +6,7 @@ from pathlib import Path
 
 from cafe_agent.data.config import load_data_config
 from cafe_agent.data.human import load_human_records
+from cafe_agent.data.independent import load_independent_records
 from cafe_agent.data.io import read_jsonl
 from cafe_agent.data.schema import Conversation, Intent
 
@@ -32,6 +33,10 @@ summary["retained_paraphrase_turns"] = retained
 human = load_human_records(config.human_path, scoreable_only=False)
 summary["human_scoreable"] = sum(record.scoreable for record in human)
 summary["codex_examples_excluded"] = sum(not record.scoreable for record in human)
+independent = load_independent_records(config.independent_path)
+summary["independent_scoreable"] = len(independent)
+summary["independent_customer_author"] = "claude"
+summary["independent_gold_annotator"] = "codex"
 Path("results").mkdir(exist_ok=True)
 Path("results/data_validation.json").write_text(json.dumps(summary, indent=2) + "\n")
 destination = Path("data/samples")

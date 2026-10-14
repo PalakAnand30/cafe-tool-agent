@@ -6,7 +6,8 @@ GGUF model on CPU. `PROJECT_SPEC.md` defines the full scope and working rules.
 
 The café backend and agent core are implemented, together with the Phase 2
 dataset pipeline, replay/token validation, assistant-only labels, human-test
-annotation CLI and private dataset publisher. Training, model evaluation and
+annotation CLI, independent LLM benchmark conversion and private dataset publisher.
+Training, model evaluation and
 the chat demo have not run. No model performance results are available.
 
 ## Local setup
@@ -46,7 +47,7 @@ Never commit or share `.env`.
 
 ## Commands and phase boundaries
 
-`make setup`, `make lint`, `make test`, `make data` and `make push-data` are
+`make setup`, `make lint`, `make test`, `make benchmark`, `make data` and `make push-data` are
 implemented. Remaining targets report their planned phase and exit with an error:
 
 | Target | Planned phase |
@@ -130,7 +131,8 @@ was unavailable to the configured account. This project does not use the OpenAI
 API for these requests.
 
 The job writes append-only gold drafts and final train/validation/test JSONL
-under `data/generated/`, caches every successful Groq response in `data/cache/`,
+under the configured `data/generated-independent-v1/`, caches every successful
+Groq response in `data/cache/`,
 and resumes completed IDs and paraphrase batches. A manifest rejects changed
 inputs or code; use a new `--output-dir` when intentionally making a new version.
 Do not delete the cache to retry an interrupted job.
@@ -146,7 +148,7 @@ state against a fresh backend, and fits the pinned Qwen template under the
 user-approved full-conversation token budget. Assistant-token masking uses
 template-aligned character spans and fast-tokenizer offsets; it never truncates
 or labels customer/tool text as an assistant target. See
-`data/generated/stats.md` for measured counts, lengths and rejection rates.
+`data/generated-independent-v1/stats.md` for measured counts, lengths and rejection rates.
 
 Regenerate the versioned review sample and validation evidence from those files:
 
@@ -164,26 +166,32 @@ API paraphrasing ran and uses a separate output directory:
 uv run --locked python -m cafe_agent.data.generator --no-paraphrase --output-dir data/offline
 ```
 
-## Write the human benchmark, then publish privately
+## Convert the independent benchmark, then publish privately
 
-Before seeing any model evaluation results, write your own conversations:
+The user approved an independent LLM-authored benchmark instead of the original
+human-written requirement. The supplied 84 cases retain `author=claude` and every
+customer message. Codex reviewed gold actions and intent labels for the current
+menu, without adopting the supplied replacement domain or its seeded orders.
+This is LLM-authored evidence, with Codex labels, and must never be reported as
+human-written or real-customer performance.
 
 ```sh
-uv run --locked python scripts/annotate_human_test.py
+make benchmark
 ```
 
-Choose an intent, enter customer messages, and label each assistant action as
-`tool`, `clarify`, `decline` or `reply`. Tool actions accept a function name and
-JSON arguments, execute against a fresh backend, and let you annotate the next
-assistant action. Use `/advance MINUTES` to test order progression, `/save` to
-review/accept or type the expected final state, and `/quit` to exit. Saving
-replays the entire conversation and checks the token budget. Previously saved
-records survive interruption.
+The immutable source is `data/human_test/human_test_authoring.yaml`; current-domain
+gold revisions and reasons are in `data/human_test/gold_overrides.yaml`. The converter
+checks source/domain hashes, replays calls on fresh backends, derives tool results
+and final states, and validates the token budget. Output is
+`data/human_test/independent_test.jsonl`, with separate customer-author and gold-annotator
+provenance. Measured counts, intent coverage and token lengths are in
+`results/independent_validation.json`. Labels were revised before any model evaluation.
 
 The file `data/human_test/human_test.jsonl` contains clearly marked
 `author=codex_example` worked examples. They are excluded by the shared human
-loader and must never count as human benchmark evidence. Add the human-authored
-benchmark required by `configs/data.yaml`; do not generate it with an LLM.
+loader and never count toward the independent benchmark. The original interactive
+CLI remains available for optional genuine human data:
+`uv run --locked python scripts/annotate_human_test.py`. Report that slice separately.
 
 Then set `HF_TOKEN` (dataset write permission) and `HF_USERNAME` in `.env` and run:
 
@@ -193,12 +201,20 @@ make push-data
 ```
 
 The dry run stages validated files without contacting the Hub. Upload requires
-the configured human benchmark count and creates a private
+the configured independent benchmark count, checks zero normalized overlap with
+synthetic customer text, and creates a private
 `<HF_USERNAME>/cafe-tool-calls` dataset. Synthetic splits use its default config;
-human test is a separate config. Existing public repositories are rejected.
+independent_test is a separate config. The legacy human_test config retains the
+excluded worked examples. Existing public repositories are rejected.
 Read raw JSONL files from the Hub to preserve omitted argument fields; Arrow
 inference can fill missing nested keys with null. Make the dataset public only
 when the project is ready.
+
+Keeping the existing menu changes many original order cases into declines.
+The independent benchmark therefore has limited successful multi-item-order
+coverage and a high share of unsupported requests. Its wording and gold labels
+may share LLM biases. Any later bootstrap intervals describe variation within
+this case set, not performance on real customers.
 
 <!-- RESULTS:START -->
 No experiments have run; results will be generated from `results/` in later phases.

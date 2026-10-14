@@ -1,0 +1,556 @@
+{
+  "source": "data/human_test/human_test_authoring.yaml",
+  "sha256": "81043d3fef0e2e71825ad3c6eaaef6a95e8815f4aae7837bfbecba80726f9d6a",
+  "case_count": 84,
+  "authors": {
+    "claude": 84
+  },
+  "human_authored_count": 0,
+  "scope": "Tool-result compatibility audit against the current committed domain; does not verify natural-language labels, expected replies, token lengths, or benchmark readiness. No model inference or publication.",
+  "outcomes": {
+    "call_succeeded": 26,
+    "unexpected_error": 42,
+    "expected_error_returned": 8,
+    "unresolved_last_order_id": 1
+  },
+  "tool_calls": [
+    {
+      "case_id": "h001",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h002",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h003",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "SIZE_REQUIRED"
+    },
+    {
+      "case_id": "h004",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "AMBIGUOUS_ITEM"
+    },
+    {
+      "case_id": "h005",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "AMBIGUOUS_ITEM"
+    },
+    {
+      "case_id": "h006",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h007",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "UNSUPPORTED_MODIFIER"
+    },
+    {
+      "case_id": "h008",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h009",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h010",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "UNSUPPORTED_MODIFIER"
+    },
+    {
+      "case_id": "h011",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h012",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "UNSUPPORTED_MODIFIER"
+    },
+    {
+      "case_id": "h013",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h014",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h015",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "SIZE_REQUIRED"
+    },
+    {
+      "case_id": "h016",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "SIZE_REQUIRED"
+    },
+    {
+      "case_id": "h017",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "AMBIGUOUS_ITEM"
+    },
+    {
+      "case_id": "h018",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h019",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "AMBIGUOUS_ITEM"
+    },
+    {
+      "case_id": "h020",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h021",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h022",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h023",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "UNSUPPORTED_MODIFIER"
+    },
+    {
+      "case_id": "h024",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "UNSUPPORTED_MODIFIER"
+    },
+    {
+      "case_id": "h025",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h026",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h027",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h028",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "AMBIGUOUS_ITEM"
+    },
+    {
+      "case_id": "h029",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "AMBIGUOUS_ITEM"
+    },
+    {
+      "case_id": "h030",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h031",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h034",
+      "turn": 2,
+      "tool": "get_order_status",
+      "outcome": "unexpected_error",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h035",
+      "turn": 2,
+      "tool": "cancel_order",
+      "outcome": "unexpected_error",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h036",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h037",
+      "turn": 1,
+      "tool": "check_availability",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h038",
+      "turn": 1,
+      "tool": "check_availability",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h039",
+      "turn": 1,
+      "tool": "check_availability",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h040",
+      "turn": 1,
+      "tool": "check_availability",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h041",
+      "turn": 1,
+      "tool": "check_availability",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h042",
+      "turn": 1,
+      "tool": "check_availability",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h043",
+      "turn": 1,
+      "tool": "get_order_status",
+      "outcome": "unexpected_error",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h044",
+      "turn": 1,
+      "tool": "get_order_status",
+      "outcome": "unexpected_error",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h045",
+      "turn": 1,
+      "tool": "get_order_status",
+      "outcome": "unexpected_error",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h046",
+      "turn": 1,
+      "tool": "get_order_status",
+      "outcome": "expected_error_returned",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h047",
+      "turn": 1,
+      "tool": "get_order_status",
+      "outcome": "unexpected_error",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h048",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "SIZE_REQUIRED"
+    },
+    {
+      "case_id": "h048",
+      "turn": 2,
+      "tool": "get_order_status",
+      "outcome": "unresolved_last_order_id"
+    },
+    {
+      "case_id": "h049",
+      "turn": 1,
+      "tool": "cancel_order",
+      "outcome": "unexpected_error",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h050",
+      "turn": 1,
+      "tool": "cancel_order",
+      "outcome": "unexpected_error",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h051",
+      "turn": 1,
+      "tool": "cancel_order",
+      "outcome": "expected_error_returned",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h052",
+      "turn": 1,
+      "tool": "cancel_order",
+      "outcome": "expected_error_returned",
+      "error_code": "ORDER_NOT_FOUND"
+    },
+    {
+      "case_id": "h053",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h053",
+      "turn": 2,
+      "tool": "cancel_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h054",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h054",
+      "turn": 2,
+      "tool": "cancel_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h054",
+      "turn": 3,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h055",
+      "turn": 1,
+      "tool": "get_menu",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h056",
+      "turn": 1,
+      "tool": "get_menu",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h057",
+      "turn": 1,
+      "tool": "get_menu",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h058",
+      "turn": 1,
+      "tool": "get_menu",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h059",
+      "turn": 1,
+      "tool": "get_menu",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h069",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "expected_error_returned",
+      "error_code": "OUT_OF_STOCK"
+    },
+    {
+      "case_id": "h069",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h070",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "expected_error_returned",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h070",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h071",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "expected_error_returned",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h071",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "OUT_OF_STOCK"
+    },
+    {
+      "case_id": "h072",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "expected_error_returned",
+      "error_code": "OUT_OF_STOCK"
+    },
+    {
+      "case_id": "h072",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "SIZE_REQUIRED"
+    },
+    {
+      "case_id": "h073",
+      "turn": 1,
+      "tool": "check_availability",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h073",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h074",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "expected_error_returned",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h074",
+      "turn": 2,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h081",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h082",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "ITEM_NOT_FOUND"
+    },
+    {
+      "case_id": "h083",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "call_succeeded",
+      "error_code": null
+    },
+    {
+      "case_id": "h084",
+      "turn": 1,
+      "tool": "create_order",
+      "outcome": "unexpected_error",
+      "error_code": "AMBIGUOUS_ITEM"
+    }
+  ]
+}

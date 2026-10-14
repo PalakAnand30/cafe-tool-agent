@@ -32,6 +32,11 @@ class DataConfig(StrictModel):
     human_path: Path
     human_min_conversations: int = Field(gt=0)
     human_max_conversations: int = Field(gt=0)
+    independent_path: Path
+    independent_authoring_path: Path
+    independent_overrides_path: Path
+    independent_min_conversations: int = Field(gt=0)
+    independent_max_conversations: int = Field(gt=0)
     tokenizer_cache: Path
     quantities: list[int]
     first_names: list[str]
@@ -41,6 +46,8 @@ class DataConfig(StrictModel):
 
     @model_validator(mode="after")
     def check_plan(self) -> "DataConfig":
+        if self.independent_min_conversations > self.independent_max_conversations:
+            raise ValueError("Independent benchmark minimum exceeds maximum")
         if set(self.splits) != {"train", "validation", "test"} or min(self.splits.values()) < 1:
             raise ValueError("Provide positive train/validation/test sizes")
         if set(self.intent_mix) != set(Intent) or abs(sum(self.intent_mix.values()) - 1) > 1e-9:

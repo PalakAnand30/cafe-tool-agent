@@ -1,0 +1,28 @@
+{
+  "conversations": 84,
+  "validated": 84,
+  "customer_message_author": "claude",
+  "gold_annotator": "codex",
+  "human_authored": 0,
+  "source_sha256": "81043d3fef0e2e71825ad3c6eaaef6a95e8815f4aae7837bfbecba80726f9d6a",
+  "domain_sha256": "82188d972382d0856bea212added38add753e4a106a28b5e50f6249705b3ee4d",
+  "revised_cases": 45,
+  "revised_turns": 50,
+  "intents": {
+    "single_order": 7,
+    "clarification": 16,
+    "unsupported": 34,
+    "multi_order": 1,
+    "availability": 2,
+    "order_status": 5,
+    "cancel_order": 6,
+    "menu": 5,
+    "tool_error": 2,
+    "out_of_scope": 6
+  },
+  "token_lengths": {
+    "min": 1175,
+    "max": 2801
+  },
+  "limitations": "LLM-authored customer messages with Codex gold labels; not human-written evidence. Original source expected actions targeted a different menu. Customer messages are unchanged."
+}
