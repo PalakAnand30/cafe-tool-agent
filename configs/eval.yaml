@@ -1,2 +1,32 @@
-# Phase 3 onward: systems, decoding parameters, paths and thresholds.
 seed: 42
+temperature: 0
+max_tokens: 512
+systems:
+  S1: {model: Qwen/Qwen2.5-1.5B-Instruct, backend: vllm, enabled: false}
+  S2: {model: Qwen/Qwen2.5-1.5B-Instruct, backend: vllm, enabled: false}
+  S3: {model: openai/gpt-oss-120b, backend: groq, enabled: true}
+  S4: {model: fine-tuned-merged, backend: vllm, enabled: false}
+  S5: {model: fine-tuned-Q4_K_M, backend: llama.cpp, enabled: false}
+datasets:
+  independent_test:
+    path: data/human_test/independent_test.jsonl
+    author: claude
+    conversations: 84
+  test:
+    path: data/generated-independent-v1/test.jsonl
+    author: synthetic
+    conversations: 400
+output_dir: results/predictions
+metrics_path: results/metrics.json
+report_path: results/S3_baseline.md
+modes: [turn, end_to_end]
+bootstrap_samples: 1000
+confidence: 0.95
+progress_every: 10
+max_quota_wait_seconds: 60
+pricing:
+  input_per_million_usd: '0.15'
+  output_per_million_usd: '0.60'
+  verified_date: '2026-10-14'
+  source: https://console.groq.com/docs/model/openai/gpt-oss-120b
+  assumption: Cold paid-equivalent estimate; input-cache discounts and free-plan billing excluded.

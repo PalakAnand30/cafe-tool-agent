@@ -7,8 +7,9 @@ GGUF model on CPU. `PROJECT_SPEC.md` defines the full scope and working rules.
 The café backend and agent core are implemented, together with the Phase 2
 dataset pipeline, replay/token validation, assistant-only labels, human-test
 annotation CLI, independent LLM benchmark conversion and private dataset publisher.
-Training, model evaluation and
-the chat demo have not run. No model performance results are available.
+The Phase 3 local evaluator runs the GPT-OSS 120B baseline through Groq and
+computes metrics from saved predictions. Training, GPU model evaluation and
+the chat demo have not run. Current S3 coverage and results are shown below.
 
 ## Local setup
 
@@ -31,7 +32,7 @@ Never commit or share `.env`.
 ## Project layout
 
 - `src/cafe_agent/`: domain, backend, tools, parser, prompting, clients,
-  agent loop and dataset pipeline; evaluation and demo remain placeholders.
+  agent loop, dataset pipeline and local evaluation; the demo remains a placeholder.
 - `configs/domain.yaml`: menu, prices, supported modifiers, stock and timing.
 - `configs/runtime.yaml`: decoding, caching, retry, CPU and agent settings.
   `data.yaml` controls generation; `train.yaml` pins the tokenizer/model revision.
@@ -47,12 +48,11 @@ Never commit or share `.env`.
 
 ## Commands and phase boundaries
 
-`make setup`, `make lint`, `make test`, `make benchmark`, `make data` and `make push-data` are
-implemented. Remaining targets report their planned phase and exit with an error:
+`make setup`, `make lint`, `make test`, `make benchmark`, `make data`, `make push-data`
+and `make eval-local` are implemented. Remaining targets report their planned phase:
 
 | Target | Planned phase |
 | --- | --- |
-| `make eval-local` | 3 (harness), 5 (GGUF) |
 | `make report` | 5 |
 | `make serve`, `make docker-build`, `make docker-run` | 6 |
 
@@ -216,8 +216,63 @@ coverage and a high share of unsupported requests. Its wording and gold labels
 may share LLM biases. Any later bootstrap intervals describe variation within
 this case set, not performance on real customers.
 
+## Local baseline evaluation
+
+```sh
+make eval-local
+uv run --locked python scripts/evaluate.py --metrics-only
+```
+
+The first command runs S3 (`openai/gpt-oss-120b` through Groq) with the shared
+system prompt and tool schemas, temperature 0, a 512-token response cap, seed 42
+and low reasoning effort. It validates both test sets before making requests,
+then completes both modes per conversation. Every gold assistant turn is scored
+from its gold history. End-to-end runs use the real agent and a fresh backend,
+with recorded logical-time advances anchored to user turns. The Claude-authored
+independent set runs first; the synthetic held-out test follows.
+
+Predictions append to `results/predictions/S3__{split}.jsonl` using one versioned
+Pydantic schema. A manifest pins input files, decoding, shared prompt/tools and
+inference code. Re-runs skip completed keys and use cached Groq responses;
+interrupted final JSONL writes are backed up before repair. Changed inputs or
+inference code require a new output directory. Do not run two writers in one
+directory. Provider-rejected tool generations count as invalid outputs;
+connectivity/authentication/quota failures stop the run and preserve progress.
+
+Tool IDs and JSON histories are serialized canonically across both modes and
+all future systems. Argument scoring normalizes schema defaults and ignores
+modifier/item ordering while preserving quantities, duplicate lines and item
+bindings. Missing or wrong tool calls count as incorrect argument predictions.
+Plain-text actions use fixed lexical rules, with no model judge; replies after
+tool results count as replies. These rules do not assess reply factuality or
+whether a clarification asks for the right detail.
+
+`end_to_end_success` checks final state and clean agent termination. A no-op
+response can leave an empty state unchanged, so the stricter
+`action_and_state_success` additionally checks each user-turn action/arguments
+and missing/extra tool calls. Both are reported. All order IDs, money, quantities,
+customer names, statuses and logical times are retained in state comparison.
+
+The second command recomputes metrics and the table locally without model/API
+access. `results/metrics.json` includes field-level F1, clarification/decline
+precision and recall, per-intent breakdowns, confusion matrices, latency and
+cost assumptions. Complete independent-set metrics have 95% percentile
+bootstrap intervals using conversation clusters. Partial runs are labelled and
+have no confidence intervals. Undefined metrics are `null`.
+
+S3 latency includes the network and retries, excludes explicit quota pacing and
+local cache hits, and must not be described as CPU inference latency. Cost is
+a cold paid-equivalent estimate, not an actual bill; free-plan pricing and
+provider input-cache discounts are excluded. See the dated source and usage
+coverage in `results/metrics.json` and the table in `results/S3_baseline.md`.
+
 <!-- RESULTS:START -->
-No experiments have run; results will be generated from `results/` in later phases.
+| System | Set | Coverage (turn / end) | Action accuracy | Argument exact | Field F1 | End success | Action + state |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| S3 | independent_test (**partial**) | 33/143 turns; 24/84 conversations | 30.3% | 0.0% | 0.0% | 75.0% | 8.3% |
+| S3 | test (**partial**) | 0/876 turns; 0/400 conversations | — | — | — | — | — |
+
+S3 uses GPT-OSS 120B through Groq. Brackets show 95% intervals on the complete independent LLM-authored benchmark; partial runs are labelled. End success uses final state; action + state also checks required actions. Other systems have not run. See results/S3_baseline.md for definitions and limitations.
 <!-- RESULTS:END -->
 
 Continue one phase at a time, following Section 0 of `PROJECT_SPEC.md`.

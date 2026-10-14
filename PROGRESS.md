@@ -303,6 +303,73 @@ All direct pins predate the release cutoff; transitive versions remain in
   module and current configs are included while secrets, caches, full synthetic
   datasets and model weights are excluded. `git diff --check` passed.
 
+## Phase 3: evaluation harness complete; live baseline deferred by user
+
+- User authorized Phase 3 only. Re-read the complete spec and working rules.
+  No Kaggle notebook, GPU work, demo, chart generation or later phase started.
+- Implemented a versioned Pydantic prediction schema shared by local and future
+  Kaggle clients. `make eval-local` validates both frozen test sets, evaluates
+  every gold assistant turn and runs complete agent conversations against fresh
+  in-memory backends. Explicit clock advances anchor to scripted user turns.
+- Retain exact shared system prompt, tools, temperature 0, max_tokens 512,
+  seed 42 and the approved Groq GPT-OSS 120B model with low reasoning effort.
+  Canonicalize tool IDs, JSON and schema defaults consistently across modes.
+  Raw responses, usage, cache flags, latency, traces and final states are saved.
+- Added append-only prediction checkpoints, interrupted-tail recovery, duplicate
+  key/provenance checks, an exclusive writer lock, and manifests pinning data,
+  runtime, prompt/tools and inference source hashes. Re-runs skip completed
+  units and reuse the existing content-addressed Groq cache. Provider-rejected
+  tool generations are cached as invalid outputs; outages/quotas stop the job.
+- Implemented exact tool action accuracy, normalized argument exact match,
+  field-level multiset F1, clarification/decline precision and recall, validity,
+  per-intent metrics, confusion matrices, end success, latency and paid-equivalent
+  costs. Undefined denominators are null. Plain-text actions use fixed lexical
+  rules frozen before the run; they do not judge reply factuality or which
+  detail a clarification asks for. No prompt/classifier tuning from test results.
+- Final-state success ignores line/modifier ordering, retaining every order,
+  ID, price, quantity, name, status and logical time. Report a separate stronger
+  action-and-state success metric, because an empty state can match even when
+  a decline/clarification/lookup response is wrong. Extra orders and wrong
+  cancellations are tested explicitly.
+- Implemented deterministic 1,000-resample conversation-cluster percentile
+  bootstrap for complete independent-test metrics. Partial runs have no CIs.
+  S3 latency includes network/retries, excludes deliberate quota pacing and
+  local cache hits. Cost uses Groq's published paid rates checked 2026-10-14
+  (USD 0.15/million input and 0.60/million output tokens), with input-cache
+  discounts/free-plan billing excluded; it is not an actual bill. Source:
+  https://console.groq.com/docs/model/openai/gpt-oss-120b.
+- Metrics recompute offline with
+  `uv run --locked python scripts/evaluate.py --metrics-only`, including the
+  versioned metrics, coverage, baseline table and README results marker block.
+- Full live S3 evaluation started with independent_test first. Groq's headers
+  confirmed the account's 8,000 TPM limit. The run then reached the daily token
+  quota. `results/groq_quota.json` records a real 429/TPD response: limit 200,000,
+  used 198,900 and requested 1,131 tokens. Credentials/org identifiers were
+  not logged. The user explicitly chose to keep free limits and save progress
+  for a later resume, rather than enabling higher limits.
+- Saved coverage (`results/eval_coverage.json`): independent_test has 33/143
+  gold assistant predictions and 24/84 complete end-to-end conversations.
+  Synthetic test remains 0/876 gold assistant predictions and 0/400 end-to-end
+  conversations. `results/metrics.json` and `results/S3_baseline.md` are explicitly
+  partial; they are not full benchmark results and have no confidence intervals.
+- The latest live retry proved completed IDs are reused; failed quota requests
+  were not scored as model predictions. SDK-wrapped quota errors are recognized
+  separately from connectivity errors. All frozen inference source hashes still
+  match the run manifest. Synthetic files and their generation manifest remain
+  unchanged and current; no data regeneration or new dependencies were needed.
+- Verification: `make lint` passed (67 Python files). Final `make test` passed 232
+  tests in 4.60 seconds; 22 evaluator tests cover perfect/partial/invalid fixtures,
+  empty-state false success, extra orders, clock/cancellation progression,
+  argument binding, precision/recall, bootstrap determinism, cache-key identity,
+  provider failures/quotas, append-only resume, stale manifests, duplicate
+  predictions, dataset tampering and fully offline metrics recomputation.
+- Final offline source/wheel builds and archive checks passed: evaluator modules
+  and config are included, with secrets/caches/full synthetic data/model weights
+  excluded. `git diff --check` passed.
+- Phase 3 acceptance is **not complete**: the full S3 baseline and complete-set
+  confidence intervals are pending quota availability and the user's later resume.
+  No GitHub push, HF visibility change, new dataset upload or later phase work.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -313,8 +380,9 @@ All direct pins predate the release cutoff; transitive versions remain in
 - uv warns that its in-project cache may enter source distributions; archive
   inspection confirmed the ignore rules exclude it.
 - The existing local `.env` must remain untracked and must not be printed.
-- The Groq replacement and tokenizer renderer have now been exercised locally.
-  No S3 benchmark, GPU training/evaluation or real GGUF inference has run.
+- S3 is partially evaluated and saved. Groq's free daily quota prevents finishing
+  the full run now; the user chose to resume later. No GPU training/evaluation
+  or real GGUF inference has run.
 - The account's 8,000-token/minute Groq limit slows generation. Parallel cache
   preparation hit that limit and stopped; the canonical resumable run completed
   with its existing bounded exponential backoff. Preserve cache/journals on retry.
@@ -323,7 +391,9 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Stop after the Phase 2 local commit. Start Phase 3 only after the user says
-`continue to Phase 3`. Evaluate synthetic test and independent_test, retain the
-Claude/Codex provenance and exclude the five worked examples. The private HF
+Stop at the user-requested Phase 3 checkpoint. After the quota refills, resume
+Phase 3 with `make eval-local`, or ask Codex to resume Phase 3. Preserve the
+existing prediction files, manifest and API cache. Finish independent_test and
+synthetic test, recompute full metrics/CIs, then mark Phase 3 complete and perform
+the phase-end checks/commit/report. Do not start Phase 4 yet. The private HF
 dataset is ready; no GitHub remote or push has been performed.

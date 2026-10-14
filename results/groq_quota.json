@@ -1,0 +1,8 @@
+{
+  "http_status": 429,
+  "quota_kind": "TPD",
+  "limit": 200000.0,
+  "used": 198900.0,
+  "requested": 1131.0,
+  "retry_after_seconds": "14"
+}

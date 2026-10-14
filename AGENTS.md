@@ -43,7 +43,8 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
 - `make benchmark`: convert the supplied Claude-authored set with reviewed gold.
 - `make push-data`: private Hub publication after independent benchmark validation.
 - Human annotation: `uv run --locked python scripts/annotate_human_test.py`.
-- `make eval-local`: Phase 3 harness, extended for CPU GGUF in Phase 5.
+- `make eval-local`: resumable S3 evaluation on both test sets; CPU GGUF in Phase 5.
+- Offline scoring: `uv run --locked python scripts/evaluate.py --metrics-only`.
 - `make report`: Phase 5.
 - `make serve`, `make docker-build`, `make docker-run`: Phase 6.
 - Later-phase targets fail explicitly until implemented; do not report them as working.
@@ -115,3 +116,22 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
   must remain genuinely human-authored and be reported separately.
 - The user explicitly requested help with the private upload; complete validation
   and the dry run, then run `make push-data`. No GitHub push is authorized.
+
+## Phase 3 evaluation rules
+
+- Use the shared prediction schema for all systems. Evaluate every gold assistant
+  turn plus complete agent conversations on fresh backends; retain scripted user
+  messages and explicit logical-time advances. Exclude Codex worked examples.
+- Freeze prompts, lexical action rules and argument normalization before the
+  baseline. Do not tune the evaluator or prompt from observed test failures.
+  Plain-text action rules are approximate and do not judge reply factuality.
+- Preserve append-only predictions, API cache and immutable inference manifests.
+  Changed inference code/input requires a new output directory; never silently
+  mix runs. Score/report complete coverage or mark partial results explicitly.
+- Report state-only end success separately from the stronger action-and-state
+  success. Empty state alone is insufficient evidence of correct clarification,
+  decline or lookup behaviour. Preserve extra-order/cancellation side effects.
+- Bootstrap complete independent cases by conversation, not individual turns.
+  Keep Claude/Codex provenance and coverage limitations explicit.
+- S3 request latency includes network/retries, excludes explicit rate pacing and
+  local cache hits. Cost is a dated paid-equivalent estimate, not an actual bill.

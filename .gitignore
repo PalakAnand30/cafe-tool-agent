@@ -27,6 +27,7 @@ dist/
 *.gguf
 wandb/
 logs/
+results/predictions/.run.lock
 .ipynb_checkpoints/
 .DS_Store
 

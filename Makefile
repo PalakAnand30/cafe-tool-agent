@@ -7,8 +7,8 @@ export TOKENIZERS_PARALLELISM ?= false
 .PHONY: help setup lint test benchmark data push-data eval-local report serve docker-build docker-run
 
 help:
-	@echo "Available now: setup, lint, test, benchmark, data, push-data"
-	@echo "Later phases: eval-local, report, serve, docker-build, docker-run"
+	@echo "Available now: setup, lint, test, benchmark, data, push-data, eval-local"
+	@echo "Later phases: report, serve, docker-build, docker-run"
 
 setup:
 	$(UV) sync --locked
@@ -30,8 +30,7 @@ push-data:
 	$(UV) run --locked python scripts/push_dataset.py
 
 eval-local:
-	@echo "$@ is not implemented yet; harness in Phase 3, GGUF evaluation in Phase 5." >&2
-	@exit 2
+	$(UV) run --locked python scripts/evaluate.py
 
 report:
 	@echo "$@ is not implemented yet; scheduled for Phase 5." >&2

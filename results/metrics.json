@@ -1,0 +1,1797 @@
+{
+  "schema_version": 1,
+  "groups": [
+    {
+      "system": "S3",
+      "model": "openai/gpt-oss-120b",
+      "split": "independent_test",
+      "author": "claude",
+      "expected_conversations": 84,
+      "complete": false,
+      "modes": {
+        "turn": {
+          "complete": false,
+          "prediction_records": 33,
+          "expected_prediction_records": 143,
+          "conversations": 25,
+          "counts": {
+            "responses": 33,
+            "parse_valid": 33,
+            "tool_attempts": 2,
+            "valid_tool_responses": 2,
+            "cached_responses": 1,
+            "usage_observed": 33,
+            "actions": 33,
+            "correct_actions": 10,
+            "clarify_gold": 4,
+            "clarify_pred": 24,
+            "clarify_tp": 3,
+            "decline_gold": 15,
+            "decline_pred": 0,
+            "decline_tp": 0,
+            "gold_tool_turns": 7,
+            "correct_tool_turns": 0,
+            "arguments_exact": 0,
+            "field:modifiers:tp": 0,
+            "field:modifiers:fp": 2,
+            "field:modifiers:fn": 5,
+            "field:all:tp": 0,
+            "field:all:fp": 9,
+            "field:all:fn": 29,
+            "field:size:tp": 0,
+            "field:size:fp": 1,
+            "field:size:fn": 7,
+            "field:item_name:tp": 0,
+            "field:item_name:fp": 3,
+            "field:item_name:fn": 8,
+            "field:quantity:tp": 0,
+            "field:quantity:fp": 3,
+            "field:quantity:fn": 8,
+            "field:customer_name:tp": 0,
+            "field:customer_name:fp": 0,
+            "field:customer_name:fn": 1
+          },
+          "uncached_latency_observations": 32,
+          "metrics": {
+            "valid_tool_call_rate": {
+              "value": 1.0,
+              "ci95": null
+            },
+            "parse_valid_rate": {
+              "value": 1.0,
+              "ci95": null
+            },
+            "action_accuracy": {
+              "value": 0.30303030303030304,
+              "ci95": null
+            },
+            "argument_exact_match": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "argument_exact_match_given_correct_tool": {
+              "value": null,
+              "ci95": null
+            },
+            "clarification_precision": {
+              "value": 0.125,
+              "ci95": null
+            },
+            "clarification_recall": {
+              "value": 0.75,
+              "ci95": null
+            },
+            "decline_precision": {
+              "value": null,
+              "ci95": null
+            },
+            "decline_recall": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "end_to_end_success": {
+              "value": null,
+              "ci95": null
+            },
+            "state_equality": {
+              "value": null,
+              "ci95": null
+            },
+            "action_and_state_success": {
+              "value": null,
+              "ci95": null
+            },
+            "cache_hit_rate": {
+              "value": 0.030303030303030304,
+              "ci95": null
+            },
+            "usage_coverage": {
+              "value": 1.0,
+              "ci95": null
+            },
+            "latency_p50_seconds": {
+              "value": 0.5727402704651463,
+              "ci95": null
+            },
+            "latency_p95_seconds": {
+              "value": 1.3165974024638998,
+              "ci95": null
+            },
+            "paid_equivalent_usd_per_1000_conversations": {
+              "value": 0.257262,
+              "ci95": null
+            },
+            "argument_field_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "item_name_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "size_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "quantity_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "modifiers_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "order_id_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "category_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "customer_name_f1": {
+              "value": 0.0,
+              "ci95": null
+            }
+          },
+          "confusion_matrix": {
+            "tool:create_order": {
+              "clarify": 7
+            },
+            "reply": {
+              "reply": 7
+            },
+            "clarify": {
+              "tool:create_order": 1,
+              "clarify": 3
+            },
+            "decline": {
+              "clarify": 14,
+              "tool:create_order": 1
+            }
+          },
+          "per_intent": {
+            "clarification": {
+              "conversations": 4,
+              "counts": {
+                "responses": 6,
+                "parse_valid": 6,
+                "tool_attempts": 1,
+                "valid_tool_responses": 1,
+                "cached_responses": 0,
+                "usage_observed": 6,
+                "actions": 6,
+                "correct_actions": 4,
+                "clarify_gold": 4,
+                "clarify_pred": 4,
+                "clarify_tp": 3,
+                "decline_gold": 0,
+                "decline_pred": 0,
+                "decline_tp": 0,
+                "field:modifiers:tp": 0,
+                "field:modifiers:fp": 1,
+                "field:modifiers:fn": 0,
+                "field:all:tp": 0,
+                "field:all:fp": 3,
+                "field:all:fn": 3,
+                "field:item_name:tp": 0,
+                "field:item_name:fp": 1,
+                "field:item_name:fn": 1,
+                "field:quantity:tp": 0,
+                "field:quantity:fp": 1,
+                "field:quantity:fn": 1,
+                "gold_tool_turns": 1,
+                "correct_tool_turns": 0,
+                "arguments_exact": 0,
+                "field:size:tp": 0,
+                "field:size:fp": 0,
+                "field:size:fn": 1
+              },
+              "uncached_latency_observations": 6,
+              "metrics": {
+                "valid_tool_call_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "parse_valid_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_accuracy": {
+                  "value": 0.6666666666666666,
+                  "ci95": null
+                },
+                "argument_exact_match": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match_given_correct_tool": {
+                  "value": null,
+                  "ci95": null
+                },
+                "clarification_precision": {
+                  "value": 0.75,
+                  "ci95": null
+                },
+                "clarification_recall": {
+                  "value": 0.75,
+                  "ci95": null
+                },
+                "decline_precision": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "end_to_end_success": {
+                  "value": null,
+                  "ci95": null
+                },
+                "state_equality": {
+                  "value": null,
+                  "ci95": null
+                },
+                "action_and_state_success": {
+                  "value": null,
+                  "ci95": null
+                },
+                "cache_hit_rate": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "usage_coverage": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "latency_p50_seconds": {
+                  "value": 0.5388667920464645,
+                  "ci95": null
+                },
+                "latency_p95_seconds": {
+                  "value": 1.3606715727364644,
+                  "ci95": null
+                },
+                "paid_equivalent_usd_per_1000_conversations": {
+                  "value": 0.291675,
+                  "ci95": null
+                },
+                "argument_field_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "item_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "size_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "quantity_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "modifiers_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "order_id_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "category_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "customer_name_f1": {
+                  "value": null,
+                  "ci95": null
+                }
+              },
+              "confusion_matrix": {
+                "clarify": {
+                  "tool:create_order": 1,
+                  "clarify": 3
+                },
+                "tool:create_order": {
+                  "clarify": 1
+                },
+                "reply": {
+                  "reply": 1
+                }
+              }
+            },
+            "multi_order": {
+              "conversations": 1,
+              "counts": {
+                "responses": 2,
+                "parse_valid": 2,
+                "tool_attempts": 0,
+                "valid_tool_responses": 0,
+                "cached_responses": 0,
+                "usage_observed": 2,
+                "actions": 2,
+                "correct_actions": 1,
+                "clarify_gold": 0,
+                "clarify_pred": 1,
+                "clarify_tp": 0,
+                "decline_gold": 0,
+                "decline_pred": 0,
+                "decline_tp": 0,
+                "gold_tool_turns": 1,
+                "correct_tool_turns": 0,
+                "arguments_exact": 0,
+                "field:modifiers:tp": 0,
+                "field:modifiers:fp": 0,
+                "field:modifiers:fn": 2,
+                "field:all:tp": 0,
+                "field:all:fp": 0,
+                "field:all:fn": 8,
+                "field:size:tp": 0,
+                "field:size:fp": 0,
+                "field:size:fn": 2,
+                "field:item_name:tp": 0,
+                "field:item_name:fp": 0,
+                "field:item_name:fn": 2,
+                "field:quantity:tp": 0,
+                "field:quantity:fp": 0,
+                "field:quantity:fn": 2
+              },
+              "uncached_latency_observations": 2,
+              "metrics": {
+                "valid_tool_call_rate": {
+                  "value": null,
+                  "ci95": null
+                },
+                "parse_valid_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_accuracy": {
+                  "value": 0.5,
+                  "ci95": null
+                },
+                "argument_exact_match": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match_given_correct_tool": {
+                  "value": null,
+                  "ci95": null
+                },
+                "clarification_precision": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "clarification_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_precision": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "end_to_end_success": {
+                  "value": null,
+                  "ci95": null
+                },
+                "state_equality": {
+                  "value": null,
+                  "ci95": null
+                },
+                "action_and_state_success": {
+                  "value": null,
+                  "ci95": null
+                },
+                "cache_hit_rate": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "usage_coverage": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "latency_p50_seconds": {
+                  "value": 0.5882480829861021,
+                  "ci95": null
+                },
+                "latency_p95_seconds": {
+                  "value": 0.6019795323694139,
+                  "ci95": null
+                },
+                "paid_equivalent_usd_per_1000_conversations": {
+                  "value": 0.40545000000000003,
+                  "ci95": null
+                },
+                "argument_field_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "item_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "size_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "quantity_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "modifiers_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "order_id_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "category_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "customer_name_f1": {
+                  "value": null,
+                  "ci95": null
+                }
+              },
+              "confusion_matrix": {
+                "tool:create_order": {
+                  "clarify": 1
+                },
+                "reply": {
+                  "reply": 1
+                }
+              }
+            },
+            "single_order": {
+              "conversations": 5,
+              "counts": {
+                "responses": 10,
+                "parse_valid": 10,
+                "tool_attempts": 0,
+                "valid_tool_responses": 0,
+                "cached_responses": 1,
+                "usage_observed": 10,
+                "actions": 10,
+                "correct_actions": 5,
+                "clarify_gold": 0,
+                "clarify_pred": 5,
+                "clarify_tp": 0,
+                "decline_gold": 0,
+                "decline_pred": 0,
+                "decline_tp": 0,
+                "gold_tool_turns": 5,
+                "correct_tool_turns": 0,
+                "arguments_exact": 0,
+                "field:modifiers:tp": 0,
+                "field:modifiers:fp": 0,
+                "field:modifiers:fn": 3,
+                "field:all:tp": 0,
+                "field:all:fp": 0,
+                "field:all:fn": 18,
+                "field:size:tp": 0,
+                "field:size:fp": 0,
+                "field:size:fn": 4,
+                "field:item_name:tp": 0,
+                "field:item_name:fp": 0,
+                "field:item_name:fn": 5,
+                "field:quantity:tp": 0,
+                "field:quantity:fp": 0,
+                "field:quantity:fn": 5,
+                "field:customer_name:tp": 0,
+                "field:customer_name:fp": 0,
+                "field:customer_name:fn": 1
+              },
+              "uncached_latency_observations": 9,
+              "metrics": {
+                "valid_tool_call_rate": {
+                  "value": null,
+                  "ci95": null
+                },
+                "parse_valid_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_accuracy": {
+                  "value": 0.5,
+                  "ci95": null
+                },
+                "argument_exact_match": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match_given_correct_tool": {
+                  "value": null,
+                  "ci95": null
+                },
+                "clarification_precision": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "clarification_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_precision": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "end_to_end_success": {
+                  "value": null,
+                  "ci95": null
+                },
+                "state_equality": {
+                  "value": null,
+                  "ci95": null
+                },
+                "action_and_state_success": {
+                  "value": null,
+                  "ci95": null
+                },
+                "cache_hit_rate": {
+                  "value": 0.1,
+                  "ci95": null
+                },
+                "usage_coverage": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "latency_p50_seconds": {
+                  "value": 0.46870604099240154,
+                  "ci95": null
+                },
+                "latency_p95_seconds": {
+                  "value": 0.6683837918536737,
+                  "ci95": null
+                },
+                "paid_equivalent_usd_per_1000_conversations": {
+                  "value": 0.35985,
+                  "ci95": null
+                },
+                "argument_field_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "item_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "size_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "quantity_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "modifiers_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "order_id_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "category_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "customer_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                }
+              },
+              "confusion_matrix": {
+                "tool:create_order": {
+                  "clarify": 5
+                },
+                "reply": {
+                  "reply": 5
+                }
+              }
+            },
+            "unsupported": {
+              "conversations": 15,
+              "counts": {
+                "responses": 15,
+                "parse_valid": 15,
+                "tool_attempts": 1,
+                "valid_tool_responses": 1,
+                "cached_responses": 0,
+                "usage_observed": 15,
+                "actions": 15,
+                "correct_actions": 0,
+                "clarify_gold": 0,
+                "clarify_pred": 14,
+                "clarify_tp": 0,
+                "decline_gold": 15,
+                "decline_pred": 0,
+                "decline_tp": 0,
+                "field:size:tp": 0,
+                "field:size:fp": 1,
+                "field:size:fn": 0,
+                "field:all:tp": 0,
+                "field:all:fp": 6,
+                "field:all:fn": 0,
+                "field:modifiers:tp": 0,
+                "field:modifiers:fp": 1,
+                "field:modifiers:fn": 0,
+                "field:item_name:tp": 0,
+                "field:item_name:fp": 2,
+                "field:item_name:fn": 0,
+                "field:quantity:tp": 0,
+                "field:quantity:fp": 2,
+                "field:quantity:fn": 0
+              },
+              "uncached_latency_observations": 15,
+              "metrics": {
+                "valid_tool_call_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "parse_valid_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_accuracy": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match": {
+                  "value": null,
+                  "ci95": null
+                },
+                "argument_exact_match_given_correct_tool": {
+                  "value": null,
+                  "ci95": null
+                },
+                "clarification_precision": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "clarification_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_precision": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_recall": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "end_to_end_success": {
+                  "value": null,
+                  "ci95": null
+                },
+                "state_equality": {
+                  "value": null,
+                  "ci95": null
+                },
+                "action_and_state_success": {
+                  "value": null,
+                  "ci95": null
+                },
+                "cache_hit_rate": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "usage_coverage": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "latency_p50_seconds": {
+                  "value": 0.6192028739070521,
+                  "ci95": null
+                },
+                "latency_p95_seconds": {
+                  "value": 1.3148616713131778,
+                  "ci95": null
+                },
+                "paid_equivalent_usd_per_1000_conversations": {
+                  "value": 0.20401000000000002,
+                  "ci95": null
+                },
+                "argument_field_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "item_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "size_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "quantity_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "modifiers_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "order_id_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "category_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "customer_name_f1": {
+                  "value": null,
+                  "ci95": null
+                }
+              },
+              "confusion_matrix": {
+                "decline": {
+                  "clarify": 14,
+                  "tool:create_order": 1
+                }
+              }
+            }
+          }
+        },
+        "end_to_end": {
+          "complete": false,
+          "prediction_records": 24,
+          "expected_prediction_records": 84,
+          "conversations": 24,
+          "counts": {
+            "responses": 26,
+            "parse_valid": 26,
+            "tool_attempts": 2,
+            "valid_tool_responses": 2,
+            "cached_responses": 24,
+            "usage_observed": 26,
+            "actions": 24,
+            "correct_actions": 2,
+            "clarify_gold": 3,
+            "clarify_pred": 22,
+            "clarify_tp": 2,
+            "decline_gold": 15,
+            "decline_pred": 0,
+            "decline_tp": 0,
+            "gold_tool_turns": 6,
+            "correct_tool_turns": 0,
+            "arguments_exact": 0,
+            "field:modifiers:tp": 0,
+            "field:modifiers:fp": 2,
+            "field:modifiers:fn": 5,
+            "field:all:tp": 0,
+            "field:all:fp": 9,
+            "field:all:fn": 26,
+            "field:size:tp": 0,
+            "field:size:fp": 1,
+            "field:size:fn": 6,
+            "field:item_name:tp": 0,
+            "field:item_name:fp": 3,
+            "field:item_name:fn": 7,
+            "field:quantity:tp": 0,
+            "field:quantity:fp": 3,
+            "field:quantity:fn": 7,
+            "end_conversations": 24,
+            "state_equal": 18,
+            "end_success": 18,
+            "joint_success": 2,
+            "field:customer_name:tp": 0,
+            "field:customer_name:fp": 0,
+            "field:customer_name:fn": 1
+          },
+          "uncached_latency_observations": 2,
+          "metrics": {
+            "valid_tool_call_rate": {
+              "value": 1.0,
+              "ci95": null
+            },
+            "parse_valid_rate": {
+              "value": 1.0,
+              "ci95": null
+            },
+            "action_accuracy": {
+              "value": 0.08333333333333333,
+              "ci95": null
+            },
+            "argument_exact_match": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "argument_exact_match_given_correct_tool": {
+              "value": null,
+              "ci95": null
+            },
+            "clarification_precision": {
+              "value": 0.09090909090909091,
+              "ci95": null
+            },
+            "clarification_recall": {
+              "value": 0.6666666666666666,
+              "ci95": null
+            },
+            "decline_precision": {
+              "value": null,
+              "ci95": null
+            },
+            "decline_recall": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "end_to_end_success": {
+              "value": 0.75,
+              "ci95": null
+            },
+            "state_equality": {
+              "value": 0.75,
+              "ci95": null
+            },
+            "action_and_state_success": {
+              "value": 0.08333333333333333,
+              "ci95": null
+            },
+            "cache_hit_rate": {
+              "value": 0.9230769230769231,
+              "ci95": null
+            },
+            "usage_coverage": {
+              "value": 1.0,
+              "ci95": null
+            },
+            "latency_p50_seconds": {
+              "value": 0.43905858348589355,
+              "ci95": null
+            },
+            "latency_p95_seconds": {
+              "value": 0.5991701211337931,
+              "ci95": null
+            },
+            "paid_equivalent_usd_per_1000_conversations": {
+              "value": 0.210775,
+              "ci95": null
+            },
+            "argument_field_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "item_name_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "size_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "quantity_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "modifiers_f1": {
+              "value": 0.0,
+              "ci95": null
+            },
+            "order_id_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "category_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "customer_name_f1": {
+              "value": 0.0,
+              "ci95": null
+            }
+          },
+          "confusion_matrix": {
+            "tool:create_order": {
+              "clarify": 6
+            },
+            "clarify": {
+              "tool:create_order": 1,
+              "clarify": 2
+            },
+            "decline": {
+              "clarify": 14,
+              "tool:create_order": 1
+            }
+          },
+          "per_intent": {
+            "clarification": {
+              "conversations": 3,
+              "counts": {
+                "responses": 4,
+                "parse_valid": 4,
+                "tool_attempts": 1,
+                "valid_tool_responses": 1,
+                "cached_responses": 3,
+                "usage_observed": 4,
+                "actions": 3,
+                "correct_actions": 2,
+                "clarify_gold": 3,
+                "clarify_pred": 2,
+                "clarify_tp": 2,
+                "decline_gold": 0,
+                "decline_pred": 0,
+                "decline_tp": 0,
+                "field:modifiers:tp": 0,
+                "field:modifiers:fp": 1,
+                "field:modifiers:fn": 0,
+                "field:all:tp": 0,
+                "field:all:fp": 3,
+                "field:all:fn": 0,
+                "field:item_name:tp": 0,
+                "field:item_name:fp": 1,
+                "field:item_name:fn": 0,
+                "field:quantity:tp": 0,
+                "field:quantity:fp": 1,
+                "field:quantity:fn": 0,
+                "end_conversations": 3,
+                "state_equal": 3,
+                "end_success": 3,
+                "joint_success": 2
+              },
+              "uncached_latency_observations": 1,
+              "metrics": {
+                "valid_tool_call_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "parse_valid_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_accuracy": {
+                  "value": 0.6666666666666666,
+                  "ci95": null
+                },
+                "argument_exact_match": {
+                  "value": null,
+                  "ci95": null
+                },
+                "argument_exact_match_given_correct_tool": {
+                  "value": null,
+                  "ci95": null
+                },
+                "clarification_precision": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "clarification_recall": {
+                  "value": 0.6666666666666666,
+                  "ci95": null
+                },
+                "decline_precision": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "end_to_end_success": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "state_equality": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_and_state_success": {
+                  "value": 0.6666666666666666,
+                  "ci95": null
+                },
+                "cache_hit_rate": {
+                  "value": 0.75,
+                  "ci95": null
+                },
+                "usage_coverage": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "latency_p50_seconds": {
+                  "value": 0.6169602919835597,
+                  "ci95": null
+                },
+                "latency_p95_seconds": {
+                  "value": 0.6169602919835597,
+                  "ci95": null
+                },
+                "paid_equivalent_usd_per_1000_conversations": {
+                  "value": 0.2539,
+                  "ci95": null
+                },
+                "argument_field_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "item_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "size_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "quantity_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "modifiers_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "order_id_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "category_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "customer_name_f1": {
+                  "value": null,
+                  "ci95": null
+                }
+              },
+              "confusion_matrix": {
+                "clarify": {
+                  "tool:create_order": 1,
+                  "clarify": 2
+                }
+              }
+            },
+            "multi_order": {
+              "conversations": 1,
+              "counts": {
+                "responses": 1,
+                "parse_valid": 1,
+                "tool_attempts": 0,
+                "valid_tool_responses": 0,
+                "cached_responses": 1,
+                "usage_observed": 1,
+                "actions": 1,
+                "correct_actions": 0,
+                "clarify_gold": 0,
+                "clarify_pred": 1,
+                "clarify_tp": 0,
+                "decline_gold": 0,
+                "decline_pred": 0,
+                "decline_tp": 0,
+                "gold_tool_turns": 1,
+                "correct_tool_turns": 0,
+                "arguments_exact": 0,
+                "field:modifiers:tp": 0,
+                "field:modifiers:fp": 0,
+                "field:modifiers:fn": 2,
+                "field:all:tp": 0,
+                "field:all:fp": 0,
+                "field:all:fn": 8,
+                "field:size:tp": 0,
+                "field:size:fp": 0,
+                "field:size:fn": 2,
+                "field:item_name:tp": 0,
+                "field:item_name:fp": 0,
+                "field:item_name:fn": 2,
+                "field:quantity:tp": 0,
+                "field:quantity:fp": 0,
+                "field:quantity:fn": 2,
+                "end_conversations": 1,
+                "state_equal": 0,
+                "end_success": 0,
+                "joint_success": 0
+              },
+              "uncached_latency_observations": 0,
+              "metrics": {
+                "valid_tool_call_rate": {
+                  "value": null,
+                  "ci95": null
+                },
+                "parse_valid_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_accuracy": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match_given_correct_tool": {
+                  "value": null,
+                  "ci95": null
+                },
+                "clarification_precision": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "clarification_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_precision": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "end_to_end_success": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "state_equality": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "action_and_state_success": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "cache_hit_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "usage_coverage": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "latency_p50_seconds": {
+                  "value": null,
+                  "ci95": null
+                },
+                "latency_p95_seconds": {
+                  "value": null,
+                  "ci95": null
+                },
+                "paid_equivalent_usd_per_1000_conversations": {
+                  "value": 0.19065,
+                  "ci95": null
+                },
+                "argument_field_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "item_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "size_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "quantity_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "modifiers_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "order_id_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "category_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "customer_name_f1": {
+                  "value": null,
+                  "ci95": null
+                }
+              },
+              "confusion_matrix": {
+                "tool:create_order": {
+                  "clarify": 1
+                }
+              }
+            },
+            "single_order": {
+              "conversations": 5,
+              "counts": {
+                "responses": 5,
+                "parse_valid": 5,
+                "tool_attempts": 0,
+                "valid_tool_responses": 0,
+                "cached_responses": 5,
+                "usage_observed": 5,
+                "actions": 5,
+                "correct_actions": 0,
+                "clarify_gold": 0,
+                "clarify_pred": 5,
+                "clarify_tp": 0,
+                "decline_gold": 0,
+                "decline_pred": 0,
+                "decline_tp": 0,
+                "gold_tool_turns": 5,
+                "correct_tool_turns": 0,
+                "arguments_exact": 0,
+                "field:modifiers:tp": 0,
+                "field:modifiers:fp": 0,
+                "field:modifiers:fn": 3,
+                "field:all:tp": 0,
+                "field:all:fp": 0,
+                "field:all:fn": 18,
+                "field:size:tp": 0,
+                "field:size:fp": 0,
+                "field:size:fn": 4,
+                "field:item_name:tp": 0,
+                "field:item_name:fp": 0,
+                "field:item_name:fn": 5,
+                "field:quantity:tp": 0,
+                "field:quantity:fp": 0,
+                "field:quantity:fn": 5,
+                "end_conversations": 5,
+                "state_equal": 0,
+                "end_success": 0,
+                "joint_success": 0,
+                "field:customer_name:tp": 0,
+                "field:customer_name:fp": 0,
+                "field:customer_name:fn": 1
+              },
+              "uncached_latency_observations": 0,
+              "metrics": {
+                "valid_tool_call_rate": {
+                  "value": null,
+                  "ci95": null
+                },
+                "parse_valid_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_accuracy": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match_given_correct_tool": {
+                  "value": null,
+                  "ci95": null
+                },
+                "clarification_precision": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "clarification_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_precision": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "end_to_end_success": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "state_equality": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "action_and_state_success": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "cache_hit_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "usage_coverage": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "latency_p50_seconds": {
+                  "value": null,
+                  "ci95": null
+                },
+                "latency_p95_seconds": {
+                  "value": null,
+                  "ci95": null
+                },
+                "paid_equivalent_usd_per_1000_conversations": {
+                  "value": 0.17193,
+                  "ci95": null
+                },
+                "argument_field_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "item_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "size_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "quantity_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "modifiers_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "order_id_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "category_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "customer_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                }
+              },
+              "confusion_matrix": {
+                "tool:create_order": {
+                  "clarify": 5
+                }
+              }
+            },
+            "unsupported": {
+              "conversations": 15,
+              "counts": {
+                "responses": 16,
+                "parse_valid": 16,
+                "tool_attempts": 1,
+                "valid_tool_responses": 1,
+                "cached_responses": 15,
+                "usage_observed": 16,
+                "actions": 15,
+                "correct_actions": 0,
+                "clarify_gold": 0,
+                "clarify_pred": 14,
+                "clarify_tp": 0,
+                "decline_gold": 15,
+                "decline_pred": 0,
+                "decline_tp": 0,
+                "end_conversations": 15,
+                "state_equal": 15,
+                "end_success": 15,
+                "joint_success": 0,
+                "field:size:tp": 0,
+                "field:size:fp": 1,
+                "field:size:fn": 0,
+                "field:all:tp": 0,
+                "field:all:fp": 6,
+                "field:all:fn": 0,
+                "field:modifiers:tp": 0,
+                "field:modifiers:fp": 1,
+                "field:modifiers:fn": 0,
+                "field:item_name:tp": 0,
+                "field:item_name:fp": 2,
+                "field:item_name:fn": 0,
+                "field:quantity:tp": 0,
+                "field:quantity:fp": 2,
+                "field:quantity:fn": 0
+              },
+              "uncached_latency_observations": 1,
+              "metrics": {
+                "valid_tool_call_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "parse_valid_rate": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_accuracy": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "argument_exact_match": {
+                  "value": null,
+                  "ci95": null
+                },
+                "argument_exact_match_given_correct_tool": {
+                  "value": null,
+                  "ci95": null
+                },
+                "clarification_precision": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "clarification_recall": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_precision": {
+                  "value": null,
+                  "ci95": null
+                },
+                "decline_recall": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "end_to_end_success": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "state_equality": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "action_and_state_success": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "cache_hit_rate": {
+                  "value": 0.9375,
+                  "ci95": null
+                },
+                "usage_coverage": {
+                  "value": 1.0,
+                  "ci95": null
+                },
+                "latency_p50_seconds": {
+                  "value": 0.26115687498822737,
+                  "ci95": null
+                },
+                "latency_p95_seconds": {
+                  "value": 0.26115687498822737,
+                  "ci95": null
+                },
+                "paid_equivalent_usd_per_1000_conversations": {
+                  "value": 0.21644000000000002,
+                  "ci95": null
+                },
+                "argument_field_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "item_name_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "size_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "quantity_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "modifiers_f1": {
+                  "value": 0.0,
+                  "ci95": null
+                },
+                "order_id_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "category_f1": {
+                  "value": null,
+                  "ci95": null
+                },
+                "customer_name_f1": {
+                  "value": null,
+                  "ci95": null
+                }
+              },
+              "confusion_matrix": {
+                "decline": {
+                  "clarify": 14,
+                  "tool:create_order": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "predictions_sha256": "ee87e87403f9032218c12c1afac1efc299fc4a4938415db0e8c2818038ffce19",
+      "dataset_sha256": "344b3436285d0864d4c56a7601ba2430bb425d344ec24c473e18455262d2fe73"
+    },
+    {
+      "system": "S3",
+      "model": "openai/gpt-oss-120b",
+      "split": "test",
+      "author": "synthetic",
+      "expected_conversations": 400,
+      "complete": false,
+      "modes": {
+        "turn": {
+          "complete": false,
+          "prediction_records": 0,
+          "expected_prediction_records": 876,
+          "conversations": 0,
+          "counts": {},
+          "uncached_latency_observations": 0,
+          "metrics": {
+            "valid_tool_call_rate": {
+              "value": null,
+              "ci95": null
+            },
+            "parse_valid_rate": {
+              "value": null,
+              "ci95": null
+            },
+            "action_accuracy": {
+              "value": null,
+              "ci95": null
+            },
+            "argument_exact_match": {
+              "value": null,
+              "ci95": null
+            },
+            "argument_exact_match_given_correct_tool": {
+              "value": null,
+              "ci95": null
+            },
+            "clarification_precision": {
+              "value": null,
+              "ci95": null
+            },
+            "clarification_recall": {
+              "value": null,
+              "ci95": null
+            },
+            "decline_precision": {
+              "value": null,
+              "ci95": null
+            },
+            "decline_recall": {
+              "value": null,
+              "ci95": null
+            },
+            "end_to_end_success": {
+              "value": null,
+              "ci95": null
+            },
+            "state_equality": {
+              "value": null,
+              "ci95": null
+            },
+            "action_and_state_success": {
+              "value": null,
+              "ci95": null
+            },
+            "cache_hit_rate": {
+              "value": null,
+              "ci95": null
+            },
+            "usage_coverage": {
+              "value": null,
+              "ci95": null
+            },
+            "latency_p50_seconds": {
+              "value": null,
+              "ci95": null
+            },
+            "latency_p95_seconds": {
+              "value": null,
+              "ci95": null
+            },
+            "paid_equivalent_usd_per_1000_conversations": {
+              "value": null,
+              "ci95": null
+            },
+            "argument_field_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "item_name_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "size_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "quantity_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "modifiers_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "order_id_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "category_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "customer_name_f1": {
+              "value": null,
+              "ci95": null
+            }
+          },
+          "confusion_matrix": {},
+          "per_intent": {}
+        },
+        "end_to_end": {
+          "complete": false,
+          "prediction_records": 0,
+          "expected_prediction_records": 400,
+          "conversations": 0,
+          "counts": {},
+          "uncached_latency_observations": 0,
+          "metrics": {
+            "valid_tool_call_rate": {
+              "value": null,
+              "ci95": null
+            },
+            "parse_valid_rate": {
+              "value": null,
+              "ci95": null
+            },
+            "action_accuracy": {
+              "value": null,
+              "ci95": null
+            },
+            "argument_exact_match": {
+              "value": null,
+              "ci95": null
+            },
+            "argument_exact_match_given_correct_tool": {
+              "value": null,
+              "ci95": null
+            },
+            "clarification_precision": {
+              "value": null,
+              "ci95": null
+            },
+            "clarification_recall": {
+              "value": null,
+              "ci95": null
+            },
+            "decline_precision": {
+              "value": null,
+              "ci95": null
+            },
+            "decline_recall": {
+              "value": null,
+              "ci95": null
+            },
+            "end_to_end_success": {
+              "value": null,
+              "ci95": null
+            },
+            "state_equality": {
+              "value": null,
+              "ci95": null
+            },
+            "action_and_state_success": {
+              "value": null,
+              "ci95": null
+            },
+            "cache_hit_rate": {
+              "value": null,
+              "ci95": null
+            },
+            "usage_coverage": {
+              "value": null,
+              "ci95": null
+            },
+            "latency_p50_seconds": {
+              "value": null,
+              "ci95": null
+            },
+            "latency_p95_seconds": {
+              "value": null,
+              "ci95": null
+            },
+            "paid_equivalent_usd_per_1000_conversations": {
+              "value": null,
+              "ci95": null
+            },
+            "argument_field_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "item_name_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "size_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "quantity_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "modifiers_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "order_id_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "category_f1": {
+              "value": null,
+              "ci95": null
+            },
+            "customer_name_f1": {
+              "value": null,
+              "ci95": null
+            }
+          },
+          "confusion_matrix": {},
+          "per_intent": {}
+        }
+      },
+      "predictions_sha256": null,
+      "dataset_sha256": "662e3d6a609b850ea7a2b36756edddd950df716ec2f9c8a7ad3d9ef5d2746754"
+    }
+  ],
+  "bootstrap": {
+    "unit": "conversation",
+    "resamples": 1000,
+    "confidence": 0.95,
+    "seed": 42
+  },
+  "pricing": {
+    "input_per_million_usd": "0.15",
+    "output_per_million_usd": "0.60",
+    "verified_date": "2026-10-14",
+    "source": "https://console.groq.com/docs/model/openai/gpt-oss-120b",
+    "assumption": "Cold paid-equivalent estimate; input-cache discounts and free-plan billing excluded."
+  },
+  "scorer_sha256": "15db1b26633f3f519f576cf87ec4dc49de77c5bb8224fdd92fb2a1ec9be71a80",
+  "definitions": {
+    "action_accuracy": "Exact tool-name/multiplicity or clarify/decline/reply label; no LLM judge.",
+    "text_actions": "Frozen lexical rules; plain replies following tool results count as reply. Text correctness is not judged.",
+    "argument_exact_match": "Joint exact normalized arguments on every gold tool turn; missing/wrong tool is incorrect.",
+    "normalization": "Schema defaults/nulls normalized; modifier/item/call order ignored; duplicates, quantities and bindings preserved.",
+    "field_f1": "Micro multiset F1, aligned by tool and item-name occurrence; includes item/size/quantity/modifiers plus IDs/category/customer name.",
+    "valid_tool_call_rate": "Schema-valid parsed tool responses / all attempted tool responses, including malformed and provider-rejected attempts.",
+    "end_to_end_success": "Final backend state equals gold and the agent terminates without an execution/protocol error.",
+    "action_and_state_success": "Additionally requires correct first action/arguments at every user turn and no missing/extra tool calls.",
+    "state_equality": "Line/modifier ordering ignored; all orders, IDs, prices, quantities, customer names, statuses and logical times retained.",
+    "latency": "Uncached request wall time including network/retries; deliberate quota pacing and local cache hits excluded. Not S5 CPU latency.",
+    "cost": "Cold paid-equivalent cost, not an actual bill. Missing provider-error usage is excluded; see usage_coverage.",
+    "confidence_intervals": "Conversation-cluster percentile bootstrap on complete independent_test only. Undefined resample metrics omitted; undefined point metrics are null.",
+    "coverage": "Independent cases are Claude-authored with Codex gold and weighted toward declines; not human-written evidence."
+  }
+}
