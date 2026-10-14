@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cafe-tool-agent"
+version = "0.1.0"
+description = "A reproducible café tool-calling agent and LoRA evaluation project."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "pydantic==2.11.7",
+    "python-dotenv==1.1.1",
+    "PyYAML==6.0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==8.4.1",
+    "ruff==0.12.2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cafe_agent"]
+
+[tool.uv]
+exclude-newer = "2026-09-30T00:00:00Z"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-config --strict-markers"
+filterwarnings = ["error"]

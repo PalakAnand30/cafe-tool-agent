@@ -1,0 +1,37 @@
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+.aws/
+*.pem
+*.key
+
+# Python and tooling
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Local runtime artefacts
+*.db
+*.sqlite
+*.sqlite3
+/models/
+*.gguf
+wandb/
+logs/
+.ipynb_checkpoints/
+.DS_Store
+
+# Generated data and API cache; retain curated human data and small samples
+data/*
+!data/.gitkeep
+!data/human_test/
+!data/samples/
