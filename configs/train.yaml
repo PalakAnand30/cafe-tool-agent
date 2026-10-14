@@ -1,2 +1,5 @@
 # Phase 4: model revision, LoRA, trainer settings and notebook dependencies.
 seed: 42
+model_id: Qwen/Qwen2.5-1.5B-Instruct
+revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+max_sequence_length: 4096

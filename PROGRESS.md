@@ -6,7 +6,7 @@ Updated: 2026-10-14 (Europe/London).
 
 - [x] Phase 0: scaffold.
 - [x] Phase 1: domain, backend, tools, parser and agent loop.
-- [ ] Phase 2: dataset and human-test annotation workflow.
+- [x] Phase 2: dataset and human-test annotation workflow.
 - [ ] Phase 3: evaluation harness and Groq baseline.
 - [ ] Phase 4: Kaggle training and GPU evaluation notebooks.
 - [ ] Phase 5: GGUF evaluation and full report.
@@ -140,18 +140,139 @@ warnings-as-errors test policy. The compatible pin passes without warning filter
 - `git diff --check`: passed; the supplied spec is unchanged, and secrets,
   cache files and runtime databases remain ignored.
 
+## Phase 2 implementation and approved adjustments
+
+- Re-read the rules and full specification; implement Phase 2 only.
+- User approved raising the full-conversation limit from 1,024 to 4,096 tokens
+  while retaining full domain coverage. The pinned tokenizer measured 2,555
+  tokens for the original prompt before a reply, and 1,023 even after an initial
+  full-menu/schema compaction. Updated Sections 5, 7 and 7b of the source spec,
+  training max length and inference context (8,192) accordingly. T4 memory
+  sizing remains a Phase 4 check.
+- User approved replacing unavailable `llama-3.3-70b-versatile` with
+  `openai/gpt-oss-120b` through Groq for paraphrasing and the future S3 baseline.
+  The original call returned `model_not_found`; its ID was absent from the key's
+  cached model catalog. The replacement's live connectivity/paraphrase check
+  succeeded. Updated active config, spec and dataset provenance; preserve
+  historical Phase 1 test descriptions as history.
+- Use low reasoning effort, temperature 0 and seed 42. The replacement is
+  documented in [Groq's model page](https://console.groq.com/docs/model/openai/gpt-oss-120b)
+  and [official OpenAI documentation](https://developers.openai.com/api/docs/models/gpt-oss-120b).
+  Applied the OpenAI Docs skill for the explicit model replacement. Requests
+  still use the Groq SDK/account, not the OpenAI API.
+- Pinned Qwen model/tokenizer revision:
+  `989aa7980e4cf806f80c7fef2b1adb7bc71aa306`. Only tokenizer/config files were
+  downloaded into the ignored project cache; no model weights or torch.
+- Compact the shared prompt by grouping identical per-item modifier sets;
+  retain every item/modifier, and obtain prices/stock from tools. Remove only
+  schema titles/default metadata, retaining actual validation constraints.
+- Added the Pydantic conversation contract, per-assistant gold behaviours,
+  entity provenance, scripted user turns, logical-clock advances and author tags.
+- Implemented five wording families per intent, programmatic backend-derived
+  labels/results/state and varied final replies. Generation targets the spec's
+  split sizes, intent shares and multi-turn rate, with deterministic per-ID seeds.
+- Reserve one of five template families per intent (20%) and configured
+  item/modifier combinations exclusively for test. Deduplicate normalized user
+  text across all synthetic conversations, before and after text transforms.
+- Batch Groq paraphrases, preserving entities and complete order-line phrases
+  to prevent swapped quantity/modifier bindings. Reject missing/new entities,
+  changed bindings, new negations, malformed outputs and unchanged rewrites.
+  Record failures and fall back to original text. Native responses remain
+  content-addressed and atomically cached by the shared Groq client.
+- Surface noise preserves order facts. Drafts, paraphrase journals and final
+  split files are append-only and skip completed IDs. Fingerprinted manifests
+  reject changed source/config inputs. Interrupted JSONL tails are backed up
+  before repair; malformed complete records fail explicitly.
+- Every record checks shared schemas/prompt, call/result protocol, exact real
+  backend replay and final state, and full Qwen token length. Assistant-only
+  labels use template-prefix spans and token offsets, including closing tokens;
+  no truncation, JSON repair or framework/tensor imports.
+- Added the interactive human CLI with explicit gold actions and expected-state
+  review/input, fresh backends, optional time advances, replay validation and
+  append-only saves. Seeded five `codex_example` records, excluded by the shared
+  scored-human loader. No human-authored conversations were invented.
+- Added private Hub publication and a local dry-run packet with default synthetic
+  and separate human-test configs, dataset card, manifest and generation stats.
+  Upload checks human benchmark size and rejects existing public repositories.
+  Raw JSONL is canonical to preserve omitted argument keys across HF loading.
+- Cache parsed YAML by file contents and return copies, avoiding repeated parsing
+  during replay while reflecting edits and preventing caller mutation of cache.
+- Added the pinned tokenizer cache/download to CI and implemented `make data`
+  and user-run `make push-data`.
+
+## Phase 2 dependency pins
+
+| Dependency | Pin | Release date | Evidence |
+| --- | --- | --- | --- |
+| Transformers (tokenizer only locally) | 4.51.3 | 2025-04-14 | [PyPI](https://pypi.org/project/transformers/4.51.3/) |
+| Hugging Face Hub | 0.30.2 | 2025-04-08 | [PyPI](https://pypi.org/project/huggingface-hub/0.30.2/) |
+| Jinja2 (chat-template renderer) | 3.1.6 | 2025-03-05 | [PyPI](https://pypi.org/project/Jinja2/3.1.6/) |
+
+All direct pins predate the release cutoff; transitive versions remain in
+`uv.lock`. No dependency outside the planned stack was added.
+
+## Phase 2 verification
+
+- `make lint`: passed; final checks include 54 Python files.
+- `make test`: 204 passed with warnings treated as errors, including all prior
+  backend/parser/client cases and real-tokenizer tests for every intent/family,
+  replay corruption, leakage, exact plan shares, masking (including fake role
+  delimiters in user text and consecutive tool results), interrupted-tail
+  recovery, append-only resume, entity/binding verification, annotation saves,
+  worked-example exclusion and private upload preparation.
+- `uv build --offline`: source and wheel build passed. Every package module
+  imports from the wheel; packaged configs load, GPU imports are absent, and
+  source/wheel archive checks exclude secrets, caches, virtualenvs and Git.
+- Full `make data`: passed. All 4,200 final conversations validated (100%):
+  train 3,500, validation 300, synthetic test 400; exactly 1,050 multi-turn
+  conversations and 5,250 customer turns. All tool results and final states replay.
+- Measured full-conversation lengths: minimum 1,175, maximum 2,816, mean
+  1,325.44 tokens, all below the user-approved 4,096-token limit.
+- Paraphrasing attempted on 1,563 turns: 178 verifier rejections (11.39%):
+  147 unchanged, 20 missing protected request text, 11 missing order-line bindings.
+  One further deduplication fallback leaves 1,384 retained paraphrase turns.
+  All rejected candidates use their original utterance. Noise applied to 801 turns.
+- Final leakage checks: zero overlapping normalized customer texts; all ten
+  held-out template families and all three reserved item/modifier pairs observed
+  only in synthetic test.
+- Re-ran `make data` successfully inside the network-restricted sandbox: all
+  completed IDs/batches were reused, with no new Groq requests.
+- `scripts/push_dataset.py --dry-run`: passed after replaying all records;
+  staged 4,200 synthetic conversations and five excluded examples. Human scored
+  count is zero. No Hub repository was created or changed.
+- `scripts/collect_data_artifacts.py` regenerates 20 review records (one per
+  intent from train and test), copied statistics and `results/data_validation.json`
+  directly from the validated files. Full generated data and cache stay ignored.
+- Confirmed the live environment has no GPU packages or optional llama.cpp;
+  downloaded HF assets contain no model weights. Lockfile upload timestamps
+  obey the release cutoff. Current-source manifest check passes.
+- Final `make lint`: passed (54 Python files); final `make test`: 204 passed
+  in 4.50 seconds, with warnings treated as errors.
+- The dry-run packet matches validated splits, manifest and statistics
+  byte-for-byte. Final source/wheel builds pass and exclude the full generated
+  corpus and all secrets/caches. `git diff --check` passes.
+
 ## Known issues and user actions
 
-- No blocking issues. No accounts, uploads or secret values are required for Phase 1.
+- Write the configured 60–100 human-authored conversations with the annotation
+  CLI before seeing any model evaluation results, then run `make push-data` to
+  publish privately. HF_TOKEN and HF_USERNAME are already present in `.env`;
+  their values were not displayed. Dataset-write permission is checked when the
+  user actually uploads. These are user actions from Phase 2.
 - The sandbox required permission for PyPI access and writes to `.git`.
 - uv warns that its in-project cache may enter source distributions; archive
   inspection confirmed the ignore rules exclude it.
 - The existing local `.env` must remain untracked and must not be printed.
-- Actual Groq service/model availability, tokenizer lengths and GGUF inference
-  remain unverified; those checks belong to their later phases. Prompt size must
-  be checked against the full rendered-token budget during Phase 2 validation.
+- The Groq replacement and tokenizer renderer have now been exercised locally.
+  No S3 benchmark, GPU training/evaluation or real GGUF inference has run.
+- The account's 8,000-token/minute Groq limit slows generation. Parallel cache
+  preparation hit that limit and stopped; the canonical resumable run completed
+  with its existing bounded exponential backoff. Preserve cache/journals on retry.
+- The interrupted pre-review drafts were preserved in the ignored
+  `.cache/phase2-interrupted-drafts` directory before the finalized run.
 
 ## Next step
 
-Stop after the Phase 1 local commit. Start Phase 2 only after the user says
-`continue to Phase 2`. No remote has been added and nothing has been pushed.
+Stop after the Phase 2 local commit. Start Phase 3 only after the user says
+`continue to Phase 3`; the human benchmark must be written before model
+evaluation. No GitHub remote/push or HF upload has been performed.

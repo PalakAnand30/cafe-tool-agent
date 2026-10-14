@@ -25,11 +25,20 @@ these rules. Summarise successful results using the actual tool response.
 
 def system_prompt(domain: DomainConfig | None = None) -> str:
     config = domain or load_domain()
-    menu = {
-        "currency": config.currency,
-        "items": [item.model_dump(mode="json") for item in config.items],
-    }
-    return BEHAVIOUR + "\nMenu:\n" + json.dumps(menu, ensure_ascii=False, separators=(",", ":"))
+    # Group identical modifier sets; retain every item and supported modifier.
+    groups: dict[tuple[str, ...], list[str]] = {}
+    for item in config.items:
+        groups.setdefault(tuple(item.modifiers), []).append(item.name)
+    menu = "\n".join(
+        ", ".join(names) + ": " + (", ".join(modifiers) or "none")
+        for modifiers, names in groups.items()
+    )
+    return (
+        BEHAVIOUR
+        + f"\nCurrency: {config.currency}. Prices and stock come from tools."
+        + "\nMenu (exact item names: allowed modifiers):\n"
+        + menu
+    )
 
 
 class ChatTokenizer(Protocol):
@@ -37,7 +46,11 @@ class ChatTokenizer(Protocol):
 
 
 def render_chat(
-    tokenizer: ChatTokenizer, messages: list[Message], tools: list[dict[str, Any]] | None = None
+    tokenizer: ChatTokenizer,
+    messages: list[Message],
+    tools: list[dict[str, Any]] | None = None,
+    *,
+    add_generation_prompt: bool = True,
 ) -> str:
     # Qwen's template expects structured arguments rather than native SDK JSON strings.
     rendered = [message.to_wire() for message in messages]
@@ -48,5 +61,5 @@ def render_chat(
         rendered,
         tools=tool_schemas() if tools is None else tools,
         tokenize=False,
-        add_generation_prompt=True,
+        add_generation_prompt=add_generation_prompt,
     )

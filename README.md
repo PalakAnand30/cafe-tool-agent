@@ -4,10 +4,10 @@ A reproducible project to fine-tune Qwen2.5-1.5B-Instruct with QLoRA for café
 ordering tool calls, compare prompting and fine-tuning, and serve the resulting
 GGUF model on CPU. `PROJECT_SPEC.md` defines the full scope and working rules.
 
-Phase 1 provides the café domain, SQLite backend, tool schemas and executors,
-strict tool-call parser, shared prompt helpers, model clients and agent loop.
-Training, data generation, model evaluation and the chat demo have not run.
-No model performance results are available.
+The café backend and agent core are implemented, together with the Phase 2
+dataset pipeline, replay/token validation, assistant-only labels, human-test
+annotation CLI and private dataset publisher. Training, model evaluation and
+the chat demo have not run. No model performance results are available.
 
 ## Local setup
 
@@ -29,13 +29,15 @@ Never commit or share `.env`.
 
 ## Project layout
 
-- `src/cafe_agent/`: domain, backend, tools, parser, prompting, clients and
-  agent loop; data, evaluation and demo modules remain placeholders.
+- `src/cafe_agent/`: domain, backend, tools, parser, prompting, clients,
+  agent loop and dataset pipeline; evaluation and demo remain placeholders.
 - `configs/domain.yaml`: menu, prices, supported modifiers, stock and timing.
 - `configs/runtime.yaml`: decoding, caching, retry, CPU and agent settings.
-  Other YAML files remain placeholders for their planned phases.
-- `tests/`: backend, tools, HTTP API, parser, agent and offline client tests.
-- `notebooks/`, `scripts/`, `docker/`: placeholders for their planned phases.
+  `data.yaml` controls generation; `train.yaml` pins the tokenizer/model revision.
+- `tests/`: backend, tools, HTTP API, parser, agent, client, replay, leakage,
+  masking, annotation and publishing tests.
+- `scripts/`: human-test annotation and private dataset upload entry points.
+  `notebooks/` and `docker/` remain placeholders.
 - `data/`: generated data and API cache are ignored; human tests and small
   samples can be versioned.
 - `results/`: versioned location for future predictions and reports.
@@ -44,12 +46,11 @@ Never commit or share `.env`.
 
 ## Commands and phase boundaries
 
-`make setup`, `make lint` and `make test` are implemented. Remaining targets
-report the phase that will implement them and exit with an error:
+`make setup`, `make lint`, `make test`, `make data` and `make push-data` are
+implemented. Remaining targets report their planned phase and exit with an error:
 
 | Target | Planned phase |
 | --- | --- |
-| `make data`, `make push-data` | 2 |
 | `make eval-local` | 3 (harness), 5 (GGUF) |
 | `make report` | 5 |
 | `make serve`, `make docker-build`, `make docker-run` | 6 |
@@ -114,6 +115,90 @@ call before execution, appends tool results with matching IDs, and returns a
 reply, history and trace. It stops on malformed output, reused call IDs or the
 configured round limit. Model behaviour is tested with scripted responses and
 mock transports; no live model quality claim is made.
+
+## Generate and validate the dataset
+
+Set `GROQ_API_KEY` in your existing `.env`, then run:
+
+```sh
+make data
+```
+
+The user-approved paraphraser and later S3 baseline are `openai/gpt-oss-120b`
+through Groq with low reasoning effort. The originally specified Llama model
+was unavailable to the configured account. This project does not use the OpenAI
+API for these requests.
+
+The job writes append-only gold drafts and final train/validation/test JSONL
+under `data/generated/`, caches every successful Groq response in `data/cache/`,
+and resumes completed IDs and paraphrase batches. A manifest rejects changed
+inputs or code; use a new `--output-dir` when intentionally making a new version.
+Do not delete the cache to retry an interrupted job.
+
+Only customer utterances are paraphrased. Protected entities and complete order
+lines are verified; rejected paraphrases fall back to the original utterance.
+Assistant tool calls, backend results and varied replies are programmatic.
+Reserved template families and item/modifier pairs belong exclusively to test,
+and normalized customer text is deduplicated across all synthetic splits.
+
+Every conversation validates its tool calls, replays stored results and final
+state against a fresh backend, and fits the pinned Qwen template under the
+user-approved full-conversation token budget. Assistant-token masking uses
+template-aligned character spans and fast-tokenizer offsets; it never truncates
+or labels customer/tool text as an assistant target. See
+`data/generated/stats.md` for measured counts, lengths and rejection rates.
+
+Regenerate the versioned review sample and validation evidence from those files:
+
+```sh
+uv run --locked python scripts/collect_data_artifacts.py
+```
+
+The resulting `data/samples/` and `results/data_validation.json` contain gold
+data validation evidence, not model evaluation results.
+
+An explicit offline variant is available for development. It records that no
+API paraphrasing ran and uses a separate output directory:
+
+```sh
+uv run --locked python -m cafe_agent.data.generator --no-paraphrase --output-dir data/offline
+```
+
+## Write the human benchmark, then publish privately
+
+Before seeing any model evaluation results, write your own conversations:
+
+```sh
+uv run --locked python scripts/annotate_human_test.py
+```
+
+Choose an intent, enter customer messages, and label each assistant action as
+`tool`, `clarify`, `decline` or `reply`. Tool actions accept a function name and
+JSON arguments, execute against a fresh backend, and let you annotate the next
+assistant action. Use `/advance MINUTES` to test order progression, `/save` to
+review/accept or type the expected final state, and `/quit` to exit. Saving
+replays the entire conversation and checks the token budget. Previously saved
+records survive interruption.
+
+The file `data/human_test/human_test.jsonl` contains clearly marked
+`author=codex_example` worked examples. They are excluded by the shared human
+loader and must never count as human benchmark evidence. Add the human-authored
+benchmark required by `configs/data.yaml`; do not generate it with an LLM.
+
+Then set `HF_TOKEN` (dataset write permission) and `HF_USERNAME` in `.env` and run:
+
+```sh
+uv run --locked python scripts/push_dataset.py --dry-run
+make push-data
+```
+
+The dry run stages validated files without contacting the Hub. Upload requires
+the configured human benchmark count and creates a private
+`<HF_USERNAME>/cafe-tool-calls` dataset. Synthetic splits use its default config;
+human test is a separate config. Existing public repositories are rejected.
+Read raw JSONL files from the Hub to preserve omitted argument fields; Arrow
+inference can fill missing nested keys with null. Make the dataset public only
+when the project is ready.
 
 <!-- RESULTS:START -->
 No experiments have run; results will be generated from `results/` in later phases.

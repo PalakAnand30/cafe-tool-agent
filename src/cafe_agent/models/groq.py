@@ -52,6 +52,11 @@ class GroqClient:
             "seed": self.config.seed,
             **self.config.generation.model_dump(),
         }
+        if not tools:
+            del request["tools"]
+            del request["tool_choice"]
+        if self.config.groq.reasoning_effort is not None:
+            request["reasoning_effort"] = self.config.groq.reasoning_effort
         key = hashlib.sha256(
             json.dumps(request, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         ).hexdigest()

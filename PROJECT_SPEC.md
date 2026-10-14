@@ -68,8 +68,8 @@ Success criteria:
 | Training | PyTorch, Hugging Face `transformers`, `peft`, `trl` (SFTTrainer), `bitsandbytes` 4-bit NF4 | Kaggle only |
 | Tracking | Weights & Biases, project `cafe-tool-agent` | Kaggle (+ local eval logging optional) |
 | GPU inference | `vllm` (fp16) with fallback to `transformers.generate` if vLLM install fails | Kaggle only |
-| API baseline | Groq, model `llama-3.3-70b-versatile`, native tool calling via `groq` SDK | Local |
-| Paraphrasing | Same Groq Llama model (open-weight licence permits using outputs for training) | Local |
+| API baseline | Groq, model `openai/gpt-oss-120b`, native tool calling via `groq` SDK | Local |
+| Paraphrasing | Same Groq GPT-OSS 120B model (open-weight, Apache-2.0) | Local |
 | GGUF export | llama.cpp `convert_hf_to_gguf.py` + `llama-quantize` → `Q4_K_M` | Kaggle (CPU cells) |
 | CPU inference | `llama-cpp-python`, `n_gpu_layers=0` | Local + Docker |
 | Demo | FastAPI `/chat` + Gradio UI | Local + HF Space (Docker SDK) |
@@ -177,7 +177,7 @@ Backend rules: validate everything; return structured errors (`ITEM_NOT_FOUND`, 
 **Generation** (`cafe_agent.data`):
 - Python templates per intent, filled by sampling items, sizes, quantities, modifiers and names. Labels (tool calls, arguments, tool results from the real in-process backend, final assistant replies) are produced programmatically so they are correct by construction.
 - Assistant final replies come from varied response templates (not an LLM).
-- Paraphrase about 30% of user turns with Groq Llama 3.3 70B. Instruct it to keep every item, size, quantity, modifier and name; then **verify** entities survived (string or synonym map match) and reject failures. Log the rejection rate.
+- Paraphrase about 30% of user turns with Groq GPT-OSS 120B. Instruct it to keep every item, size, quantity, modifier and name; then **verify** entities survived (string or synonym map match) and reject failures. Log the rejection rate.
 - Noise on about 15% of user turns: typos, lowercase, missing punctuation, UK/US spelling, informal phrasing ("lemme get", "cheers").
 
 **Intent mix** (`configs/data.yaml`, adjustable):
@@ -202,7 +202,11 @@ About 25% of conversations are multi-turn (e.g. clarification then completion, o
 - Reserve 20% of templates and a set of (item, modifier) combinations exclusively for the test split.
 - Deduplicate by normalised user text across all splits; assert no overlap in tests.
 
-**Validation**: every example must (a) pass schema validation for every tool call, (b) replay against a fresh backend and reproduce the stored tool results and `expected_final_state`, (c) render with the Qwen tokenizer chat template under 1,024 tokens. Write `data/generated/stats.md` with counts per intent, turn lengths, token lengths and paraphrase rejection rate.
+**Validation**: every example must (a) pass schema validation for every tool call, (b) replay against a fresh backend and reproduce the stored tool results and `expected_final_state`, (c) render with the Qwen tokenizer chat template under 4,096 tokens. Write `data/generated/stats.md` with counts per intent, turn lengths, token lengths and paraphrase rejection rate.
+
+**User-approved adjustment (Phase 2)**: use a 4,096-token full-conversation limit while retaining full domain coverage. The pinned tokenizer measured 2,555 tokens for the original prompt alone; even a compact full-menu prompt used 1,023 tokens before the assistant response. Inference context must accommodate this budget plus generated output.
+
+**User-approved model replacement (Phase 2)**: use `openai/gpt-oss-120b` through Groq for paraphrasing and S3, with low reasoning effort. The originally specified `llama-3.3-70b-versatile` returned `model_not_found` and was absent from the configured key's model catalog. Do not claim any Llama baseline or Llama-generated data was run.
 
 **Human test set** (`data/human_test/human_test.jsonl`): 60–100 conversations written by the user, not generated. Build `scripts/annotate_human_test.py`, an interactive CLI where the user types customer messages and selects or types the expected behaviour (tool + arguments, clarify, decline) and expected final state; it validates entries against the schema and backend. Seed the file with 5 examples written by you, clearly marked `"author": "codex_example"`, which are excluded from scoring.
 
@@ -218,7 +222,7 @@ About 25% of conversations are multi-turn (e.g. clarification then completion, o
 | --- | --- | --- |
 | S1 | Qwen2.5-1.5B-Instruct, zero-shot (system prompt + tools) | Kaggle, vLLM |
 | S2 | Qwen2.5-1.5B-Instruct, few-shot (same + 4 fixed examples) | Kaggle, vLLM |
-| S3 | Llama-3.3-70B via Groq, native tool calling, same system prompt | Local |
+| S3 | GPT-OSS-120B via Groq, native tool calling, same system prompt | Local |
 | S4 | Fine-tuned LoRA, merged, fp16 | Kaggle, vLLM |
 | S5 | Fine-tuned, GGUF Q4_K_M | Local, llama-cpp-python, CPU only |
 
@@ -241,7 +245,7 @@ All systems use the same system prompt and tool schemas from `cafe_agent.prompti
 - Self-contained: pinned install cell; `pip install git+https://github.com/<GITHUB_USERNAME>/cafe-tool-agent.git` (repo must be public, or read a `GITHUB_TOKEN` Kaggle secret); load data from HF; read secrets from Kaggle Secrets; log to W&B.
 - Model: `Qwen/Qwen2.5-1.5B-Instruct` at the pinned revision, 4-bit NF4 with double quantisation, compute dtype **float16** (T4 has no bf16). Single GPU.
 - LoRA: r=16, alpha=32, dropout=0.05, target all linear projections (`q,k,v,o,gate,up,down`).
-- Trainer: TRL `SFTTrainer`, lr 2e-4, cosine schedule, warmup 3%, 2–3 epochs (config), max sequence length 1,024, per-device batch 4, grad accumulation 4, gradient checkpointing, eval each half epoch, save best by validation loss.
+- Trainer: TRL `SFTTrainer`, lr 2e-4, cosine schedule, warmup 3%, 2–3 epochs (config), max sequence length 4,096, per-device batch 4, grad accumulation 4, gradient checkpointing, eval each half epoch, save best by validation loss. Check T4 memory use with the user-approved longer sequence length during Phase 4.
 - **Loss on assistant tokens only**: implement label masking yourself in `cafe_agent.data` (render with the chat template, set non-assistant tokens to -100). Unit-test the masking locally using the tokenizer only.
 - Cell parameters at the top for ablations (`LORA_R`, `TRAIN_FRACTION`, `RUN_NAME`) so the user can rerun cheaply; default is one main run.
 - Outputs pushed to HF Hub: adapter `HF_USERNAME/cafe-agent-qwen2.5-1.5b-lora`, merged fp16 model `...-merged`, and GGUF `...-gguf` (`Q4_K_M`, built in CPU cells with llama.cpp). Each repo gets a model card with training details and W&B run link.
@@ -249,7 +253,7 @@ All systems use the same system prompt and tool schemas from `cafe_agent.prompti
 
 ## 7b. GPU evaluation (Kaggle notebook `eval_gpu_kaggle.ipynb`)
 
-- Installs the package from GitHub and vLLM (pinned for T4, `dtype="float16"`, `max_model_len=2048`, `gpu_memory_utilization=0.85`). If vLLM fails to install or load, fall back automatically to `transformers.generate` and record which backend was used.
+- Installs the package from GitHub and vLLM (pinned for T4, `dtype="float16"`, `max_model_len=8192`, `gpu_memory_utilization=0.85`). If vLLM fails to install or load, fall back automatically to `transformers.generate` and record which backend was used.
 - Runs S1, S2, S4 on the synthetic test and human test sets in turn-level and end-to-end modes, using the in-process backend from the package.
 - Writes prediction JSONL files with the shared schema, zips them, and prints download instructions. The user downloads the zip into `results/predictions/`.
 
@@ -273,7 +277,7 @@ All systems use the same system prompt and tool schemas from `cafe_agent.prompti
 
 ## 10. README
 
-Sections: one-paragraph summary with headline result; demo GIF placeholder and Space link; architecture diagram (Mermaid: user → agent → tool parser → café API, plus the training pipeline); results table and charts (auto-inserted by `scripts/update_readme.py` between `<!-- RESULTS:START -->` and `<!-- RESULTS:END -->` markers); dataset design; training details; evaluation method; reproduce steps (local + Kaggle); limitations (synthetic training data, small human test set, single domain); licences (Qwen Apache-2.0, Llama outputs used for paraphrasing under the Llama licence). Also generate `results/cv_bullets.md` with 3 CV bullets filled from `metrics.json`.
+Sections: one-paragraph summary with headline result; demo GIF placeholder and Space link; architecture diagram (Mermaid: user → agent → tool parser → café API, plus the training pipeline); results table and charts (auto-inserted by `scripts/update_readme.py` between `<!-- RESULTS:START -->` and `<!-- RESULTS:END -->` markers); dataset design; training details; evaluation method; reproduce steps (local + Kaggle); limitations (synthetic training data, small human test set, single domain); licences (Qwen and GPT-OSS Apache-2.0; record paraphrase provenance). Also generate `results/cv_bullets.md` with 3 CV bullets filled from `metrics.json`.
 
 ---
 

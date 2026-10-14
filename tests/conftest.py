@@ -5,6 +5,12 @@ from collections.abc import Iterator
 import pytest
 
 from cafe_agent.backend.service import CafeService
+from cafe_agent.data.tokenization import load_tokenizer
+
+
+@pytest.fixture(scope="session")
+def tokenizer():
+    return load_tokenizer()
 
 
 @pytest.fixture

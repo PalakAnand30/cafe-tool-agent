@@ -39,7 +39,9 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
 - `make test`: pytest, using the installed package without a source-path override.
 - Standalone café API: `uv run --locked uvicorn cafe_agent.backend.app:create_app --factory`.
   This is the backend only; the demo `make serve` target remains Phase 6.
-- `make data`, `make push-data`: Phase 2.
+- `make data`: generate and replay/token-validate resumable synthetic splits.
+- `make push-data`: user-run private Hub publication after the human benchmark.
+- Human annotation: `uv run --locked python scripts/annotate_human_test.py`.
 - `make eval-local`: Phase 3 harness, extended for CPU GGUF in Phase 5.
 - `make report`: Phase 5.
 - `make serve`, `make docker-build`, `make docker-run`: Phase 6.
@@ -83,3 +85,27 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
 - The `cpu` extra is pinned but not installed by normal setup. Keep llama.cpp
   lazy and CPU-only; actual model inference remains unverified until Phase 5.
 - Configs are bundled in wheels; checkout configs take precedence locally.
+
+## Phase 2 decisions and data rules
+
+- The user explicitly approved a 4,096-token full-conversation limit, preserving
+  full domain coverage. This supersedes the original 1,024-token requirement.
+  Inference context is 8,192; measure T4 training memory during Phase 4.
+- The user explicitly approved `openai/gpt-oss-120b` through Groq for both
+  paraphrasing and S3 after the original Llama model was unavailable. Use low
+  reasoning effort. Do not present the replacement as a Llama result.
+- Model/tokenizer revision is pinned in `configs/train.yaml`; download only
+  tokenizer/config files locally, with no model weights or torch.
+- `Conversation` is the shared data contract; gold tool-call arguments are
+  dictionaries in JSONL and converted to native wire strings by the renderer.
+- Every record must schema-validate, replay to identical tool results/final
+  state, and render under the approved token budget. Mask only assistant payloads
+  and their closing tokens; no truncation, substring guessing or JSON repair.
+- Preserve dataset manifests, append-only drafts, paraphrase journals and final
+  records. Changed inputs/code require a new output directory. Keep API cache.
+- Reserve test template families and item/modifier pairs before sampling;
+  check normalized user text across every synthetic split.
+- Human records must be written by the user before seeing model results.
+  Always exclude `author=codex_example`; never invent human-authored examples.
+- The user runs `make push-data` after annotating the required human benchmark.
+  Prepare/dry-run locally; do not upload automatically in this phase.

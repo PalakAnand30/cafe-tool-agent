@@ -1,2 +1,47 @@
-# Phase 2: split sizes, intent mix, paraphrasing and noise.
 seed: 42
+splits: {train: 3500, validation: 300, test: 400}
+intent_mix:
+  single_order: 0.18
+  multi_order: 0.17
+  clarification: 0.15
+  availability: 0.08
+  order_status: 0.08
+  cancel_order: 0.06
+  menu: 0.06
+  unsupported: 0.10
+  tool_error: 0.06
+  out_of_scope: 0.06
+paraphrase_rate: 0.30
+noise_rate: 0.15
+multi_turn_rate: 0.25
+template_variants: 5
+test_template_fraction: 0.20
+max_attempts_per_id: 200
+progress_every: 100
+max_tokens: 4096
+paraphrase_max_tokens: 192
+paraphrase_batch_size: 12
+output_dir: data/generated
+human_path: data/human_test/human_test.jsonl
+human_min_conversations: 60
+human_max_conversations: 100
+tokenizer_cache: .cache/huggingface
+quantities: [1, 2, 3]
+first_names: [Alex, Jamie, Morgan, Taylor, Jordan, Casey, Sam, Robin, Quinn, Drew, Riley, Avery, Cameron, Charlie, Devon, Ellis, Finley, Harper, Jesse, Rowan]
+last_names: [Adams, Baker, Carter, Davis, Evans, Foster, Green, Harris, Irving, Jones, Kelly, Lane, Miller, Nash, Owen, Parker, Reed, Smith, Turner, Wells]
+held_out_combinations:
+  - {item_name: latte, modifier: vanilla_syrup}
+  - {item_name: cappuccino, modifier: soy_milk}
+  - {item_name: butter croissant, modifier: warmed}
+synonyms:
+  oat_milk: [oat milk, oat-milk]
+  soy_milk: [soy milk, soya milk, soy-milk]
+  extra_shot: [extra shot, extra shots]
+  no_sugar: [no sugar, without sugar, sugar-free]
+  vanilla_syrup: [vanilla syrup]
+  decaf: [decaf, decaffeinated]
+  warmed: [warmed, warm, heated]
+  iced: [iced]
+  '1': ['1', one, a, an]
+  '2': ['2', two]
+  '3': ['3', three]

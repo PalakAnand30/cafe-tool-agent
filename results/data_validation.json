@@ -1,0 +1,33 @@
+{
+  "conversations": 4200,
+  "validated": 4200,
+  "splits": {
+    "train": 3500,
+    "validation": 300,
+    "test": 400
+  },
+  "multi_turn_conversations": 1050,
+  "user_turns": 5250,
+  "noisy_turns": 801,
+  "token_lengths": {
+    "min": 1175,
+    "max": 2816,
+    "mean": 1325.4359523809524
+  },
+  "paraphrase_attempts": 1563,
+  "paraphrase_rejections": 178,
+  "paraphrase_rejection_reasons": {
+    "unchanged": 147,
+    "missing_unsupported_request": 20,
+    "missing_order_line": 11
+  },
+  "leakage": {
+    "held_out_templates_observed": 10,
+    "held_out_combinations_observed": 3,
+    "overlapping_user_texts": 0
+  },
+  "paraphrase_rejection_rate": 0.11388355726167626,
+  "retained_paraphrase_turns": 1384,
+  "human_scoreable": 0,
+  "codex_examples_excluded": 5
+}

@@ -26,5 +26,11 @@ jobs:
         run: make setup
       - name: Lint and format checks
         run: make lint
+      - uses: actions/cache@v4
+        with:
+          path: .cache/huggingface
+          key: qwen-tokenizer-${{ runner.os }}-${{ hashFiles('configs/train.yaml') }}
+      - name: Cache the pinned tokenizer (no weights)
+        run: uv run --locked python -c "from cafe_agent.data.tokenization import load_tokenizer; load_tokenizer()"
       - name: Unit tests
         run: make test

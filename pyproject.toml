@@ -13,9 +13,12 @@ dependencies = [
     "fastapi==0.115.12",
     "groq==0.28.0",
     "httpx==0.28.1",
+    "huggingface-hub==0.30.2",
+    "Jinja2==3.1.6",
     "pydantic==2.11.7",
     "python-dotenv==1.1.1",
     "PyYAML==6.0.2",
+    "transformers==4.51.3",
     "uvicorn==0.34.3",
 ]
 

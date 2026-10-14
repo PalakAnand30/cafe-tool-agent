@@ -65,7 +65,11 @@ def tool_schemas() -> list[dict[str, Any]]:
         if isinstance(value, dict):
             if "$ref" in value:
                 return inline(definitions[value["$ref"].split("/")[-1]], definitions)
-            return {k: inline(v, definitions) for k, v in value.items() if k != "$defs"}
+            return {
+                k: inline(v, definitions)
+                for k, v in value.items()
+                if k not in {"$defs", "title", "default"}
+            }
         return value
 
     tools = []
