@@ -8,9 +8,9 @@
   },
   "test": {
     "source_conversations": 400,
-    "turn_predictions": 59,
+    "turn_predictions": 143,
     "expected_turn_predictions": 876,
-    "end_predictions": 24,
+    "end_predictions": 62,
     "complete": false
   }
 }

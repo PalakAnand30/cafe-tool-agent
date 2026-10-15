@@ -406,6 +406,29 @@ All direct pins predate the release cutoff; transitive versions remain in
   synthetic baseline remains unfinished. Keep free limits and resume from
   the same files when quota is available again; do not start Phase 4.
 
+## Phase 3 evening quota check and resume (2026-10-15)
+
+- User requested another quota check, retaining the earlier conditional resume
+  instruction and free-plan preference. At 19:46:59 UTC, one uncached pending
+  request succeeded with HTTP 200; cached the response without changing prediction
+  checkpoints. Latest sanitized evidence: `results/groq_quota_check.json`.
+- Resumed `make eval-local` after that check. Synthetic coverage advanced from
+  59 to 143 of 876 gold assistant turns and from 24 to 62 of 400 end-to-end
+  conversations. Independent coverage remains complete at 143 turns and 84
+  conversations; its prediction file is byte-for-byte unchanged.
+- Groq returned another quota limit with a 325-second retry-after value. The
+  evaluator stopped, saved partial metrics and retained every completed prediction
+  and cached response. Did not resume again after this quota stop. Full Phase 3
+  acceptance remains incomplete; no later phase started.
+- Offline checks replayed all 146 saved end-to-end histories (84 independent,
+  62 synthetic), reproducing tool results and recorded backend states. Both
+  original checkpoint prefixes are preserved, frozen inference hashes match,
+  and offline metrics recomputation is identical. Evidence is recorded in
+  `results/phase3_resume_validation.json`.
+- `make lint` passed (67 Python files); `make test` passed all 232 tests in
+  4.31 seconds. Refreshed reports and README from saved predictions; no source,
+  dependency, domain, prompt or decoding changes were made.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -417,7 +440,7 @@ All direct pins predate the release cutoff; transitive versions remain in
   inspection confirmed the ignore rules exclude it.
 - The existing local `.env` must remain untracked and must not be printed.
 - Independent S3 evaluation is complete, including confidence intervals.
-  Synthetic S3 evaluation is partial and saved at 24/400 end-to-end cases.
+  Synthetic S3 evaluation is partial and saved at 62/400 end-to-end cases.
   Groq's current quota prevents finishing the full run now. Keep free limits
   and resume only when quota is available. No GPU training/evaluation or real
   GGUF inference has run.
