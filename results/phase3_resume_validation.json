@@ -1,0 +1,16 @@
+{
+  "split": "independent_test",
+  "complete": true,
+  "turn_predictions": 143,
+  "end_predictions": 84,
+  "predictions_sha256": "ad43ac7cf9d4013b39dbb46df7b5070b2e5c3ebc3dbbc41ccf5c7f70fc4be467",
+  "trace_replay_matches_recorded_states": true,
+  "scope": "Collector integrity check; this is not a model accuracy claim.",
+  "replayed_end_conversations": {
+    "independent_test": 84,
+    "test": 24
+  },
+  "original_checkpoint_prefix_preserved": true,
+  "frozen_source_hashes_match": true,
+  "offline_metrics_recomputed_identically": true
+}

@@ -1,0 +1,22 @@
+{
+  "checked_at_utc": "2026-10-15T10:59:37.428226+00:00",
+  "quota_available": true,
+  "request_key": "4b5bd34eef62845b7762bfa93b00559b79de2b7337c4dd5f1272460d1bb8bffa",
+  "model": "openai/gpt-oss-120b",
+  "http_status": 200,
+  "rate_headers": {
+    "x-ratelimit-limit-requests": "1000",
+    "x-ratelimit-limit-tokens": "8000",
+    "x-ratelimit-remaining-requests": "999",
+    "x-ratelimit-remaining-tokens": "6512",
+    "x-ratelimit-reset-requests": "1m26.4s",
+    "x-ratelimit-reset-tokens": "11.16s"
+  },
+  "cached": false,
+  "usage": {
+    "prompt_tokens": 976,
+    "completion_tokens": 55,
+    "total_tokens": 1031
+  },
+  "prediction_checkpoints_unchanged": true
+}

@@ -1,17 +1,16 @@
 {
-  "state": "deferred_by_user",
+  "state": "quota_limited",
   "system": "S3",
   "fingerprint": "9dc254059ed19c003a76c7a6619d53de3b2158af94c40caceecfa15dd0780122",
-  "retry_after_seconds": 134.0,
+  "retry_after_seconds": 119.0,
   "rate_headers": {
-    "retry-after": "134",
+    "retry-after": "119",
     "x-ratelimit-limit-requests": "1000",
     "x-ratelimit-limit-tokens": "8000",
-    "x-ratelimit-remaining-requests": "906",
-    "x-ratelimit-remaining-tokens": "7703",
-    "x-ratelimit-reset-requests": "2h15m21.6s",
-    "x-ratelimit-reset-tokens": "2.227s"
+    "x-ratelimit-remaining-requests": "782",
+    "x-ratelimit-remaining-tokens": "5161",
+    "x-ratelimit-reset-requests": "5h13m55.2s",
+    "x-ratelimit-reset-tokens": "21.292s"
   },
-  "complete": false,
-  "stop_reason": "Groq daily token quota; user chose free limits and a later resume."
+  "complete": false
 }

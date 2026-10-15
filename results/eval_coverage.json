@@ -1,16 +1,16 @@
 {
   "independent_test": {
     "source_conversations": 84,
-    "turn_predictions": 33,
+    "turn_predictions": 143,
     "expected_turn_predictions": 143,
-    "end_predictions": 24,
-    "complete": false
+    "end_predictions": 84,
+    "complete": true
   },
   "test": {
     "source_conversations": 400,
-    "turn_predictions": 0,
+    "turn_predictions": 59,
     "expected_turn_predictions": 876,
-    "end_predictions": 0,
+    "end_predictions": 24,
     "complete": false
   }
 }

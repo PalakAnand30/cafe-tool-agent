@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 2026-10-14 (Europe/London).
+Updated: 2026-10-15 (Europe/London).
 
 ## Phase checklist
 
@@ -370,6 +370,42 @@ All direct pins predate the release cutoff; transitive versions remain in
   confidence intervals are pending quota availability and the user's later resume.
   No GitHub push, HF visibility change, new dataset upload or later phase work.
 
+## Phase 3 conditional quota check and resume (2026-10-15)
+
+- User requested a quota check and authorized resuming Phase 3 only if quota
+  was available. Sent one genuinely uncached pending gold-turn request with
+  retries disabled for this probe; successful response was saved under the
+  normal full-request cache key. Groq returned HTTP 200. Prediction checkpoints
+  were unchanged by the check itself. Sanitized evidence, without credentials
+  or organization identifiers: `results/groq_quota_check.json`.
+- Resumed `make eval-local` only after the successful live quota check. Reused
+  all completed keys and cached responses. Prompts, decoding, argument rules,
+  classifiers and all frozen inference source hashes remain unchanged.
+- Completed independent_test: 143/143 gold assistant turns and 84/84 end-to-end
+  conversations. A local integrity check replayed every saved execution trace
+  and reproduced its recorded backend state; source IDs and prediction keys
+  are complete and unique. Evidence: `results/phase3_resume_validation.json`.
+  This check validates collection integrity, not model accuracy.
+- The independent-set metrics now include the configured 1,000-resample, 95%
+  conversation-cluster bootstrap intervals. The synthetic set progressed to
+  59/876 gold assistant turns and 24/400 end-to-end conversations. Its results
+  remain explicitly partial and have no confidence intervals.
+- Replayed all 108 saved end-to-end histories (84 independent and 24 synthetic),
+  including recorded logical-clock advances. Every tool result and final state
+  matched. The original checkpoint prefix remains intact, frozen inference
+  hashes match, and offline metric recomputation reproduces the same results.
+- `make lint` passed (67 Python files); `make test` passed all 232 tests in
+  8.58 seconds. No source, dependency, prompt or decoding changes were needed.
+- Groq then returned another quota limit with a 119-second retry-after value.
+  The evaluator stopped and preserved its checkpoint. No further resume was
+  attempted once quota was unavailable, following the user's condition.
+  Current stop metadata: `results/eval_status.json`; current coverage:
+  `results/eval_coverage.json`. Prior October 14 quota evidence is historical.
+- Refreshed metrics, baseline report and README table directly from saved
+  prediction files. Full Phase 3 acceptance is still incomplete because the
+  synthetic baseline remains unfinished. Keep free limits and resume from
+  the same files when quota is available again; do not start Phase 4.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -380,9 +416,11 @@ All direct pins predate the release cutoff; transitive versions remain in
 - uv warns that its in-project cache may enter source distributions; archive
   inspection confirmed the ignore rules exclude it.
 - The existing local `.env` must remain untracked and must not be printed.
-- S3 is partially evaluated and saved. Groq's free daily quota prevents finishing
-  the full run now; the user chose to resume later. No GPU training/evaluation
-  or real GGUF inference has run.
+- Independent S3 evaluation is complete, including confidence intervals.
+  Synthetic S3 evaluation is partial and saved at 24/400 end-to-end cases.
+  Groq's current quota prevents finishing the full run now. Keep free limits
+  and resume only when quota is available. No GPU training/evaluation or real
+  GGUF inference has run.
 - The account's 8,000-token/minute Groq limit slows generation. Parallel cache
   preparation hit that limit and stopped; the canonical resumable run completed
   with its existing bounded exponential backoff. Preserve cache/journals on retry.
@@ -391,9 +429,10 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Stop at the user-requested Phase 3 checkpoint. After the quota refills, resume
-Phase 3 with `make eval-local`, or ask Codex to resume Phase 3. Preserve the
-existing prediction files, manifest and API cache. Finish independent_test and
-synthetic test, recompute full metrics/CIs, then mark Phase 3 complete and perform
+Stop at the quota-limited Phase 3 checkpoint. After the quota refills, resume
+Phase 3 with `make eval-local`, or ask Codex to check quota and conditionally
+resume. Preserve existing predictions, manifest and API cache; independent_test
+is complete and will be skipped. Finish synthetic test, recompute full metrics,
+then mark Phase 3 complete and perform
 the phase-end checks/commit/report. Do not start Phase 4 yet. The private HF
 dataset is ready; no GitHub remote or push has been performed.
