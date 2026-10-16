@@ -1,0 +1,72 @@
+selection: First lexicographic train ID per fixed intent; never selected from test
+  outcomes.
+train_sha256: 1326a0dc1c8db4cee0f4a745e86ad9af505c7f562c9b99cdea2cafb24e3bbf84
+examples:
+- source_id: train-00010
+  source_intent: single_order
+  messages:
+  - role: user
+    content: 'For Jamie Baker: order 3 hummus sandwich, thanks.'
+  - role: assistant
+    tool_calls:
+    - id: fewshot_train-00010_call_2
+      type: function
+      function:
+        name: create_order
+        arguments: '{"customer_name": "Jamie Baker", "items": [{"item_name": "hummus
+          sandwich", "quantity": 3, "modifiers": []}]}'
+  - role: tool
+    content: '{"order_id":"ORD-00001","total":"14.40","eta_minutes":6}'
+    tool_call_id: fewshot_train-00010_call_2
+  - role: assistant
+    content: "I've placed ORD-00001. Total: \xA314.40. ETA: 6 minutes."
+- source_id: train-00004
+  source_intent: multi_order
+  messages:
+  - role: user
+    content: Hi, this is Quinn Jones; I'd like you to order 2 small peppermint tea
+      with no sugar and 3 small lemonade with no sugar.
+  - role: assistant
+    tool_calls:
+    - id: fewshot_train-00004_call_2
+      type: function
+      function:
+        name: create_order
+        arguments: '{"customer_name": "Quinn Jones", "items": [{"item_name": "peppermint
+          tea", "quantity": 2, "modifiers": ["no_sugar"], "size": "small"}, {"item_name":
+          "lemonade", "quantity": 3, "modifiers": ["no_sugar"], "size": "small"}]}'
+  - role: tool
+    content: '{"order_id":"ORD-00001","total":"11.40","eta_minutes":6}'
+    tool_call_id: fewshot_train-00004_call_2
+  - role: assistant
+    content: "Thanks! ORD-00001 totals \xA311.40; preparation takes 6 minutes."
+- source_id: train-00003
+  source_intent: clarification
+  messages:
+  - role: user
+    content: I'm Rowan Lane. Please order 2 small lat drinks.
+  - role: assistant
+    content: 'Which exact item: latte, iced latte or chai latte?'
+  - role: user
+    content: Rowan Lane speaking; could you order 2 medium latte?
+  - role: assistant
+    tool_calls:
+    - id: fewshot_train-00003_call_4
+      type: function
+      function:
+        name: create_order
+        arguments: '{"customer_name": "Rowan Lane", "items": [{"item_name": "latte",
+          "quantity": 2, "modifiers": [], "size": "medium"}]}'
+  - role: tool
+    content: '{"order_id":"ORD-00001","total":"7.00","eta_minutes":6}'
+    tool_call_id: fewshot_train-00003_call_4
+  - role: assistant
+    content: "Order ORD-00001 is received: \xA37.00, ready in 6 minutes."
+- source_id: train-00000
+  source_intent: unsupported
+  messages:
+  - role: user
+    content: Hello, Alex Turner here; please place an order for 1 small latte with
+      warmed.
+  - role: assistant
+    content: Latte does not support warmed; would you like a small latte without it?

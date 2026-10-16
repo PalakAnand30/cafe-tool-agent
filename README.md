@@ -12,6 +12,11 @@ on both test sets and computes metrics from saved predictions. Training, GPU
 model evaluation and the chat demo have not run. Current S3 coverage and results
 are shown below.
 
+Phase 4's Kaggle training and GPU evaluation notebooks are ready for the user to
+run. Follow the [Kaggle handoff](docs/PHASE4_KAGGLE.md) for GitHub setup, secrets,
+T4 settings, training/export, prediction downloads and interrupted-run recovery.
+Local validation does not establish T4 memory fit or GPU runtime compatibility.
+
 ## Local setup
 
 Use Python 3.11 and [uv](https://docs.astral.sh/uv/). From the repository root:
@@ -39,8 +44,8 @@ Never commit or share `.env`.
   `data.yaml` controls generation; `train.yaml` pins the tokenizer/model revision.
 - `tests/`: backend, tools, HTTP API, parser, agent, client, replay, leakage,
   masking, annotation and publishing tests.
-- `scripts/`: human-test annotation and private dataset upload entry points.
-  `notebooks/` and `docker/` remain placeholders.
+- `scripts/`: data, evaluation and notebook build/validation entry points.
+  `notebooks/` contains the two Kaggle workflows; `docker/` remains a placeholder.
 - `data/`: generated data and API cache are ignored; human tests and small
   samples can be versioned.
 - `results/`: versioned predictions, metrics, validation evidence and reports.
@@ -109,8 +114,9 @@ rate limits and server errors with exponential backoff and jitter.
 `LlamaCppClient` lazy-loads the optional `cpu` extra, fixes `n_gpu_layers=0`,
 and accepts a tokenizer so it can use the shared Qwen chat-template renderer.
 The optional engine has not been installed or tested with a real GGUF yet;
-that validation belongs to Phase 5. HF and vLLM clients are explicit Kaggle
-stubs for Phase 4 and import no GPU libraries locally.
+that validation belongs to Phase 5. The lazy HF/vLLM workers under
+`cafe_agent.kaggle` are used by the Phase 4 notebooks. The old `models.kaggle`
+stubs are retained for frozen S3 provenance. Importing the package loads no GPU libraries.
 
 `Agent.run(messages)` accepts caller-owned history, validates every generated
 call before execution, appends tool results with matching IDs, and returns a

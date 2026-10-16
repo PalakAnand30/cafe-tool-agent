@@ -1,0 +1,10 @@
+{
+  "source_and_wheel_built": true,
+  "wheel_imports_without_gpu_packages": true,
+  "bundled_kaggle_configs_verified": true,
+  "archives_exclude_secrets_caches_weights": true,
+  "frozen_s3_fingerprint": "9dc254059ed19c003a76c7a6619d53de3b2158af94c40caceecfa15dd0780122",
+  "frozen_data_manifest_matches": true,
+  "gpu_training_run": false,
+  "gpu_inference_run": false
+}

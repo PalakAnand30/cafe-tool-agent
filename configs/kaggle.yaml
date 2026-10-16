@@ -1,0 +1,74 @@
+seed: 42
+dataset_revision: 5a626daa659b2455861e6a8d5a891c6dbe14e36d
+datasets:
+  train:
+    file: data/train.jsonl
+    sha256: 1326a0dc1c8db4cee0f4a745e86ad9af505c7f562c9b99cdea2cafb24e3bbf84
+    conversations: 3500
+  validation:
+    file: data/validation.jsonl
+    sha256: c83e6b580bf18b91b88c84b11eb965aae00db4aaa7d9512619d546465f08dfa8
+    conversations: 300
+  test:
+    file: data/test.jsonl
+    sha256: 662e3d6a609b850ea7a2b36756edddd950df716ec2f9c8a7ad3d9ef5d2746754
+    conversations: 400
+  independent_test:
+    file: data/independent_test.jsonl
+    sha256: 344b3436285d0864d4c56a7601ba2430bb425d344ec24c473e18455262d2fe73
+    conversations: 84
+dependencies:
+  uv: 0.11.26
+  torch: 2.6.0
+  transformers: 4.51.3
+  accelerate: 1.6.0
+  peft: 0.15.2
+  trl: 0.17.0
+  bitsandbytes: 0.45.5
+  datasets: 3.5.0
+  wandb: 0.19.10
+  safetensors: 0.5.3
+  numpy: 1.26.4
+  sentencepiece: 0.2.0
+  protobuf: 5.29.4
+  tiktoken: 0.9.0
+  tokenizers: 0.21.4
+  opencv-python-headless: 4.11.0.86
+vllm_version: 0.8.5.post1
+llama_cpp_revision: 74d4f5b041ad837153b0e90fc864b8290e01d8d5
+llama_cpp_tag: b5046
+inference:
+  context: 8192
+  max_tokens: 512
+  gpu_memory_utilization: 0.85
+hub_suffixes:
+  adapter: cafe-agent-qwen2.5-1.5b-lora
+  merged: cafe-agent-qwen2.5-1.5b-lora-merged
+  gguf: cafe-agent-qwen2.5-1.5b-lora-gguf
+training:
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  trainer:
+    epochs: 3
+    learning_rate: 0.0002
+    warmup_ratio: 0.03
+    per_device_train_batch_size: 4
+    per_device_eval_batch_size: 1
+    gradient_accumulation_steps: 4
+    logging_steps: 10
+    save_total_limit: 2
+    max_grad_norm: 1.0
+    lr_scheduler_type: cosine
+    optim: adamw_torch
+    gradient_checkpointing: true
+  wandb_project: cafe-tool-agent

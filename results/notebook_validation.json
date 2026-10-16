@@ -1,0 +1,24 @@
+{
+  "notebooks": [
+    {
+      "path": "notebooks/eval_gpu_kaggle.ipynb",
+      "sha256": "7ae8946dc3fd3034ba281da8e3bf263b9e5532e0669b1f939b4b72d02657b55e",
+      "format": "nbformat 4.5",
+      "cells": 8,
+      "compiled_code_cells": 5,
+      "executed_gpu_cells": 0,
+      "outputs": 0
+    },
+    {
+      "path": "notebooks/train_kaggle.ipynb",
+      "sha256": "92d8d3e7e731936d0241c06623a09bc7869c6fe5ae21f49f64980c26eaf3cb5d",
+      "format": "nbformat 4.5",
+      "cells": 8,
+      "compiled_code_cells": 5,
+      "executed_gpu_cells": 0,
+      "outputs": 0
+    }
+  ],
+  "gpu_training_run": false,
+  "gpu_inference_run": false
+}

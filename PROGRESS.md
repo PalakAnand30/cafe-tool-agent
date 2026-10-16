@@ -8,7 +8,7 @@ Updated: 2026-10-16 (Europe/London).
 - [x] Phase 1: domain, backend, tools, parser and agent loop.
 - [x] Phase 2: dataset and human-test annotation workflow.
 - [x] Phase 3: evaluation harness and Groq baseline.
-- [ ] Phase 4: Kaggle training and GPU evaluation notebooks.
+- [x] Phase 4: Kaggle training and GPU evaluation notebooks (written and locally validated).
 - [ ] Phase 5: GGUF evaluation and full report.
 - [ ] Phase 6: demo and deployment.
 - [ ] Phase 7: polish and reproducibility.
@@ -486,6 +486,90 @@ All direct pins predate the release cutoff; transitive versions remain in
   unstarted and requires the user's explicit continuation. No GitHub push,
   dataset upload, GPU work or model download was performed.
 
+## Phase 4: Kaggle notebooks prepared and locally validated (2026-10-16)
+
+- User authorized Phase 4 only. Re-read the source spec and project rules. Created
+  `notebooks/train_kaggle.ipynb` and `notebooks/eval_gpu_kaggle.ipynb`, with source
+  generation in `scripts/build_notebooks.py` and schema/syntax validation in
+  `scripts/validate_notebooks.py`. Both are output-free nbformat 4.5, with eight
+  cells and five compiled code cells each. No GPU cell executed locally.
+- Notebook bootstrap uses Kaggle Secrets, an isolated uv-managed Python 3.11
+  environment and a user-pushed exact Git commit. Optional private GitHub access
+  uses an environment-only authorization header; no credential is put in a URL,
+  command argument, saved manifest or notebook output. HF account lookup can fill
+  the dataset/model namespace, avoiding an extra required secret.
+- Notebook pin set: PyTorch 2.6.0, Transformers 4.51.3, PEFT 0.15.2,
+  TRL 0.17.0, Accelerate 1.6.0, bitsandbytes 0.45.5, datasets 3.5.0,
+  W&B 0.19.10, safetensors 0.5.3, NumPy 1.26.4, tokenizers 0.21.4,
+  sentencepiece 0.2.0, protobuf 5.29.4, tiktoken 0.9.0,
+  opencv-python-headless 4.11.0.86, uv 0.11.26 and vLLM 0.8.5.post1.
+  Verified all 17 release dates precede the two-week cutoff and checked 39
+  declared requirements against selected direct pins. Versions, release dates,
+  PyPI links and primary API evidence are in `results/kaggle_dependency_validation.json`.
+  vLLM's pinned CUDA requirements match PyTorch 2.6.0; TRL's pinned source supports
+  pretokenized datasets and `skip_prepare_dataset`. CUDA wheel/runtime compatibility
+  is still unverified. No new local dependencies were installed or added to uv.lock.
+- Added lazy, package-installable Kaggle workers under `cafe_agent.kaggle`.
+  Training loads only the immutable raw train/validation splits, checks their
+  content hashes/prompt/tools/authorship and reuses the shared assistant-mask
+  implementation. Its collator preserves labels, including closing tokens and
+  masked padding; TRL preprocessing/packing is disabled, and label_names is explicit.
+- QLoRA defaults: NF4 double quantization, float16 (no bf16), seven attention/MLP
+  projections, r=16/alpha=32/dropout=.05, lr=2e-4, three epochs, batch 4 and
+  accumulation 4, cosine schedule, 3% warmup and gradient checkpointing. Probe
+  the full 4,096-token padded batch in training mode before an optimizer step.
+  OOM stops with an explicit batch-1/accumulation-16/new-run instruction, without
+  truncation. Record probe peak separately from actual training/evaluation peak.
+- Save/evaluate approximately every half epoch and export the best validation-loss
+  adapter. Preserve immutable training inputs, installed versions, package commit,
+  chosen train IDs, W&B link, losses and measured worker time. Checkpoint resumes
+  require the matching full run manifest; completed adapter/summary pairs are reused.
+- A separate Kaggle CPU process merges the adapter into a fresh fp16 base,
+  builds llama.cpp b5046 at `74d4f5b041ad837153b0e90fc864b8290e01d8d5`
+  with CUDA disabled and converts/quantizes Q4_K_M. Adapter, merged model and GGUF
+  get private Hub repositories, model cards and actual training metadata. The
+  summary prints immutable Hub revisions for the user's evaluation notebook.
+- GPU evaluation runs S1/S2/S4 through the exact existing turn/end-to-end runner,
+  parser, tools, clock and prediction schema. Uses float16, 8,192 context, seed 42,
+  greedy decoding, 512 generated tokens and vLLM memory utilization .85. vLLM
+  V0/XFormers settings target T4. Installation/load failure uses a fresh Transformers
+  environment/process; runtime errors stop for resume. Backend files/manifests stay
+  separate, with actual versions, GPU, model revision and source provenance recorded.
+- S2 examples are frozen in `configs/few_shot.yaml`: first sorted train ID in four
+  fixed intent groups (`train-00010`, `train-00004`, `train-00003`, `train-00000`).
+  Their gold messages are retained and call IDs namespaced. No selection from test
+  failures or prompt/evaluator tuning. Overflow is explicitly recorded as a length
+  failure, never truncated. Bundle only complete S1/S2/S4 coverage, retaining S3.
+- Restoring a saved Kaggle input validates all prediction/manifest files before
+  mutation, preserves any newer current checkpoint prefix and rejects divergent
+  histories. Training and GPU evaluation instructions cover interrupted sessions.
+- To preserve reproducibility, kept `configs/train.yaml`, data-generation sources,
+  S3 inference files, original manifests and predictions unchanged. New training
+  settings/pins are in `configs/kaggle.yaml`, composed with the frozen tokenizer
+  identity. The old Phase 1 model stubs remain frozen; notebook workers use new paths.
+  Both existing data and S3 manifest checks still match their original fingerprints.
+- Local acceptance: pinned raw data hashes passed; three real training examples
+  loaded/rendered/masked/padded correctly (1,195/1,377/1,398 tokens, with
+  19/113/118 assistant tokens). Checked all 1,019 S2 gold-history prompts; maximum
+  length 3,269 plus 512 output tokens fits context 8,192. Evidence:
+  `results/notebook_data_preflight.json` and `results/notebook_validation.json`.
+- Final `make lint` passed (85 files, including the notebooks). `make test` passed
+  all 251 tests in 4.73 seconds; 19 new cases cover data/authorship, deterministic
+  subsets, assistant-label padding, half-epoch settings, few-shot context/IDs,
+  raw/length failures, notebook regeneration, secret handling, fallback isolation,
+  immutable manifests, checkpoint restoration and complete prediction bundling.
+- Kaggle workers validate coverage/provenance without computing performance scores;
+  the final metrics and confidence intervals remain a shared local scoring step.
+- Offline source/wheel builds passed. The wheel imports every module outside the
+  checkout without GPU packages and loads the bundled Kaggle/few-shot configs.
+  Archives include notebooks/handoff docs and exclude secrets, caches, full generated
+  data and model weights. Evidence: `results/phase4_integrity.json`. Diff checks passed.
+- Added exact click-by-click instructions in `docs/PHASE4_KAGGLE.md` and linked them
+  from README. Phase 4 implementation/acceptance is complete; actual T4 fit,
+  training, GPU inference and GGUF export remain user-run work. No model loss,
+  GPU-hour or S1/S2/S4 performance result was invented. No GitHub push, model
+  upload, dataset upload, GPU install, training or later phase ran in this session.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -500,6 +584,10 @@ All direct pins predate the release cutoff; transitive versions remain in
   confidence intervals. Keep free limits and preserve predictions/cache; future
   metrics recomputation and completed-run resumes require no new requests.
   No GPU training/evaluation or real GGUF inference has run.
+- Phase 4 notebooks require the user to push this commit to GitHub, fill exact
+  Git/model revisions and run on Kaggle with attached secrets. T4 memory fit,
+  CUDA wheels, training and GGUF conversion have not been runtime-tested. Follow
+  `docs/PHASE4_KAGGLE.md`; retain full output/checkpoint folders and private Hub artifacts.
 - The account's 8,000-token/minute Groq limit slows generation. Parallel cache
   preparation hit that limit and stopped; the canonical resumable run completed
   with its existing bounded exponential backoff. Preserve cache/journals on retry.
@@ -508,7 +596,10 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Phase 3 is complete. Stop and wait for `continue to Phase 4`. That phase writes
-the Kaggle training and GPU evaluation notebooks; do not start them before the
-user continues. Preserve completed S3 predictions, immutable manifest and API
-cache. The private HF dataset is ready; no GitHub remote or push has been performed.
+Phase 4 notebooks are written and locally validated. Stop and hand off the Kaggle
+steps. The user must push the exact commit, run training/export, copy the merged
+Hub revision, run GPU evaluation and extract gpu_predictions.zip into
+results/predictions/ alongside S3. Wait for those artifacts and `continue to Phase 5`
+before downloading/evaluating GGUF or building the full report. Preserve all
+existing predictions, immutable manifests and API cache. No GitHub remote or push
+has been performed by Codex.

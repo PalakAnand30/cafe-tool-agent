@@ -135,3 +135,31 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
   Keep Claude/Codex provenance and coverage limitations explicit.
 - S3 request latency includes network/retries, excludes explicit rate pacing and
   local cache hits. Cost is a dated paid-equivalent estimate, not an actual bill.
+
+## Phase 4 notebook rules and handoff
+
+- `notebooks/train_kaggle.ipynb` and `eval_gpu_kaggle.ipynb` are user-run Kaggle
+  workflows. Do not execute their bootstrap/GPU cells on the Mac. GPU packages
+  remain notebook-only; package modules under `cafe_agent.kaggle` import them lazily.
+- Preserve `configs/train.yaml`, existing data-generation sources and all S3
+  inference files/manifests. Kaggle hyperparameters/pins are in `configs/kaggle.yaml`;
+  `train_settings()` composes them with the frozen tokenizer identity. Four S2
+  examples and their training provenance are frozen in `configs/few_shot.yaml`.
+- Bootstrap an isolated Python 3.11 environment on Kaggle. Install the package
+  from the exact user-pushed Git commit; require exact dataset/base/merged revisions.
+  Never embed tokens in Git URLs, notebook output or model cards.
+- Preserve assistant labels with the custom collator and `skip_prepare_dataset`;
+  set `label_names=["labels"]`, fp16 and no bf16. Default memory probe is batch 4
+  padded to 4,096. OOM requires an explicit new run with batch 1 / accumulation 16,
+  retaining full conversations. Record probe and actual training memory separately.
+- GPU evaluation reuses the shared runner/schema, fresh backends and clock.
+  Separate backend files/processes; only vLLM installation/load failure triggers
+  automatic Transformers fallback. Runtime failures stop for resume. Do not roll
+  back newer predictions when restoring an older Kaggle input.
+- Keep Hub outputs private. Preserve full checkpoint folders and manifests on
+  interruption. Validate complete S1/S2/S4 coverage before bundling; retain S3.
+- Local checks: `uv run --locked python scripts/validate_notebooks.py` and
+  `uv run --locked python -m cafe_agent.kaggle.preflight --output results/notebook_data_preflight.json`.
+  Rebuild with `uv run --locked python scripts/build_notebooks.py` after source-cell edits.
+- Exact user steps are in `docs/PHASE4_KAGGLE.md`. GPU training, actual T4 memory,
+  GPU inference and GGUF conversion remain unverified until the user runs Kaggle.

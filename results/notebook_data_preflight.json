@@ -1,0 +1,30 @@
+{
+  "gpu_training_run": false,
+  "gpu_inference_run": false,
+  "examples": [
+    {
+      "id": "train-00000",
+      "tokens": 1195,
+      "assistant_tokens": 19
+    },
+    {
+      "id": "train-00001",
+      "tokens": 1377,
+      "assistant_tokens": 113
+    },
+    {
+      "id": "train-00002",
+      "tokens": 1398,
+      "assistant_tokens": 118
+    }
+  ],
+  "dataset_hashes_verified": [
+    "independent_test",
+    "test",
+    "train",
+    "validation"
+  ],
+  "s2_gold_prompts_checked": 1019,
+  "s2_max_prompt_tokens": 3269,
+  "inference_context": 8192
+}
