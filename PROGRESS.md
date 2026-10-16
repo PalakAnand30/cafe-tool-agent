@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 2026-10-15 (Europe/London).
+Updated: 2026-10-16 (Europe/London).
 
 ## Phase checklist
 
@@ -429,6 +429,36 @@ All direct pins predate the release cutoff; transitive versions remain in
   4.31 seconds. Refreshed reports and README from saved predictions; no source,
   dependency, domain, prompt or decoding changes were made.
 
+## Phase 3 second credential and resume (2026-10-16)
+
+- User supplied `GROQ_API_KEY2` in the ignored `.env`. Tested it with one uncached
+  pending evaluation request; Groq returned HTTP 200. Selected the second key
+  for this run by loading it with python-dotenv and assigning it to the process's
+  `GROQ_API_KEY` before evaluation. Did not edit `.env`, print either credential,
+  change default credential selection, or implement automatic key rotation.
+- Continued the earlier conditional Phase 3 authorization. Preserved all cached
+  responses and completed predictions. A connection error stopped the first
+  attempt at 196 synthetic end-to-end conversations. A fresh pending-request
+  probe succeeded, so resumed again. Latest sanitized check, including only the
+  credential variable name, is in `results/groq_quota_check.json`.
+- Synthetic coverage advanced from 143 to 580 of 876 gold assistant turns and
+  from 62 to 248 of 400 end-to-end conversations (186 additional conversations).
+  Independent coverage remains complete at 143 turns and 84 conversations; its
+  predictions are byte-for-byte unchanged.
+- Groq then returned a quota limit with a 211-second retry-after value. Stopped
+  at that checkpoint without another resume, preserving the free-plan preference.
+  `results/eval_status.json` records the stop. Reports and README were regenerated
+  from saved predictions and continue to label synthetic results as partial.
+- Offline integrity checks replayed all 332 saved end-to-end histories (84
+  independent, 248 synthetic), reproducing every tool result and recorded backend
+  state. Both previous checkpoint prefixes remain intact, frozen inference hashes
+  match, and offline metric recomputation is identical. Evidence:
+  `results/phase3_resume_validation.json`. This is collector validation, not an
+  accuracy claim. No prompt, domain, model parameter, inference source or
+  dependency changes were made.
+- `make lint` passed (67 Python files); `make test` passed all 232 tests in
+  4.16 seconds. Phase 3 remains incomplete; no later phase started.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -440,7 +470,7 @@ All direct pins predate the release cutoff; transitive versions remain in
   inspection confirmed the ignore rules exclude it.
 - The existing local `.env` must remain untracked and must not be printed.
 - Independent S3 evaluation is complete, including confidence intervals.
-  Synthetic S3 evaluation is partial and saved at 62/400 end-to-end cases.
+  Synthetic S3 evaluation is partial and saved at 248/400 end-to-end cases.
   Groq's current quota prevents finishing the full run now. Keep free limits
   and resume only when quota is available. No GPU training/evaluation or real
   GGUF inference has run.

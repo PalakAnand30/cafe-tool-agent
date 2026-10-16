@@ -2,15 +2,15 @@
   "state": "quota_limited",
   "system": "S3",
   "fingerprint": "9dc254059ed19c003a76c7a6619d53de3b2158af94c40caceecfa15dd0780122",
-  "retry_after_seconds": 325.0,
+  "retry_after_seconds": 211.0,
   "rate_headers": {
-    "retry-after": "325",
+    "retry-after": "211",
     "x-ratelimit-limit-requests": "1000",
     "x-ratelimit-limit-tokens": "8000",
-    "x-ratelimit-remaining-requests": "892",
-    "x-ratelimit-remaining-tokens": "1664",
-    "x-ratelimit-reset-requests": "2h35m31.2s",
-    "x-ratelimit-reset-tokens": "47.52s"
+    "x-ratelimit-remaining-requests": "847",
+    "x-ratelimit-remaining-tokens": "2376",
+    "x-ratelimit-reset-requests": "3h40m19.199s",
+    "x-ratelimit-reset-tokens": "42.18s"
   },
   "complete": false
 }
