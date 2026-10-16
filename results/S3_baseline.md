@@ -3,7 +3,7 @@
 | System | Set | Coverage (turn / end) | Action accuracy | Argument exact | Field F1 | End success | Action + state |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | S3 | independent_test (complete) | 143/143 turns; 84/84 conversations | 62.9% [54.1%, 71.4%] | 61.5% [45.2%, 77.6%] | 49.3% [28.3%, 69.4%] | 82.1% [73.8%, 89.3%] | 40.5% [29.8%, 51.2%] |
-| S3 | test (**partial**) | 580/876 turns; 248/400 conversations | 81.0% | 66.3% | 71.4% | 65.7% | 54.0% |
+| S3 | test (complete) | 876/876 turns; 400/400 conversations | 81.2% | 67.6% | 72.4% | 69.5% | 57.5% |
 
 Bracketed intervals are 95% conversation-cluster bootstrap intervals on the complete independent LLM-authored set. Partial runs have no confidence intervals. Action/argument scores use gold-history turns; end scores use the real agent.
 

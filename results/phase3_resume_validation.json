@@ -7,15 +7,15 @@
       "predictions_sha256": "ad43ac7cf9d4013b39dbb46df7b5070b2e5c3ebc3dbbc41ccf5c7f70fc4be467"
     },
     "test": {
-      "turn_predictions": 580,
-      "end_predictions": 248,
-      "predictions_sha256": "bc581e738e5e12adffc8b2f847f23bfa31c3609610272074c310833cd4d6284c"
+      "turn_predictions": 876,
+      "end_predictions": 400,
+      "predictions_sha256": "fdb8e51373538dcaff0c9b520056cec939cbdc9eb72035641d94df773dacb77c"
     }
   },
   "trace_replay_matches_recorded_states": true,
   "replayed_end_conversations": {
     "independent_test": 84,
-    "test": 248
+    "test": 400
   },
   "original_checkpoint_prefix_preserved": true,
   "frozen_source_hashes_match": true,

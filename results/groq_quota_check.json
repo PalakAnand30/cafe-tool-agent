@@ -1,23 +1,23 @@
 {
-  "checked_at_utc": "2026-10-16T10:36:54.314091+00:00",
+  "checked_at_utc": "2026-10-16T17:28:11.456393+00:00",
   "quota_available": true,
-  "request_key": "627f17fa8db1fd390ae0975ba5cc1dc56fcf917f4942d14ea930c66e36a1b0bd",
+  "request_key": "d0f2748747cae482dd2db14f865a949f8283d766bc2f2e2e2b1fe37bf9cd7995",
   "model": "openai/gpt-oss-120b",
-  "credential_env": "GROQ_API_KEY2",
+  "credential_env": "GROQ_API_KEY",
   "http_status": 200,
   "rate_headers": {
     "x-ratelimit-limit-requests": "1000",
     "x-ratelimit-limit-tokens": "8000",
     "x-ratelimit-remaining-requests": "999",
-    "x-ratelimit-remaining-tokens": "6387",
+    "x-ratelimit-remaining-tokens": "6404",
     "x-ratelimit-reset-requests": "1m26.4s",
-    "x-ratelimit-reset-tokens": "12.097s"
+    "x-ratelimit-reset-tokens": "11.97s"
   },
   "cached": false,
   "usage": {
-    "prompt_tokens": 1101,
-    "completion_tokens": 34,
-    "total_tokens": 1135
+    "prompt_tokens": 1084,
+    "completion_tokens": 85,
+    "total_tokens": 1169
   },
   "prediction_checkpoints_unchanged": true
 }

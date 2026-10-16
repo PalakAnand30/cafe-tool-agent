@@ -7,7 +7,7 @@ Updated: 2026-10-16 (Europe/London).
 - [x] Phase 0: scaffold.
 - [x] Phase 1: domain, backend, tools, parser and agent loop.
 - [x] Phase 2: dataset and human-test annotation workflow.
-- [ ] Phase 3: evaluation harness and Groq baseline.
+- [x] Phase 3: evaluation harness and Groq baseline.
 - [ ] Phase 4: Kaggle training and GPU evaluation notebooks.
 - [ ] Phase 5: GGUF evaluation and full report.
 - [ ] Phase 6: demo and deployment.
@@ -459,6 +459,33 @@ All direct pins predate the release cutoff; transitive versions remain in
 - `make lint` passed (67 Python files); `make test` passed all 232 tests in
   4.16 seconds. Phase 3 remains incomplete; no later phase started.
 
+## Phase 3 original-key resume and completion (2026-10-16)
+
+- User requested checking the original `GROQ_API_KEY`. A genuinely uncached pending
+  request succeeded with HTTP 200 at 17:28:11 UTC. Explicitly selected the original
+  key from `.env` for this process, preserving `.env`, the second key and default
+  client behavior. Sanitized evidence: `results/groq_quota_check.json`.
+- Resumed under the existing conditional authorization. Completed the remaining
+  synthetic evaluation: 876/876 gold assistant turns and 400/400 end-to-end
+  conversations, up from 580 turns and 248 conversations. Independent coverage
+  remains complete at 143/143 turns and 84/84 conversations; its prediction file
+  is byte-for-byte unchanged. `results/eval_status.json` now records `complete`.
+- Regenerated the complete S3 metrics, per-intent breakdowns, confusion matrices,
+  baseline report and README table directly from saved predictions. Independent
+  metrics include the frozen 1,000-resample conversation-cluster 95% intervals.
+  S3 is GPT-OSS 120B through Groq; other systems have not run. The independent
+  benchmark remains explicitly Claude-authored with Codex gold, not human evidence.
+- Replayed all 484 saved end-to-end histories (84 independent, 400 synthetic),
+  reproducing every tool result and recorded backend state. Previous checkpoint
+  prefixes are intact, frozen inference hashes still match, and offline metric
+  recomputation is identical. `results/phase3_resume_validation.json` contains
+  final hashes and collection integrity evidence. No inference source, prompt,
+  domain, dependency or decoding changes were made.
+- `make lint` passed (67 Python files); `make test` passed all 232 tests in
+  9.16 seconds. Phase 3 acceptance is complete. Stop here; Phase 4 remains
+  unstarted and requires the user's explicit continuation. No GitHub push,
+  dataset upload, GPU work or model download was performed.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -469,11 +496,10 @@ All direct pins predate the release cutoff; transitive versions remain in
 - uv warns that its in-project cache may enter source distributions; archive
   inspection confirmed the ignore rules exclude it.
 - The existing local `.env` must remain untracked and must not be printed.
-- Independent S3 evaluation is complete, including confidence intervals.
-  Synthetic S3 evaluation is partial and saved at 248/400 end-to-end cases.
-  Groq's current quota prevents finishing the full run now. Keep free limits
-  and resume only when quota is available. No GPU training/evaluation or real
-  GGUF inference has run.
+- S3 evaluation is complete on both test sets, including independent-set
+  confidence intervals. Keep free limits and preserve predictions/cache; future
+  metrics recomputation and completed-run resumes require no new requests.
+  No GPU training/evaluation or real GGUF inference has run.
 - The account's 8,000-token/minute Groq limit slows generation. Parallel cache
   preparation hit that limit and stopped; the canonical resumable run completed
   with its existing bounded exponential backoff. Preserve cache/journals on retry.
@@ -482,10 +508,7 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Stop at the quota-limited Phase 3 checkpoint. After the quota refills, resume
-Phase 3 with `make eval-local`, or ask Codex to check quota and conditionally
-resume. Preserve existing predictions, manifest and API cache; independent_test
-is complete and will be skipped. Finish synthetic test, recompute full metrics,
-then mark Phase 3 complete and perform
-the phase-end checks/commit/report. Do not start Phase 4 yet. The private HF
-dataset is ready; no GitHub remote or push has been performed.
+Phase 3 is complete. Stop and wait for `continue to Phase 4`. That phase writes
+the Kaggle training and GPU evaluation notebooks; do not start them before the
+user continues. Preserve completed S3 predictions, immutable manifest and API
+cache. The private HF dataset is ready; no GitHub remote or push has been performed.

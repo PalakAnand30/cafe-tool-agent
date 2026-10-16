@@ -7,9 +7,10 @@ GGUF model on CPU. `PROJECT_SPEC.md` defines the full scope and working rules.
 The café backend and agent core are implemented, together with the Phase 2
 dataset pipeline, replay/token validation, assistant-only labels, human-test
 annotation CLI, independent LLM benchmark conversion and private dataset publisher.
-The Phase 3 local evaluator runs the GPT-OSS 120B baseline through Groq and
-computes metrics from saved predictions. Training, GPU model evaluation and
-the chat demo have not run. Current S3 coverage and results are shown below.
+The Phase 3 local evaluator has completed the GPT-OSS 120B baseline through Groq
+on both test sets and computes metrics from saved predictions. Training, GPU
+model evaluation and the chat demo have not run. Current S3 coverage and results
+are shown below.
 
 ## Local setup
 
@@ -42,7 +43,7 @@ Never commit or share `.env`.
   `notebooks/` and `docker/` remain placeholders.
 - `data/`: generated data and API cache are ignored; human tests and small
   samples can be versioned.
-- `results/`: versioned location for future predictions and reports.
+- `results/`: versioned predictions, metrics, validation evidence and reports.
 - `.github/workflows/ci.yml`: locked setup, lint and tests on pushes and PRs.
 - `AGENTS.md` and `PROGRESS.md`: working rules, decisions and phase status.
 
@@ -114,8 +115,8 @@ stubs for Phase 4 and import no GPU libraries locally.
 `Agent.run(messages)` accepts caller-owned history, validates every generated
 call before execution, appends tool results with matching IDs, and returns a
 reply, history and trace. It stops on malformed output, reused call IDs or the
-configured round limit. Model behaviour is tested with scripted responses and
-mock transports; no live model quality claim is made.
+configured round limit. Core protocol behaviour is tested with scripted responses
+and mock transports. S3 model quality is measured by the evaluator below.
 
 ## Generate and validate the dataset
 
@@ -125,7 +126,7 @@ Set `GROQ_API_KEY` in your existing `.env`, then run:
 make data
 ```
 
-The user-approved paraphraser and later S3 baseline are `openai/gpt-oss-120b`
+The user-approved paraphraser and S3 baseline are `openai/gpt-oss-120b`
 through Groq with low reasoning effort. The originally specified Llama model
 was unavailable to the configured account. This project does not use the OpenAI
 API for these requests.
@@ -270,7 +271,7 @@ coverage in `results/metrics.json` and the table in `results/S3_baseline.md`.
 | System | Set | Coverage (turn / end) | Action accuracy | Argument exact | Field F1 | End success | Action + state |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | S3 | independent_test (complete) | 143/143 turns; 84/84 conversations | 62.9% [54.1%, 71.4%] | 61.5% [45.2%, 77.6%] | 49.3% [28.3%, 69.4%] | 82.1% [73.8%, 89.3%] | 40.5% [29.8%, 51.2%] |
-| S3 | test (**partial**) | 580/876 turns; 248/400 conversations | 81.0% | 66.3% | 71.4% | 65.7% | 54.0% |
+| S3 | test (complete) | 876/876 turns; 400/400 conversations | 81.2% | 67.6% | 72.4% | 69.5% | 57.5% |
 
 S3 uses GPT-OSS 120B through Groq. Brackets show 95% intervals on the complete independent LLM-authored benchmark; partial runs are labelled. End success uses final state; action + state also checks required actions. Other systems have not run. See results/S3_baseline.md for definitions and limitations.
 <!-- RESULTS:END -->
