@@ -50,9 +50,9 @@
     },
     {
       "package": "wandb",
-      "version": "0.19.10",
-      "released": "2025-04-22",
-      "source": "https://pypi.org/project/wandb/0.19.10/"
+      "version": "0.22.3",
+      "released": "2025-10-28",
+      "source": "https://pypi.org/project/wandb/0.22.3/"
     },
     {
       "package": "safetensors",
@@ -107,7 +107,8 @@
   "kaggle_runtime_tested": false,
   "compatibility_evidence": [
     "https://raw.githubusercontent.com/vllm-project/vllm/v0.8.5.post1/requirements/cuda.txt",
-    "https://raw.githubusercontent.com/huggingface/trl/v0.17.0/trl/trainer/sft_trainer.py"
+    "https://raw.githubusercontent.com/huggingface/trl/v0.17.0/trl/trainer/sft_trainer.py",
+    "https://github.com/wandb/wandb/releases/tag/v0.22.3"
   ],
   "llama_cpp": {
     "tag": "b5046",
@@ -115,6 +116,28 @@
     "source": "https://github.com/ggml-org/llama.cpp/tree/74d4f5b041ad837153b0e90fc864b8290e01d8d5"
   },
   "limitation": "Release dates and declared package/API compatibility verified; CUDA wheels, T4 memory and training require the user-run Kaggle session.",
-  "declared_direct_requirement_checks": 39,
-  "declared_direct_requirements_satisfied": true
+  "declared_direct_requirement_checks": 41,
+  "declared_direct_requirements_satisfied": true,
+  "wandb_key_compatibility": {
+    "checked": "2026-10-20",
+    "previous_pin": "0.19.10",
+    "pin": "0.22.3",
+    "reason": "The old SDK rejects 86-character keys; 0.22.3 supports keys longer than 40 characters.",
+    "pypi_metadata": "https://pypi.org/pypi/wandb/0.22.3/json",
+    "release_timestamp": "2025-10-28T23:58:46.560250Z",
+    "requires_python": ">=3.8",
+    "requirement_checks": [
+      {
+        "requirement": "protobuf!=4.21.0,!=5.28.0,<7,>=3.19.0; python_version > \"3.9\" and sys_platform == \"linux\"",
+        "selected": "5.29.4",
+        "satisfied": true
+      },
+      {
+        "requirement": "pydantic<3",
+        "selected": "2.11.7",
+        "satisfied": true
+      }
+    ],
+    "runtime_tested": false
+  }
 }

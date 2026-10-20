@@ -199,9 +199,13 @@ def test_generated_notebooks_are_reproducible(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     builder["build"]()
     for name in ["train_kaggle.ipynb", "eval_gpu_kaggle.ipynb"]:
-        assert (tmp_path / "notebooks" / name).read_bytes() == (
-            ROOT / "notebooks" / name
-        ).read_bytes()
+        generated = json.loads((tmp_path / "notebooks" / name).read_text())
+        checked_in = json.loads((ROOT / "notebooks" / name).read_text())
+        # Users fill in the first code cell before uploading to Kaggle.
+        # Require every generated workflow cell to match, preserving those settings.
+        assert generated["cells"][1]["cell_type"] == checked_in["cells"][1]["cell_type"] == "code"
+        checked_in["cells"][1] = generated["cells"][1]
+        assert generated == checked_in
 
 
 @pytest.mark.parametrize("private", [False, True])

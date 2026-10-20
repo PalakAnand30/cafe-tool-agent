@@ -87,6 +87,30 @@ directory. Its grandparent must contain the matching `training_manifest.json`.
 Resume restores optimizer/scheduler/RNG through Trainer; incompatible manifests
 fail explicitly. Retain the checkpoints even if the notebook session expires.
 
+### W&B rejects an 86-character key
+
+`ValueError: API key must be 40 characters long, yours was 86` comes from the
+old `wandb==0.19.10` pin. W&B added longer-key support in
+[0.22.3](https://github.com/wandb/wandb/releases/tag/v0.22.3); the notebooks now
+pin that version. Keep the complete key in Kaggle Secrets.
+
+For a notebook already open on Kaggle:
+
+1. In the bootstrap cell's `REQUIREMENTS`, replace `wandb==0.19.10` with
+   `wandb==0.22.3`, then rerun that cell. This updates the isolated worker
+   environment rather than Kaggle's notebook kernel.
+2. Set `RUN_NAME = "main-r16-full-wandb0223"` in the parameters cell and rerun
+   that cell. Keep `RESUME_CHECKPOINT = ""` for this failed pre-training attempt.
+   The old attempt already wrote an immutable manifest containing installed
+   versions; retain its folder and use a new output directory for the changed pin.
+3. Rerun the training cell. This traceback occurred before loading model weights
+   or taking training steps. The warning about specifying a key in code is
+   generic: the worker obtains the value from its environment, populated by
+   Kaggle Secrets. The warning itself does not stop training.
+
+No GitHub package update is needed for this pin-only repair to an existing
+Kaggle notebook. Future notebook regeneration uses `configs/kaggle.yaml`.
+
 ## Evaluate S1, S2 and S4
 
 1. Create a **fresh** private Kaggle notebook and import

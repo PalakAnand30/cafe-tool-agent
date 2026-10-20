@@ -135,7 +135,7 @@ def build() -> None:
     common = """
         GITHUB_USERNAME = ""  # Your GitHub username; no token here.
         REPO_NAME = "cafe-tool-agent"  # Match the repository you push.
-        GIT_REF = "PASTE_PHASE4_COMMIT"  # Exact 40-character commit from the Phase 4 report.
+        GIT_REF = "PASTE_PHASE4_COMMIT"  # Exact 40-character project commit.
         PRIVATE_GITHUB = False  # True requires an attached GITHUB_TOKEN Kaggle secret.
         HF_USERNAME = ""  # Blank: derive the account name from HF_TOKEN.
     """

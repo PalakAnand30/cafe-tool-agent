@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 2026-10-16 (Europe/London).
+Updated: 2026-10-20 (Europe/London).
 
 ## Phase checklist
 
@@ -569,6 +569,40 @@ All direct pins predate the release cutoff; transitive versions remain in
   training, GPU inference and GGUF export remain user-run work. No model loss,
   GPU-hour or S1/S2/S4 performance result was invented. No GitHub push, model
   upload, dataset upload, GPU install, training or later phase ran in this session.
+
+## Phase 4 follow-up: newer W&B API keys (2026-10-20)
+
+- User's Kaggle training worker stopped at `wandb.login` because W&B 0.19.10
+  requires a 40-character key and their key has 86 characters. This happened
+  after data encoding/manifest creation, before model loading or training steps.
+  The generic key-in-code warning was not the failure; the key already enters
+  the worker via the environment populated from Kaggle Secrets.
+- Updated the notebook-only W&B pin to 0.22.3 in `configs/kaggle.yaml` and rebuilt
+  both notebooks. The official release notes explicitly add support for keys
+  longer than 40 characters:
+  https://github.com/wandb/wandb/releases/tag/v0.22.3.
+  PyPI reports release timestamp 2025-10-28T23:58:46.560250Z, older than the
+  existing 2026-09-30 cutoff. Declared Python >=3.8, protobuf 5.29.4 and Pydantic
+  2.11.7 requirements are compatible. Recorded metadata/checks in
+  `results/kaggle_dependency_validation.json`; no local package was installed.
+- Added an existing-session recovery procedure to `docs/PHASE4_KAGGLE.md`:
+  update the W&B requirement and rerun bootstrap, choose a new run name/output
+  directory, leave resume empty for this pre-training failure, then retry training.
+  Keep the full key. Retain the failed attempt's immutable manifest rather than
+  editing/deleting it. A GitHub package update is unnecessary for that pin-only
+  Kaggle repair; this local commit is not pushed.
+- Preserved the user's notebook GitHub settings and guide URL edits. Shortened
+  the Git-ref comment to keep a populated SHA within the line limit. Notebook
+  regeneration checks still compare every workflow cell, allowing customization
+  of the designated first parameter cell. The original Phase 4 validation report
+  remains historical evidence; this follow-up's notebook validation passed with
+  eight cells/five compiled code cells each, no outputs and no GPU execution.
+- Final `make lint` passed (85 files); `make test` passed all 251 tests in
+  8.81 seconds. The initial lint check found only overlong comments beside the
+  user's filled Git SHAs; shortened those comments, then reran checks successfully.
+  No GPU dependencies/imports, training or W&B authentication ran on the Mac.
+  Kaggle authentication with the updated SDK and actual training remain user-run
+  verification. Stay in Phase 4; no Phase 5 work or GitHub push is authorized.
 
 ## Known issues and user actions
 
