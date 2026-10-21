@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 2026-10-20 (Europe/London).
+Updated: 2026-10-21 (Europe/London).
 
 ## Phase checklist
 
@@ -604,6 +604,40 @@ All direct pins predate the release cutoff; transitive versions remain in
   Kaggle authentication with the updated SDK and actual training remain user-run
   verification. Stay in Phase 4; no Phase 5 work or GitHub push is authorized.
 
+## Phase 4: user reports completed Kaggle training/export (2026-10-21)
+
+- User ran the full training notebook after the batch-4 memory probe OOM, using
+  the explicit batch-1/accumulation-16 fallback and a new run name,
+  `main-r16-full-wandb0223-b1`. Their final output reports completed training,
+  merge, GGUF conversion and all three private-by-workflow Hub uploads.
+  Transcribed the supplied output into `results/kaggle_training_user_report.json`
+  with explicit user-report provenance. Original Kaggle JSON files/manifests and
+  remote artifact verification are still pending; no remote request was made.
+- Reported train loss 0.025193520106762558; validation loss fell from
+  1.008454442024231 to 0.010441209189593792 (also the best validation loss).
+  Best checkpoint is checkpoint-330. These are assistant-token training/validation
+  losses, not held-out action accuracy or task-success measurements.
+- Reported Tesla T4 training time is 19,721.953115739 seconds (about 5h 28m).
+  GPU-worker elapsed time is separately 5.591685450511111 hours, excluding setup
+  and CPU export. Full-length probe shape [1, 4096] passed: peak allocated
+  10,467,113,472 bytes (about 9.75 GiB); separately recorded training/evaluation
+  peak 8,091,172,864 bytes (about 7.54 GiB). Do not merge the two measurements.
+- Reported immutable Hub revisions:
+  adapter `1727278e014684c60813ca7bbea6a145202731d7`;
+  merged `6023f33114834618276c7de0cf43fda45397e1d7`;
+  GGUF `a41f869ceec177228db7abdc0d01a07967a4f409`.
+  Dataset/base/llama.cpp revisions match the existing configured pins. Full
+  installed-package/Git provenance still requires the original training manifest.
+- Filled the evaluation notebook's user parameter `MERGED_REVISION` with the
+  reported merged revision; preserved the user's existing GitHub settings.
+  Next: retain the full training output/checkpoints and original JSON files,
+  run the separate GPU evaluation notebook with the same training Git reference,
+  then download `gpu_predictions.zip`. GPU evaluation/S1-S2-S4 scores and local
+  GGUF inference remain pending. No Phase 5 work, GPU code execution on the Mac,
+  Hub visibility change or GitHub push was performed.
+- Local `make lint` passed (85 files); `make test` passed all 251 tests in
+  9.34 seconds. These verify the local handoff changes, not the uploaded models.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -617,11 +651,12 @@ All direct pins predate the release cutoff; transitive versions remain in
 - S3 evaluation is complete on both test sets, including independent-set
   confidence intervals. Keep free limits and preserve predictions/cache; future
   metrics recomputation and completed-run resumes require no new requests.
-  No GPU training/evaluation or real GGUF inference has run.
-- Phase 4 notebooks require the user to push this commit to GitHub, fill exact
-  Git/model revisions and run on Kaggle with attached secrets. T4 memory fit,
-  CUDA wheels, training and GGUF conversion have not been runtime-tested. Follow
-  `docs/PHASE4_KAGGLE.md`; retain full output/checkpoint folders and private Hub artifacts.
+  The user reports completed GPU training/export; GPU evaluation and real local
+  GGUF inference remain pending.
+- The user reports T4 batch-1/4,096-token fit and completed training/GGUF export.
+  Retain original JSON manifests, full checkpoints and private Hub artifacts.
+  Run the separate GPU evaluation notebook with the exact training Git reference
+  and reported merged model revision; follow `docs/PHASE4_KAGGLE.md`.
 - The account's 8,000-token/minute Groq limit slows generation. Parallel cache
   preparation hit that limit and stopped; the canonical resumable run completed
   with its existing bounded exponential backoff. Preserve cache/journals on retry.
@@ -630,10 +665,11 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Phase 4 notebooks are written and locally validated. Stop and hand off the Kaggle
-steps. The user must push the exact commit, run training/export, copy the merged
-Hub revision, run GPU evaluation and extract gpu_predictions.zip into
-results/predictions/ alongside S3. Wait for those artifacts and `continue to Phase 5`
+The user reports completed Phase 4 Kaggle training/export. Preserve the original
+training_summary.json, training_manifest.json, export_summary.json and full
+checkpoint folders. Run GPU evaluation at the same training Git reference and the
+reported merged revision; extract gpu_predictions.zip into results/predictions/
+alongside S3. Wait for those artifacts and `continue to Phase 5`
 before downloading/evaluating GGUF or building the full report. Preserve all
 existing predictions, immutable manifests and API cache. No GitHub remote or push
 has been performed by Codex.
