@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 2026-10-21 (Europe/London).
+Updated: 2026-10-22 (Europe/London).
 
 ## Phase checklist
 
@@ -637,6 +637,30 @@ All direct pins predate the release cutoff; transitive versions remain in
   Hub visibility change or GitHub push was performed.
 - Local `make lint` passed (85 files); `make test` passed all 251 tests in
   9.34 seconds. These verify the local handoff changes, not the uploaded models.
+
+## Phase 4 follow-up: Kaggle download link returns 404 (2026-10-22)
+
+- User reached the evaluation notebook's final download messages, but its link
+  returned 404. The final cell used an absolute filesystem path in `FileLink`.
+  Changed the generated notebook to retain the original validated archive under
+  `cafe-gpu/`, copy it into `/kaggle/working/gpu_predictions.zip`, and display a
+  relative filename link from the working directory. Print the copied archive's
+  path/size and document the file-browser download fallback.
+- Added a recovery cell to `docs/PHASE4_KAGGLE.md` that checks for the existing
+  archive, copies it to the working-directory root and creates the relative link.
+  It does not rerun model evaluation or rebundle predictions. Reference for
+  relative FileLink usage:
+  https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html#IPython.display.FileLink.
+- Rebuilt both notebooks while retaining the user's parameter cells. A local
+  regression test executes the download cell with a fixture ZIP and mocked
+  process/display interfaces, verifies that the link is relative and resolves
+  to the copied archive, and checks that the original ZIP is unchanged/readable.
+  No GPU notebook code or external service was executed locally.
+- `make lint` passed (85 files); `make test` passed all 252 tests in 4.94 seconds.
+  Both notebooks passed schema/syntax validation, with five compiled code cells
+  and no outputs each. The user still needs to confirm the Kaggle browser
+  download and provide the original prediction archive before local integrity
+  checks/scoring. No GPU evaluation scores or Phase 5 results are claimed.
 
 ## Known issues and user actions
 

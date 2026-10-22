@@ -134,14 +134,39 @@ Kaggle notebook. Future notebook regeneration uses `configs/kaggle.yaml`.
    `RESUME_PREDICTIONS` to that folder, preserving the Git/model revisions and
    settings. Manifest checks reject changed inputs or a mixed backend.
 7. The final cell verifies complete prediction coverage and creates
-   `/kaggle/working/cafe-gpu/gpu_predictions.zip`. Click its download link, or save
-   the notebook version and download `cafe-gpu/gpu_predictions.zip` from **Output**.
+   `/kaggle/working/cafe-gpu/gpu_predictions.zip`, then copies it to
+   `/kaggle/working/gpu_predictions.zip` for a relative download link. Click that
+   link, or download `gpu_predictions.zip` from the saved version's **Output**.
 8. On the Mac, extract the ZIP's files into this project's `results/predictions/`.
    The archive contains S1/S2/S4 only; retain the existing S3 files. Keep the
    `gpu_evaluation_summary.json` beside the manifests for model/backend provenance.
 9. Tell Codex the notebooks have run and the predictions are present. Phase 5
    will load GGUF on CPU and produce the shared local comparison/report. Phase 4
    itself does not claim completed GPU experiments or begin Phase 5.
+
+If an older notebook's download link returns **404**, run this cell in the same
+active evaluation session. It reuses the existing archive without running
+evaluation or bundling again:
+
+```python
+import os
+import shutil
+from pathlib import Path
+
+from IPython.display import FileLink, display
+
+source = Path("/kaggle/working/cafe-gpu/gpu_predictions.zip")
+if not source.is_file():
+    raise FileNotFoundError("ZIP missing in this session; check the final evaluation cell.")
+shutil.copyfile(source, "/kaggle/working/gpu_predictions.zip")
+os.chdir("/kaggle/working")
+display(FileLink("gpu_predictions.zip"))
+```
+
+If the link still fails, use the file browser's download action for
+`/kaggle/working/gpu_predictions.zip`. An expired interactive session or an older
+saved version may not contain the current run's files; preserve output before
+ending the session.
 
 ## Local verification and implementation references
 

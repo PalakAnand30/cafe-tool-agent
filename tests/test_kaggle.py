@@ -208,6 +208,49 @@ def test_generated_notebooks_are_reproducible(tmp_path, monkeypatch):
         assert generated == checked_in
 
 
+def test_download_link_is_relative_and_preserves_archive(tmp_path, monkeypatch):
+    output = tmp_path / "cafe-gpu"
+    output.mkdir()
+    archive = output / "gpu_predictions.zip"
+    with zipfile.ZipFile(archive, "w") as handle:
+        handle.writestr("gpu_evaluation_summary.json", '{"complete": true}')
+    original = archive.read_bytes()
+    links = []
+
+    def file_link(path):
+        assert not Path(path).is_absolute()
+        assert Path(path).read_bytes() == original
+        return path
+
+    monkeypatch.setitem(sys.modules, "IPython", SimpleNamespace())
+    monkeypatch.setitem(
+        sys.modules, "IPython.display", SimpleNamespace(FileLink=file_link, display=links.append)
+    )
+    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: None)
+    monkeypatch.chdir(tmp_path)
+    source = notebook_source("eval_gpu_kaggle.ipynb", "from IPython.display")
+    source = source.replace(
+        "/kaggle/working/gpu_predictions.zip", str(tmp_path / "gpu_predictions.zip")
+    )
+    import os
+
+    exec(
+        source,
+        {
+            "OUTPUT": output,
+            "PYTHON": "worker",
+            "ENV": {},
+            "Path": Path,
+            "os": os,
+            "subprocess": subprocess,
+        },
+    )
+    assert links == ["gpu_predictions.zip"]
+    assert archive.read_bytes() == original
+    with zipfile.ZipFile(tmp_path / links[0]) as handle:
+        assert json.loads(handle.read("gpu_evaluation_summary.json"))["complete"] is True
+
+
 @pytest.mark.parametrize("private", [False, True])
 @pytest.mark.parametrize("training", [False, True])
 def test_bootstrap_credentials_only_enter_environment(

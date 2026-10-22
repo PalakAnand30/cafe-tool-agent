@@ -295,13 +295,20 @@ def build() -> None:
         (OUTPUT / "selection.json").write_text(json.dumps(selection, indent=2))
     """
     bundle = """
+        import shutil
+
         from IPython.display import FileLink, display
 
         subprocess.run([PYTHON, "-m", "cafe_agent.kaggle.bundle",
                         "--selection", str(OUTPUT / "selection.json"),
                         "--output", str(OUTPUT / "gpu_predictions.zip")], check=True, env=ENV)
-        display(FileLink(str(OUTPUT / "gpu_predictions.zip")))
-        print("In the saved version's Output, download cafe-gpu/gpu_predictions.zip.")
+        # Kaggle serves relative working-directory links, not absolute filesystem URLs.
+        download = Path("/kaggle/working/gpu_predictions.zip")
+        shutil.copyfile(OUTPUT / "gpu_predictions.zip", download)
+        os.chdir(download.parent)
+        display(FileLink(download.name))
+        print("ZIP ready:", download, download.stat().st_size, "bytes")
+        print("In the saved version's Output, download gpu_predictions.zip.")
         print("Extract it into local results/predictions/, retaining existing S3 files.")
     """
     write(
