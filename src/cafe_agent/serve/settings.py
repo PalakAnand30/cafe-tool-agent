@@ -19,6 +19,7 @@ class ServeSettings(StrictModel):
     model_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     examples: list[str] = Field(min_length=5, max_length=5)
     space_name: str = Field(pattern=r"^[A-Za-z0-9_.-]+$")
+    featured_items: list[str] = Field(min_length=1)
 
 
 def serve_settings(path: Path | None = None) -> ServeSettings:

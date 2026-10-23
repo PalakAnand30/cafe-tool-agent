@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" fill="none" role="img" aria-label="Illustration of a golden croissant">
+<ellipse cx="181" cy="221" rx="116" ry="12" fill="#A5653D" opacity=".12"/>
+<ellipse cx="181" cy="207" rx="121" ry="19" fill="#FFFAEA"/>
+<path d="M85 161c-8-33 11-74 42-82l14 29-18 61c-18 24-45 32-53 15-7-14 15-23 15-23" fill="#CB8745"/>
+<path d="M273 161c9-33-10-74-42-82l-14 29 18 61c18 24 45 32 53 15 7-14-15-23-15-23" fill="#CB8745"/>
+<path d="M112 107c10-39 43-41 62-21l-9 92c-36 17-61-21-53-71" fill="#E7AE65"/>
+<path d="M246 107c-10-39-43-41-62-21l9 92c36 17 61-21 53-71" fill="#E7AE65"/>
+<path d="M162 69c9-14 28-14 37 0l15 95c3 29-70 29-67 0z" fill="#F1C687"/>
+<path d="m163 89 35-5m-39 29 43-5m-47 29 51-5m-50 26 50-3" stroke="#D5A05A" stroke-width="5" stroke-linecap="round"/>
+<path d="m121 117 22 10m-23 13 22 8m93-31-22 10m23 13-22 8" stroke="#D49A53" stroke-width="4" stroke-linecap="round"/>
+<path d="m99 55 2 7 7 2-7 2-2 7-2-7-7-2 7-2zM269 74l2 7 7 2-7 2-2 7-2-7-7-2 7-2z" fill="#FFF7DC"/>
+</svg>

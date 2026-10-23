@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" fill="none" role="img" aria-label="Illustrated blueberry muffin">
+<ellipse cx="180" cy="218" rx="105" ry="15" fill="#FFF8E8"/>
+<path d="m111 132 16 73c4 18 103 18 107 0l16-73z" fill="#C8A17D"/>
+<path d="m135 142 9 60m17-60 4 64m20-64-1 64m22-64-5 60m24-60-10 57" stroke="#B58C69" stroke-width="4"/>
+<path d="M104 133c-19-25-3-53 20-52-1-28 27-45 49-28 23-23 56-10 60 16 30-6 52 28 36 52 9 27-3 34-26 29l-27-5-36 6-35-5-27 5z" fill="#EAC18C"/>
+<circle cx="143" cy="91" r="9" fill="#7B788C"/><circle cx="199" cy="72" r="8" fill="#7B788C"/><circle cx="224" cy="112" r="10" fill="#7B788C"/><circle cx="171" cy="124" r="8" fill="#8E8B9F"/>
+<path d="m159 72 7-3m30 34 7 4m-76 16 7 2m107-40 6 3" stroke="#D7A877" stroke-width="4" stroke-linecap="round"/>
+</svg>

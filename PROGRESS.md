@@ -837,6 +837,59 @@ All direct pins predate the release cutoff; transitive versions remain in
   user edits in the Phase 4 guide and notebooks remain untouched and unstaged.
   Local conventional commit closes implementation; stop before Phase 7.
 
+## Phase 6 follow-up: inspiration theme and menu browsing (2026-10-23)
+
+- User ran the demo, reported a full-menu → food-menu failure, and explicitly
+  requested a redesign based on the three supplied Inspiration images. This is
+  a focused Phase 6 follow-up; Phase 7 and publication remain unauthorized.
+- Reproduced the exact issue with the native CPU model. It generated
+  get_menu(category="food"), which correctly fails the frozen strict schema:
+  actual food categories are bakery and sandwiches. No backend action had run.
+  Preserved raw responses and PARSE_ERROR evidence in
+  results/phase6_menu_failure_reproduction.json.
+- Added a demo-only read-only menu shortcut for exact standalone menu requests.
+  Food reads bakery and sandwiches through CafeService.call; other category
+  reads use the same validated tools. Replies show actual prices and stock;
+  source="menu" and actual tool traces make this path explicit. Orders, mixed
+  requests and unrecognized requests remain model-driven (source="model").
+  Store the displayed menu reply in dialogue history; no parser repairs, hidden
+  auto-orders, JSON/category changes or benchmark result updates were introduced.
+- Rebuilt the Gradio presentation around warm cream/peach, espresso text,
+  terracotta chat bubbles, sage accents, rounded menu cards and a receipt panel.
+  Original local SVG illustrations cover coffee, tea, cold drinks and food;
+  reference images were inspected and left untouched. No reference branding or
+  third-party photo was embedded. Fonts and imagery work locally without remote
+  font/image services. Menu tabs expose current backend prices and stock, with
+  a horizontally scrollable card list on phones.
+- Preserved order totals, size/modifier details, clock advancement and reset.
+  Both Start fresh and the chat clear event reset the actual session. Behind
+  the counter retains technical calls/results and response source while the
+  main flow uses customer-facing copy. Global shell styles live separately from
+  Gradio-scoped component CSS to avoid root/media-query scoping problems.
+- Verified the rendered UI with installed headless Chrome and a temporary fixture
+  preview on port 7861, without touching the user's port-7860 demo. Desktop at
+  1440px and mobile at 390px have no document overflow. Actual browser clicks
+  tested Food (eight menu cards), menu submission and reset. Preview screenshots
+  are saved under results/ui/. Browser preview used a fixture model; menu reads
+  used the real backend and are not claimed as model accuracy measurements.
+- Separate real native-CPU smoke check passed: full menu → food menu → one medium
+  latte in the same session. Menu reads returned no errors or orders, and the
+  model then created ORD-00001 for GBP 3.50. Evidence is retained in
+  results/phase6_theme_smoke.json. This fixes the supplied flow through explicit
+  demo routing; it does not retrain the model or remove its other limitations.
+- Updated Space packaging to include allowlisted CSS/SVG assets. Verified the
+  built wheel's theme sources/assets against checkout bytes. Prepared an immutable
+  108-file deployment bundle without uploading, preserving the original deployment
+  receipt; new receipt: results/phase6_theme_bundle.json. All previously committed
+  result artifacts are byte-identical. Frozen prompt, parser, tool schemas,
+  agent, CPU inference and train/local configurations remain unchanged.
+- Final make lint passed (115 files); make test passed 284 tests in 5.47s,
+  including new menu sequence, no-side-effect, mixed-request and escaping cases.
+  Source/wheel builds passed. results/phase6_theme_validation.json records checks
+  and screenshot hashes. No new dependency, GPU package, push or deployment.
+  Preserve the user's existing guide/notebook edits and Inspiration directory.
+  Restart the running demo and refresh the browser to load the new design.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -873,6 +926,7 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 Phase 6 implementation is complete with the runtime limitations above. Follow
 docs/PHASE6_DEMO.md for the browser, optional private Space deployment and recording.
+The user-requested theme/menu follow-up is complete; restart the demo to load it.
 Preserve predictions, manifests, private Hub weights, checkpoints and API cache.
 Stop and wait for `continue to Phase 7` before final polish/publication work.
 No GitHub push is authorized.

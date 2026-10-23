@@ -18,13 +18,26 @@ if it is missing; set `HF_TOKEN` in `.env`. Existing weights are verified agains
 the SHA-256 in `configs/serve.yaml`. Tokenizer files use the frozen base revision.
 No evaluation dataset is downloaded for serving.
 
+The redesigned counter uses the warm cream/peach/coffee palette from the supplied
+Inspiration references, with original local SVG artwork, menu cards and a receipt
+panel. It works without external font or image services. The menu tabs browse
+current café data and show prices and out-of-stock items; swipe the cards on a phone.
+
+Standalone menu requests such as “Show me the menu” and “show me the food menu”
+now read the café tools directly. “Food” combines bakery and sandwiches; it is not
+an added tool-schema category. Responses expose `source: "menu"` and actual tool
+traces under **Behind the counter**. Orders and other chat still use the model
+(`source: "model"`). This demo convenience does not change the model, frozen
+evaluator or previously reported results; mixed requests still go to the model.
+
 The five clickable examples cover ordering, clarification, declining an off-menu
 request, recovering from an out-of-stock tool result, and menu browsing. Expand
-**Tool calls** to see actual calls/results. The order board shows backend state,
+**Behind the counter** to see actual calls/results. The receipt shows backend state,
 including decimal-string totals. It is independent of the assistant's wording.
-Use **Advance café time 5 minutes** to progress preparation; checking status does
+Use **Let 5 minutes pass** to progress preparation; checking status does
 not advance time. Try ordering, asking for the returned order ID's status, then
-cancelling it before it is ready. **Start a new café session** clears that café.
+cancelling it before it is ready. **Start fresh** clears that café; the chat's clear
+button also resets the actual session rather than only hiding the transcript.
 
 Sessions expire after one idle hour and allow 24 customer turns. History is never
 silently truncated. At a context/output limit or interrupted model request, start

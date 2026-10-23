@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" fill="none" role="img" aria-label="Illustrated cinnamon roll">
+<ellipse cx="180" cy="218" rx="116" ry="15" fill="#FFF8E8"/>
+<path d="M82 144v36c0 60 196 60 196 0v-36z" fill="#C28B54"/>
+<ellipse cx="180" cy="141" rx="98" ry="67" fill="#E6B77B"/>
+<path d="M244 160c35-48-18-92-77-76-74 20-76 83-16 99 53 15 113-29 71-59-36-26-93 10-67 33 21 18 68-3 43-17-13-7-31 5-14 9" stroke="#A86D3F" stroke-width="9" stroke-linecap="round"/>
+<path d="M103 139c25-48 118-59 153-1m-143 40c37 25 89 21 126-1" stroke="#FFF0D6" stroke-width="7" stroke-linecap="round"/>
+</svg>

@@ -32,6 +32,8 @@ def bundle_files(root: Path) -> dict[str, bytes]:
         for name in ["pyproject.toml", "uv.lock", ".dockerignore", "docker/entrypoint.sh"]
     ]
     paths += sorted((root / "src/cafe_agent").rglob("*.py"))
+    for suffix in ["*.css", "*.svg"]:
+        paths += sorted((root / "src/cafe_agent/serve/assets").glob(suffix))
     paths += sorted((root / "configs").glob("*.yaml"))
     paths += sorted((root / "configs").glob("*.cmake"))
     files = {str(path.relative_to(root)): path.read_bytes() for path in paths}

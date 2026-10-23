@@ -4,7 +4,7 @@ import secrets
 import time
 from dataclasses import dataclass, field
 from threading import RLock
-from typing import Any, Protocol
+from typing import Any, Literal, Protocol
 
 from pydantic import Field
 
@@ -17,6 +17,7 @@ from cafe_agent.parsing.parser import ToolCall
 from cafe_agent.prompting.prompts import system_prompt
 from cafe_agent.tools.executor import ToolExecutor
 
+from .menu import menu_reply, menu_request, read_menu
 from .settings import ServeSettings
 
 
@@ -56,6 +57,7 @@ class ChatResponse(StrictModel):
     current_order: Order | None
     state: BackendState
     error: str | None = None
+    source: Literal["model", "menu"] = "model"
 
 
 @dataclass
@@ -99,6 +101,12 @@ class ChatService:
                 raise SessionError(409, "TURN_LIMIT_RESET_REQUIRED")
             session.messages.append(Message(role="user", content=request.message))
             session.turns += 1
+            group = menu_request(request.message)
+            if group is not None:
+                items, trace = read_menu(session.cafe, group)
+                reply = menu_reply(items, group)
+                session.messages.append(Message(role="assistant", content=reply))
+                return self._response(key, session.cafe.snapshot(), reply, trace, source="menu")
             # The shared model's KV context is never reused across customers.
             executor = RecordingExecutor(session.cafe)
             try:
@@ -132,7 +140,13 @@ class ChatService:
 
     @staticmethod
     def _response(
-        key: str, state: BackendState, reply: str, trace: list[TraceEntry], error: str | None = None
+        key: str,
+        state: BackendState,
+        reply: str,
+        trace: list[TraceEntry],
+        error: str | None = None,
+        *,
+        source: Literal["model", "menu"] = "model",
     ) -> ChatResponse:
         return ChatResponse(
             session_id=key,
@@ -141,6 +155,7 @@ class ChatService:
             state=state,
             current_order=state.orders[-1] if state.orders else None,
             error=error,
+            source=source,
         )
 
     def advance(self, key: str) -> dict[str, Any]:

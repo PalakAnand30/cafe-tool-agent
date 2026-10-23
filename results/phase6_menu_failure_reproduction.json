@@ -1,0 +1,416 @@
+{
+  "scope": "User-reported demo failure reproduction, not an evaluation run",
+  "requests": [
+    {
+      "message": "Show me the menu",
+      "reply": "The menu includes espresso, americano, latte, cappuccino, flat white, filter coffee, english breakfast tea, earl grey tea, green tea, peppermint tea, chai latte, iced latte, cold brew, lemonade, orange juice, iced tea, butter croissant, almond croissant, blueberry muffin, chocolate brownie, cinnamon roll, cheese sandwich, ham and cheese sandwich, hummus sandwich.",
+      "error": null,
+      "trace": [
+        {
+          "call": {
+            "name": "get_menu",
+            "arguments": {},
+            "id": "call_2_0_0"
+          },
+          "result": {
+            "currency": "GBP",
+            "items": [
+              {
+                "name": "espresso",
+                "category": "coffee",
+                "prices": {
+                  "small": "2.20",
+                  "medium": "2.60",
+                  "large": "3.00"
+                },
+                "price": null,
+                "modifiers": {
+                  "extra_shot": "0.60",
+                  "decaf": "0.00",
+                  "no_sugar": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "americano",
+                "category": "coffee",
+                "prices": {
+                  "small": "2.50",
+                  "medium": "2.90",
+                  "large": "3.30"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "soy_milk": "0.40",
+                  "extra_shot": "0.60",
+                  "decaf": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "latte",
+                "category": "coffee",
+                "prices": {
+                  "small": "3.00",
+                  "medium": "3.50",
+                  "large": "4.00"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "soy_milk": "0.40",
+                  "extra_shot": "0.60",
+                  "decaf": "0.00",
+                  "no_sugar": "0.00",
+                  "vanilla_syrup": "0.50",
+                  "iced": "0.20"
+                },
+                "available": true
+              },
+              {
+                "name": "cappuccino",
+                "category": "coffee",
+                "prices": {
+                  "small": "3.00",
+                  "medium": "3.50",
+                  "large": "4.00"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "soy_milk": "0.40",
+                  "extra_shot": "0.60",
+                  "decaf": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "flat white",
+                "category": "coffee",
+                "prices": {
+                  "small": "3.10",
+                  "medium": "3.60",
+                  "large": "4.10"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "soy_milk": "0.40",
+                  "extra_shot": "0.60",
+                  "decaf": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "mocha",
+                "category": "coffee",
+                "prices": {
+                  "small": "3.40",
+                  "medium": "3.90",
+                  "large": "4.40"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "soy_milk": "0.40",
+                  "extra_shot": "0.60",
+                  "decaf": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "filter coffee",
+                "category": "coffee",
+                "prices": {
+                  "small": "2.00",
+                  "medium": "2.40",
+                  "large": "2.80"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "no_sugar": "0.00"
+                },
+                "available": false
+              },
+              {
+                "name": "english breakfast tea",
+                "category": "tea",
+                "prices": {
+                  "small": "2.00",
+                  "medium": "2.40",
+                  "large": "2.80"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "soy_milk": "0.40",
+                  "no_sugar": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "earl grey tea",
+                "category": "tea",
+                "prices": {
+                  "small": "2.10",
+                  "medium": "2.50",
+                  "large": "2.90"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "no_sugar": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "green tea",
+                "category": "tea",
+                "prices": {
+                  "small": "2.10",
+                  "medium": "2.50",
+                  "large": "2.90"
+                },
+                "price": null,
+                "modifiers": {
+                  "no_sugar": "0.00",
+                  "iced": "0.20"
+                },
+                "available": true
+              },
+              {
+                "name": "peppermint tea",
+                "category": "tea",
+                "prices": {
+                  "small": "2.10",
+                  "medium": "2.50",
+                  "large": "2.90"
+                },
+                "price": null,
+                "modifiers": {
+                  "no_sugar": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "chai latte",
+                "category": "tea",
+                "prices": {
+                  "small": "3.20",
+                  "medium": "3.70",
+                  "large": "4.20"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "soy_milk": "0.40",
+                  "no_sugar": "0.00",
+                  "iced": "0.20"
+                },
+                "available": true
+              },
+              {
+                "name": "iced latte",
+                "category": "cold_drinks",
+                "prices": {
+                  "small": "3.20",
+                  "medium": "3.70",
+                  "large": "4.20"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "soy_milk": "0.40",
+                  "extra_shot": "0.60",
+                  "decaf": "0.00",
+                  "vanilla_syrup": "0.50"
+                },
+                "available": true
+              },
+              {
+                "name": "cold brew",
+                "category": "cold_drinks",
+                "prices": {
+                  "small": "3.00",
+                  "medium": "3.50",
+                  "large": "4.00"
+                },
+                "price": null,
+                "modifiers": {
+                  "oat_milk": "0.40",
+                  "no_sugar": "0.00",
+                  "vanilla_syrup": "0.50"
+                },
+                "available": true
+              },
+              {
+                "name": "lemonade",
+                "category": "cold_drinks",
+                "prices": {
+                  "small": "2.40",
+                  "medium": "2.90",
+                  "large": "3.40"
+                },
+                "price": null,
+                "modifiers": {
+                  "no_sugar": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "orange juice",
+                "category": "cold_drinks",
+                "prices": {
+                  "small": "2.60",
+                  "medium": "3.10",
+                  "large": "3.60"
+                },
+                "price": null,
+                "modifiers": {},
+                "available": false
+              },
+              {
+                "name": "iced tea",
+                "category": "cold_drinks",
+                "prices": {
+                  "small": "2.40",
+                  "medium": "2.90",
+                  "large": "3.40"
+                },
+                "price": null,
+                "modifiers": {
+                  "no_sugar": "0.00",
+                  "vanilla_syrup": "0.50"
+                },
+                "available": true
+              },
+              {
+                "name": "butter croissant",
+                "category": "bakery",
+                "prices": {},
+                "price": "2.50",
+                "modifiers": {
+                  "warmed": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "almond croissant",
+                "category": "bakery",
+                "prices": {},
+                "price": "3.00",
+                "modifiers": {
+                  "warmed": "0.00"
+                },
+                "available": false
+              },
+              {
+                "name": "blueberry muffin",
+                "category": "bakery",
+                "prices": {},
+                "price": "2.80",
+                "modifiers": {
+                  "warmed": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "chocolate brownie",
+                "category": "bakery",
+                "prices": {},
+                "price": "2.90",
+                "modifiers": {
+                  "warmed": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "cinnamon roll",
+                "category": "bakery",
+                "prices": {},
+                "price": "3.10",
+                "modifiers": {
+                  "warmed": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "cheese sandwich",
+                "category": "sandwiches",
+                "prices": {},
+                "price": "4.50",
+                "modifiers": {
+                  "warmed": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "ham and cheese sandwich",
+                "category": "sandwiches",
+                "prices": {},
+                "price": "5.00",
+                "modifiers": {
+                  "warmed": "0.00"
+                },
+                "available": true
+              },
+              {
+                "name": "hummus sandwich",
+                "category": "sandwiches",
+                "prices": {},
+                "price": "4.80",
+                "modifiers": {
+                  "warmed": "0.00"
+                },
+                "available": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "message": "show me the food menu",
+      "reply": "Request incomplete. Inspect your orders and start a new session.",
+      "error": "PARSE_ERROR",
+      "trace": []
+    }
+  ],
+  "raw_model_responses": [
+    {
+      "content": "<tool_call>\n{\"name\": \"get_menu\", \"arguments\": {}}\n</tool_call>",
+      "tool_calls": [],
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1161,
+        "completion_tokens": 15,
+        "total_tokens": 1176
+      },
+      "cached": false
+    },
+    {
+      "content": "The menu includes espresso, americano, latte, cappuccino, flat white, filter coffee, english breakfast tea, earl grey tea, green tea, peppermint tea, chai latte, iced latte, cold brew, lemonade, orange juice, iced tea, butter croissant, almond croissant, blueberry muffin, chocolate brownie, cinnamon roll, cheese sandwich, ham and cheese sandwich, hummus sandwich.",
+      "tool_calls": [],
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 3148,
+        "completion_tokens": 92,
+        "total_tokens": 3240
+      },
+      "cached": false
+    },
+    {
+      "content": "<tool_call>\n{\"name\": \"get_menu\", \"arguments\": {\"category\": \"food\"}}\n</tool_call>",
+      "tool_calls": [],
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 3255,
+        "completion_tokens": 19,
+        "total_tokens": 3274
+      },
+      "cached": false
+    }
+  ]
+}

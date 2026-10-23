@@ -1,0 +1,21 @@
+/* Global shell rules: Gradio scopes component CSS inside .contain. */
+body { background:#edf3ee!important; }
+gradio-app { background:#edf3ee!important; }
+gradio-app .gradio-container {
+  width:calc(100% - 48px)!important; min-width:0!important;
+  max-width:1220px!important; margin:24px auto!important;
+  padding:30px 40px 18px!important; box-sizing:border-box;
+}
+gradio-app .gradio-container > main.app { padding:0!important; min-width:0; width:100%; }
+gradio-app .gradio-container .html-container { padding:0!important; }
+gradio-app .gradio-container .contain,gradio-app .gradio-container .wrap { min-width:0; }
+gradio-app button:focus-visible,gradio-app textarea:focus-visible {
+  outline:3px solid #b18a5f!important; outline-offset:3px;
+}
+@media (max-width:850px) {
+  gradio-app .gradio-container { width:100%!important; margin:0 auto!important;
+    padding:22px!important; border-radius:0; border:0; }
+}
+@media (max-width:600px) {
+  gradio-app .gradio-container { padding:18px 14px!important; }
+}

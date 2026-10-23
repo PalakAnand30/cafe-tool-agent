@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" fill="none" role="img" aria-label="Illustration of a fresh sandwich">
+<ellipse cx="180" cy="218" rx="112" ry="13" fill="#687C61" opacity=".13"/>
+<ellipse cx="180" cy="207" rx="118" ry="16" fill="#FFFAEA"/>
+<path d="m87 166 137-51 56 68-140 26z" fill="#C58E59"/>
+<path d="m83 153 147-48 56 65-148 27z" fill="#EAC38B"/>
+<path d="m86 139 25-4 12 6 15-15 17 8 17-18 18 9 18-17 24-9 55 59-24-2-12 13-23-4-12 14-26-3-16 11-32-3z" fill="#8B9F70"/>
+<path d="m93 128 140-48 47 66-145 28z" fill="#F4DBA5"/>
+<path d="m105 141 128-46 39 51-135 26z" fill="#C87552"/>
+<path d="m80 112 141-53 64 75-147 29z" fill="#C99156"/>
+<path d="m89 110 129-47 55 67-134 25z" fill="#F2D5A2"/>
+<path d="m135 106 7-1m22-10 7-2m18-8 7-1m-38 40 7-2m18-9 7-1m18-7 7-1" stroke="#D4AD70" stroke-width="3" stroke-linecap="round"/>
+</svg>

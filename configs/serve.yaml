@@ -14,3 +14,4 @@ examples:
   - "One almond croissant, please."
   - "Show me the coffee menu."
 space_name: cafe-tool-agent
+featured_items: [latte, butter croissant, cheese sandwich]

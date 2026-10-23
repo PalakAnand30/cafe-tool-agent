@@ -1,0 +1,34 @@
+{
+  "scope": "Phase 6 user-requested theme and menu-read follow-up, not a benchmark",
+  "references": "Supplied Inspiration images inspected; originals left untouched. New vector artwork is original.",
+  "browser": "Installed Chrome, headless; fixture model for preview; menu actions use real CafeService",
+  "browser_checks": [
+    "Food tab renders 8 backend menu items",
+    "Menu submission shows bakery and sandwiches without error",
+    "Start fresh clears the conversation",
+    "Desktop 1440px has no document overflow",
+    "Mobile 390px has no document overflow"
+  ],
+  "native_model_smoke": "results/phase6_theme_smoke.json",
+  "pre_fix_failure": "results/phase6_menu_failure_reproduction.json",
+  "menu_recovery": "Exact standalone menu reads use validated backend tools. Food combines bakery and sandwiches. Orders and mixed requests remain model-driven.",
+  "all_existing_results_unchanged": true,
+  "frozen_prompt_parser_schemas_agent_and_cpu_unchanged": true,
+  "make_lint": "passed, 115 files",
+  "make_test": "284 passed in 5.47 seconds",
+  "wheel_and_deployment_assets_verified": true,
+  "deployment_bundle": "results/phase6_theme_bundle.json",
+  "screenshots": {
+    "results/ui/cafe-counter-desktop.png": {
+      "width": 1440,
+      "height": 1343,
+      "sha256": "008c25bca8bd7972d86d15bbcd8c725011cc4bef221b9aab4cdb3d39f223309b"
+    },
+    "results/ui/cafe-counter-mobile.png": {
+      "width": 390,
+      "height": 1852,
+      "sha256": "755640dd0c8b2b050a780912e228f6b2c71ed7ac4c4725ae5b3c7629ea8a11d7"
+    }
+  },
+  "pushed_or_deployed": false
+}
