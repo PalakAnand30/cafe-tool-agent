@@ -1,0 +1,140 @@
+{
+  "checked_on": "2026-10-23",
+  "scope": "Offline artifact, coverage, provenance and execution-integrity validation; no model performance scoring or new inference.",
+  "source_directory": "gpu_predictions",
+  "summary_sha256": "07143427501a9d164803a4b9606bee7b5f1e7ea10026162010c94c0c5689c66c",
+  "systems": {
+    "S1": {
+      "backend": "transformers",
+      "device": "Tesla T4",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "package_commit": "3fb9663d21fd64a305a3ac9ec920518700c774cf",
+      "manifest_fingerprint_verified": true,
+      "source_hashes_verified": true,
+      "prompt_tools_runtime_domain_verified": true,
+      "few_shot_verified": true,
+      "dataset_hashes_verified": true,
+      "trace_state_message_error_replay_verified": true,
+      "splits": {
+        "independent_test": {
+          "turn_predictions": 143,
+          "end_to_end_predictions": 84,
+          "replayed_conversations": 84,
+          "complete": true
+        },
+        "test": {
+          "turn_predictions": 876,
+          "end_to_end_predictions": 400,
+          "replayed_conversations": 400,
+          "complete": true
+        }
+      }
+    },
+    "S2": {
+      "backend": "transformers",
+      "device": "Tesla T4",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "package_commit": "3fb9663d21fd64a305a3ac9ec920518700c774cf",
+      "manifest_fingerprint_verified": true,
+      "source_hashes_verified": true,
+      "prompt_tools_runtime_domain_verified": true,
+      "few_shot_verified": true,
+      "dataset_hashes_verified": true,
+      "trace_state_message_error_replay_verified": true,
+      "splits": {
+        "independent_test": {
+          "turn_predictions": 143,
+          "end_to_end_predictions": 84,
+          "replayed_conversations": 84,
+          "complete": true
+        },
+        "test": {
+          "turn_predictions": 876,
+          "end_to_end_predictions": 400,
+          "replayed_conversations": 400,
+          "complete": true
+        }
+      }
+    },
+    "S4": {
+      "backend": "transformers",
+      "device": "Tesla T4",
+      "model": "PalakAnand30/cafe-agent-qwen2.5-1.5b-lora-merged",
+      "revision": "6023f33114834618276c7de0cf43fda45397e1d7",
+      "package_commit": "3fb9663d21fd64a305a3ac9ec920518700c774cf",
+      "manifest_fingerprint_verified": true,
+      "source_hashes_verified": true,
+      "prompt_tools_runtime_domain_verified": true,
+      "few_shot_verified": true,
+      "dataset_hashes_verified": true,
+      "trace_state_message_error_replay_verified": true,
+      "splits": {
+        "independent_test": {
+          "turn_predictions": 143,
+          "end_to_end_predictions": 84,
+          "replayed_conversations": 84,
+          "complete": true
+        },
+        "test": {
+          "turn_predictions": 876,
+          "end_to_end_predictions": 400,
+          "replayed_conversations": 400,
+          "complete": true
+        }
+      }
+    }
+  },
+  "files": {
+    "S1__independent_test.jsonl": {
+      "sha256": "b55b4a5d0826fc8f796b173cc38f736ff2a962672d2b86cd8aaec75ecf818399",
+      "bytes": 468138
+    },
+    "S1__manifest.json": {
+      "sha256": "dfb25ac306c26e85d072e35f48a799f1ade1dd009543af1a755d41af8b852ff4",
+      "bytes": 23549
+    },
+    "S1__test.jsonl": {
+      "sha256": "52081262c335745e182856275dd6b91a2a08d3228045016628b4f92b24de94de",
+      "bytes": 2202023
+    },
+    "S2__independent_test.jsonl": {
+      "sha256": "d86fa560dff57082b4fefa1ba5a1bd09ed233f235ba56f1afb66b16b97d4106d",
+      "bytes": 364058
+    },
+    "S2__manifest.json": {
+      "sha256": "f87c6b890484ab1a1707212eba2b4bb4c699988c2659591b08d095348b085226",
+      "bytes": 27879
+    },
+    "S2__test.jsonl": {
+      "sha256": "bd5977b2ac8450a4871266b83c81ced2cb1c675229627e456b787ccfa8dade82",
+      "bytes": 2173175
+    },
+    "S4__independent_test.jsonl": {
+      "sha256": "1a04dd5192fdb9dffb8da4c8ed3842307366771799ede3dfc869a1290979aed5",
+      "bytes": 491840
+    },
+    "S4__manifest.json": {
+      "sha256": "44da03fd705b49860b836e9589cd568730c9224decaf49f918a15a1511d7967a",
+      "bytes": 23602
+    },
+    "S4__test.jsonl": {
+      "sha256": "949fd6d7de706cdb042382fa47c460432bb4dee30a979a74cdaef8aaa417a398",
+      "bytes": 2387943
+    }
+  },
+  "s3_before": {
+    "results/predictions/S3__independent_test.jsonl": "ad43ac7cf9d4013b39dbb46df7b5070b2e5c3ebc3dbbc41ccf5c7f70fc4be467",
+    "results/predictions/S3__manifest.json": "1c4e175200ae2b73e85d654fef70b2dd581d6b04c8ffcffdd73ecca43860c9a4",
+    "results/predictions/S3__test.jsonl": "fdb8e51373538dcaff0c9b520056cec939cbdc9eb72035641d94df773dacb77c"
+  },
+  "all_checks_passed": true,
+  "predictions_total": 4509,
+  "replayed_conversations_total": 1452,
+  "destination_directory": "results/predictions",
+  "files_imported_or_identically_present": 10,
+  "imported_files_match_source": true,
+  "s3_unchanged": true,
+  "original_source_preserved": true
+}

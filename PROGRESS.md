@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 2026-10-22 (Europe/London).
+Updated: 2026-10-23 (Europe/London).
 
 ## Phase checklist
 
@@ -662,6 +662,46 @@ All direct pins predate the release cutoff; transitive versions remain in
   download and provide the original prediction archive before local integrity
   checks/scoring. No GPU evaluation scores or Phase 5 results are claimed.
 
+## Phase 4: GPU prediction receipt and integrity validation (2026-10-23)
+
+- User supplied the extracted archive under `gpu_predictions/` and requested a
+  check. Found six prediction JSONL files, three immutable manifests and the
+  bundle summary. Every prediction/manifest SHA-256 matches the supplied summary;
+  all three manifest fingerprints recompute exactly. Recorded actual checks,
+  hashes, file sizes, coverage and provenance in
+  `results/gpu_predictions_validation.json`.
+- S1, S2 and S4 each have complete, unique schema-valid prediction keys:
+  synthetic test 876 gold assistant turns plus 400 end-to-end conversations;
+  independent_test 143 gold assistant turns plus 84 end-to-end conversations.
+  Total 4,509 prediction records. Checked source IDs, author/intent labels,
+  fingerprints and dataset hashes against the frozen local records, excluding
+  Codex worked examples. Independent cases remain Claude-authored with Codex gold.
+- All three systems actually used the Transformers fallback on Tesla T4, CUDA
+  runtime 12.4, PyTorch 2.6.0 and Transformers 4.51.3. Do not label these as vLLM
+  measurements. The bundle does not include attempts.json, so it does not establish
+  the specific reason vLLM was unavailable. Dataset revision and S1/S2 base
+  revision match configured pins; S4 uses the user's reported merged revision
+  `6023f33114834618276c7de0cf43fda45397e1d7`. Package provenance records
+  Git commit `3fb9663d21fd64a305a3ac9ec920518700c774cf`.
+- All frozen inference and Kaggle worker source hashes match the local checkout.
+  Verified prompt, tools, domain, runtime, decoding/context/seed and four fixed
+  S2 examples against local configs. Relocated dataset paths only in memory for
+  checking; retained the original manifests byte-for-byte.
+- Replayed the recorded model responses through the shared agent runner on fresh
+  backends, including explicit logical-time advances. All 1,452 end-to-end records
+  reproduced their tool traces/results, final states, messages, errors and response
+  consumption exactly. This validates execution integrity, not prediction accuracy.
+  No new inference, model download, external API call or GPU import was performed.
+- Copied all ten verified files into `results/predictions/` after checking every
+  destination for conflicts. Copies match the supplied bytes. Preserved the
+  original `gpu_predictions/` directory and every existing S3 file/hash.
+  No metrics, README result table or performance reports were changed.
+- `make lint` passed (85 files); `make test` passed all 252 tests in 4.99 seconds.
+  Phase 4 GPU predictions are complete and ready for Phase 5. Original training
+  JSON manifests/checkpoints remain separately requested; their absence here does
+  not change prediction coverage. Stop pending `continue to Phase 5`; no GitHub
+  push, Hub visibility change or Phase 5 work was performed.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -675,12 +715,14 @@ All direct pins predate the release cutoff; transitive versions remain in
 - S3 evaluation is complete on both test sets, including independent-set
   confidence intervals. Keep free limits and preserve predictions/cache; future
   metrics recomputation and completed-run resumes require no new requests.
-  The user reports completed GPU training/export; GPU evaluation and real local
-  GGUF inference remain pending.
+  The user reports completed GPU training/export; S1/S2/S4 GPU prediction files
+  are now received and locally integrity-checked. Real local GGUF inference and
+  the complete comparison/report remain pending Phase 5.
 - The user reports T4 batch-1/4,096-token fit and completed training/GGUF export.
   Retain original JSON manifests, full checkpoints and private Hub artifacts.
-  Run the separate GPU evaluation notebook with the exact training Git reference
-  and reported merged model revision; follow `docs/PHASE4_KAGGLE.md`.
+  GPU evaluation has completed with the exact training Git reference and reported
+  merged model revision. Retain the received prediction files and their backup;
+  no GPU evaluation rerun is required.
 - The account's 8,000-token/minute Groq limit slows generation. Parallel cache
   preparation hit that limit and stopped; the canonical resumable run completed
   with its existing bounded exponential backoff. Preserve cache/journals on retry.
@@ -689,11 +731,10 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-The user reports completed Phase 4 Kaggle training/export. Preserve the original
+Phase 4 GPU predictions are received, complete, integrity-checked and copied
+into results/predictions/ alongside unchanged S3 files. Preserve the original
 training_summary.json, training_manifest.json, export_summary.json and full
-checkpoint folders. Run GPU evaluation at the same training Git reference and the
-reported merged revision; extract gpu_predictions.zip into results/predictions/
-alongside S3. Wait for those artifacts and `continue to Phase 5`
+checkpoint folders separately. Wait for `continue to Phase 5`
 before downloading/evaluating GGUF or building the full report. Preserve all
 existing predictions, immutable manifests and API cache. No GitHub remote or push
 has been performed by Codex.
