@@ -1,0 +1,6 @@
+{
+  "state": "failed",
+  "fingerprint": "77810b1420d695cbb0657817e3ded879a60fdfd3015f02d80db81684067c418c",
+  "n_gpu_layers": 0,
+  "error_type": "ValueError"
+}

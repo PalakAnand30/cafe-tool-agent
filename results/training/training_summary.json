@@ -1,0 +1,22 @@
+{
+  "train_loss": 0.025193520106762558,
+  "initial_validation_loss": 1.008454442024231,
+  "validation_loss": 0.010441209189593792,
+  "best_validation_loss": 0.010441209189593792,
+  "best_checkpoint": "/kaggle/working/cafe-main-r16-full-wandb0223-b1/checkpoints/checkpoint-330",
+  "runtime_seconds": 19721.953115739,
+  "gpu_hours": 5.591685450511111,
+  "gpu_hours_basis": "Measured GPU-worker elapsed time; excludes notebook setup and export, not a billing receipt.",
+  "gpu": "Tesla T4",
+  "memory_probe_peak_bytes": 10467113472,
+  "training_peak_allocated_bytes": 8091172864,
+  "probe_shape": [
+    1,
+    4096
+  ],
+  "memory_note": "Probe excludes optimizer state; training peak includes training/evaluation.",
+  "wandb_url": "https://wandb.ai/palak-anand-the-university-of-edinburgh/cafe-tool-agent/runs/mz9t5xh9",
+  "adapter_path": "/kaggle/working/cafe-main-r16-full-wandb0223-b1/adapter",
+  "dataset_revision": "5a626daa659b2455861e6a8d5a891c6dbe14e36d",
+  "base_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
+}

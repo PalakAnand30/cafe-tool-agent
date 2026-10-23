@@ -1,0 +1,8 @@
+{
+  "cpu_brand": "Apple M5",
+  "ram_bytes": 17179869184,
+  "physical_cores": 10,
+  "configured_inference_threads": 4,
+  "source": "Read-only sysctl: machdep.cpu.brand_string, hw.memsize, hw.physicalcpu",
+  "verified_on": "2026-10-23"
+}

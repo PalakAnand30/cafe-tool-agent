@@ -1,0 +1,24 @@
+{
+  "repo": "PalakAnand30/cafe-agent-qwen2.5-1.5b-lora-gguf",
+  "revision": "a41f869ceec177228db7abdc0d01a07967a4f409",
+  "filename": "cafe-agent-qwen2.5-1.5b-Q4_K_M.gguf",
+  "path": "models/cafe-agent-qwen2.5-1.5b-Q4_K_M/cafe-agent-qwen2.5-1.5b-Q4_K_M.gguf",
+  "bytes": 986047872,
+  "sha256": "36ff02d9e08685a7e56298486273715b9c6914356f2a20fc0f4b6815d077e544",
+  "hub_lfs_sha256_verified": true,
+  "private_at_download": true,
+  "originals": {
+    "training_manifest.json": {
+      "path": "models/cafe-agent-qwen2.5-1.5b-Q4_K_M/training_manifest.json",
+      "sha256": "d63570f2a42464fd6b34fa7bf7f4040eb34ee71f55c3157a3aabc0861783200b"
+    },
+    "training_summary.json": {
+      "path": "models/cafe-agent-qwen2.5-1.5b-Q4_K_M/training_summary.json",
+      "sha256": "17e082e64b3b8ff60023d12118214d6c77bf85a2091065cf603e162f67f1933f"
+    },
+    "README.md": {
+      "path": "models/cafe-agent-qwen2.5-1.5b-Q4_K_M/README.md",
+      "sha256": "e66a64dd5b7725cc0067e7bfffc55723a1a5de6f9f85802264880fc4cca7b468"
+    }
+  }
+}

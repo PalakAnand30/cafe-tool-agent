@@ -1,0 +1,40 @@
+{
+  "checked_on": "2026-10-23",
+  "new_dependency": {
+    "package": "matplotlib",
+    "version": "3.10.3",
+    "released": "2025-05-08",
+    "source": "https://pypi.org/project/matplotlib/3.10.3/"
+  },
+  "activated_optional_dependency": {
+    "package": "llama-cpp-python",
+    "version": "0.3.9",
+    "released": "2025-05-08",
+    "source": "https://pypi.org/project/llama-cpp-python/0.3.9/"
+  },
+  "direct_pins_precede_release_cutoff": true,
+  "python": "3.11.15",
+  "installed_versions": {
+    "matplotlib": "3.10.3",
+    "llama-cpp-python": "0.3.9",
+    "numpy": "2.4.6",
+    "huggingface-hub": "0.30.2",
+    "transformers": "4.51.3"
+  },
+  "gpu_offload_supported_by_build": false,
+  "cpu_build_hook_sha256": "fc3f7dc54e16db235b571340078d43ef5d96bc5069c6095138e37de19a80546f",
+  "cpu_build_reason": "The pinned wrapper forces GGML_METAL ON on macOS; nested CMAKE_PROJECT_INCLUDE resets GPU backends OFF.",
+  "evidence": [
+    "https://raw.githubusercontent.com/abetlen/llama-cpp-python/v0.3.9/CMakeLists.txt",
+    "https://cmake.org/cmake/help/latest/variable/CMAKE_PROJECT_INCLUDE.html"
+  ],
+  "local_cuda_torch_or_mlx_installed": false,
+  "forbidden_local_packages_checked": [
+    "bitsandbytes",
+    "mlx",
+    "mlx-lm",
+    "torch",
+    "unsloth",
+    "vllm"
+  ]
+}

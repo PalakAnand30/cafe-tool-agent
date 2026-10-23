@@ -24,10 +24,14 @@ dist/
 *.sqlite
 *.sqlite3
 /models/
+/gpu_predictions/
 *.gguf
 wandb/
 logs/
 results/predictions/.run.lock
+results/predictions/**/.s5.run.lock
+results/predictions/.s5.run.lock
+results/.cpu_latency.lock
 .ipynb_checkpoints/
 .DS_Store
 

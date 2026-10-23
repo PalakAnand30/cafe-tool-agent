@@ -1,0 +1,21 @@
+{
+  "source_and_wheel_built": true,
+  "archive_exclusions_verified": true,
+  "wheel_sources_match_checkout": true,
+  "wheel_import_without_gpu_packages_verified": true,
+  "frozen_data_manifest_matches": true,
+  "all_five_systems_complete": true,
+  "s5_complete_conversations_per_split": {
+    "independent_test": 84,
+    "test": 400
+  },
+  "s5_replayed_end_conversations": 484,
+  "cpu_latency_requests": 100,
+  "s3_metrics_and_intervals_unchanged": true,
+  "report_regeneration_byte_identical": true,
+  "regeneration_artifacts": 18,
+  "n_gpu_layers": 0,
+  "gpu_offload_supported_by_build": false,
+  "gguf_sha256": "36ff02d9e08685a7e56298486273715b9c6914356f2a20fc0f4b6815d077e544",
+  "cpu_native_manifest_sha256": "f7c03f9b2dc8159b4874c1b8036020db8f56d8e556e3906861c348934c168457"
+}

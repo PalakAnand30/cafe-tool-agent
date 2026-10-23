@@ -1,0 +1,10 @@
+{
+  "complete": true,
+  "requests": 100,
+  "expected_requests": 100,
+  "p50_seconds": 9.510105041437782,
+  "p95_seconds": 11.0270493853488,
+  "definition": "CPU request wall time: rendering, token checks, prefill and generation; fresh KV context per request; excludes model load, warm-up and explicit reset.",
+  "n_gpu_layers": 0,
+  "manifest_sha256": "abec09f809b4fe4ef0a57effb6932be406c78ad5ce6e6155db3830da83497d5b"
+}

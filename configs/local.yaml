@@ -1,0 +1,28 @@
+seed: 42
+output_directory: results/predictions/cpu-v1
+model:
+  repo: PalakAnand30/cafe-agent-qwen2.5-1.5b-lora-gguf
+  revision: a41f869ceec177228db7abdc0d01a07967a4f409
+  filename: cafe-agent-qwen2.5-1.5b-Q4_K_M.gguf
+  directory: models/cafe-agent-qwen2.5-1.5b-Q4_K_M
+cpu:
+  context: 8192
+  threads: 4
+  batch: 512
+  micro_batch: 128
+latency:
+  warmup_requests: 3
+  measured_requests: 100
+  split: test
+  reset_context_each_request: true
+cost:
+  usd_per_cpu_hour: 0.10
+  assumption: >-
+    Illustrative USD 0.10 per CPU wall-clock hour on an already-owned laptop;
+    not a measured electricity bill or cloud price. Excludes hardware purchase,
+    idle time, setup, download and training. No model API fee for S1/S2/S4/S5.
+report:
+  systems: [S1, S2, S3, S4, S5]
+  representative_failures: 10
+  charts_directory: results/charts
+  directory: results

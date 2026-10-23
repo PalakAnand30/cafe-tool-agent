@@ -7,15 +7,14 @@ GGUF model on CPU. `PROJECT_SPEC.md` defines the full scope and working rules.
 The café backend and agent core are implemented, together with the Phase 2
 dataset pipeline, replay/token validation, assistant-only labels, human-test
 annotation CLI, independent LLM benchmark conversion and private dataset publisher.
-The Phase 3 local evaluator has completed the GPT-OSS 120B baseline through Groq
-on both test sets and computes metrics from saved predictions. Training, GPU
-model evaluation and the chat demo have not run. Current S3 coverage and results
-are shown below.
+Training/export ran on Kaggle and S1/S2/S4 predictions were received and validated.
+The GPT-OSS 120B S3 baseline is complete on both test sets. Phase 5 adds CPU-only
+GGUF evaluation, a 100-request latency benchmark and the shared five-system report.
+The chat demo remains Phase 6. Results and limitations are shown below.
 
-Phase 4's Kaggle training and GPU evaluation notebooks are ready for the user to
-run. Follow the [Kaggle handoff](docs/PHASE4_KAGGLE.md) for GitHub setup, secrets,
-T4 settings, training/export, prediction downloads and interrupted-run recovery.
-Local validation does not establish T4 memory fit or GPU runtime compatibility.
+Follow the [Kaggle handoff](docs/PHASE4_KAGGLE.md) for GPU reproduction and the
+[local Phase 5 guide](docs/PHASE5_LOCAL.md) for CPU setup, downloads, resumable
+evaluation and deterministic report generation.
 
 ## Local setup
 
@@ -54,16 +53,16 @@ Never commit or share `.env`.
 
 ## Commands and phase boundaries
 
-`make setup`, `make lint`, `make test`, `make benchmark`, `make data`, `make push-data`
-and `make eval-local` are implemented. Remaining targets report their planned phase:
+`make setup`, `make setup-cpu`, `make lint`, `make test`, `make benchmark`, `make data`,
+`make push-data`, `make eval-local` (S5), `make eval-s3`, `make latency` and
+`make report` are implemented. Remaining targets report their planned phase:
 
 | Target | Planned phase |
 | --- | --- |
-| `make report` | 5 |
 | `make serve`, `make docker-build`, `make docker-run` | 6 |
 
 GPU training and inference run only on Kaggle T4 notebooks. Local GGUF
-inference will use CPU only (`n_gpu_layers=0`).
+inference uses CPU only (`n_gpu_layers=0`, no K/Q/V offload).
 
 ## Café backend
 
@@ -113,8 +112,8 @@ rate limits and server errors with exponential backoff and jitter.
 
 `LlamaCppClient` lazy-loads the optional `cpu` extra, fixes `n_gpu_layers=0`,
 and accepts a tokenizer so it can use the shared Qwen chat-template renderer.
-The optional engine has not been installed or tested with a real GGUF yet;
-that validation belongs to Phase 5. The lazy HF/vLLM workers under
+Phase 5's `cpu.CPUClient` also verifies identical Qwen prompt token IDs and
+uses unpenalized greedy decoding. The lazy HF/vLLM workers under
 `cafe_agent.kaggle` are used by the Phase 4 notebooks. The old `models.kaggle`
 stubs are retained for frozen S3 provenance. Importing the package loads no GPU libraries.
 
@@ -226,7 +225,7 @@ this case set, not performance on real customers.
 ## Local baseline evaluation
 
 ```sh
-make eval-local
+make eval-s3
 uv run --locked python scripts/evaluate.py --metrics-only
 ```
 
@@ -276,10 +275,22 @@ coverage in `results/metrics.json` and the table in `results/S3_baseline.md`.
 <!-- RESULTS:START -->
 | System | Set | Coverage (turn / end) | Action accuracy | Argument exact | Field F1 | End success | Action + state |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| S1 | independent_test (complete) | 143/143 turns; 84/84 conversations | 51.7% [43.0%, 60.1%] | 51.3% [35.1%, 66.7%] | 34.3% [19.6%, 50.0%] | 76.2% [66.7%, 84.5%] | 26.2% [16.7%, 36.9%] |
+| S1 | test (complete) | 876/876 turns; 400/400 conversations | 75.0% | 37.0% | 47.3% | 43.8% | 29.0% |
+| S2 | independent_test (complete) | 143/143 turns; 84/84 conversations | 46.2% [38.7%, 53.6%] | 23.1% [9.7%, 36.4%] | 38.8% [17.8%, 60.1%] | 79.8% [71.4%, 88.1%] | 21.4% [13.1%, 29.8%] |
+| S2 | test (complete) | 876/876 turns; 400/400 conversations | 72.5% | 48.7% | 66.3% | 57.5% | 32.5% |
 | S3 | independent_test (complete) | 143/143 turns; 84/84 conversations | 62.9% [54.1%, 71.4%] | 61.5% [45.2%, 77.6%] | 49.3% [28.3%, 69.4%] | 82.1% [73.8%, 89.3%] | 40.5% [29.8%, 51.2%] |
 | S3 | test (complete) | 876/876 turns; 400/400 conversations | 81.2% | 67.6% | 72.4% | 69.5% | 57.5% |
+| S4 | independent_test (complete) | 143/143 turns; 84/84 conversations | 62.9% [52.8%, 71.8%] | 46.2% [31.4%, 62.2%] | 29.4% [18.0%, 42.1%] | 73.8% [63.1%, 83.3%] | 33.3% [22.6%, 44.0%] |
+| S4 | test (complete) | 876/876 turns; 400/400 conversations | 96.6% | 98.4% | 95.6% | 96.0% | 91.5% |
+| S5 | independent_test (complete) | 143/143 turns; 84/84 conversations | 63.6% [53.6%, 72.3%] | 46.2% [31.6%, 61.1%] | 34.2% [21.7%, 46.9%] | 75.0% [65.5%, 83.3%] | 31.0% [21.4%, 41.7%] |
+| S5 | test (complete) | 876/876 turns; 400/400 conversations | 96.2% | 100.0% | 94.9% | 97.8% | 91.8% |
 
-S3 uses GPT-OSS 120B through Groq. Brackets show 95% intervals on the complete independent LLM-authored benchmark; partial runs are labelled. End success uses final state; action + state also checks required actions. Other systems have not run. See results/S3_baseline.md for definitions and limitations.
+The independent benchmark contains 84 Claude-authored cases with Codex gold labels, not human or real-customer evidence. It is weighted toward unsupported requests and has limited successful multi-item-order coverage. Synthetic templates and LLM wording can bias results. Intervals reflect case-sampling uncertainty, not real-world generalization. Plain-text actions use frozen approximate lexical rules; reply factuality and which detail was clarified are not judged. State-only success can overstate clarification, decline and lookup performance; action + state is the stronger endpoint. Hardware, quantization, tokenizer/runtime numerics and inference backends differ.
+
+See [the full report](results/report.md) for execution, latency and cost provenance.
+
+![Independent comparison](results/charts/independent_comparison.png)
 <!-- RESULTS:END -->
 
 Continue one phase at a time, following Section 0 of `PROJECT_SPEC.md`.

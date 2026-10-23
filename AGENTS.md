@@ -43,9 +43,12 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
 - `make benchmark`: convert the supplied Claude-authored set with reviewed gold.
 - `make push-data`: private Hub publication after independent benchmark validation.
 - Human annotation: `uv run --locked python scripts/annotate_human_test.py`.
-- `make eval-local`: resumable S3 evaluation on both test sets; CPU GGUF in Phase 5.
+- `make eval-local`: resumable S5 CPU GGUF evaluation on both test sets.
+- `make eval-s3`: historical cached/resumable Groq baseline; not needed for reporting.
+- `make setup-cpu`: install the pinned CPU extra with the forced-Metal CMake override.
+- `make latency`: separate CPU benchmark with three warm-ups and 100 fixed requests.
 - Offline scoring: `uv run --locked python scripts/evaluate.py --metrics-only`.
-- `make report`: Phase 5.
+- `make report`: regenerate the complete five-system comparison offline from results.
 - `make serve`, `make docker-build`, `make docker-run`: Phase 6.
 - Later-phase targets fail explicitly until implemented; do not report them as working.
 

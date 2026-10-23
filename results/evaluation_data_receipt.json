@@ -1,0 +1,14 @@
+{
+  "repo": "PalakAnand30/cafe-tool-calls",
+  "revision": "5a626daa659b2455861e6a8d5a891c6dbe14e36d",
+  "files": {
+    "independent_test": {
+      "path": "data/human_test/independent_test.jsonl",
+      "sha256": "344b3436285d0864d4c56a7601ba2430bb425d344ec24c473e18455262d2fe73"
+    },
+    "test": {
+      "path": "data/generated-independent-v1/test.jsonl",
+      "sha256": "662e3d6a609b850ea7a2b36756edddd950df716ec2f9c8a7ad3d9ef5d2746754"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "state": "complete",
+  "fingerprint": "e825b02e99422a90ef9b3609f54532bd6791ae97cc29fcfde54d7feb9277e984",
+  "n_gpu_layers": 0,
+  "coverage": {
+    "groups": [
+      {
+        "split": "independent_test",
+        "complete": true,
+        "predictions_sha256": "d9c434c20e6db83d2ee23e14c24b30e7a3891efd79168bea299237c13e70d2e9"
+      },
+      {
+        "split": "test",
+        "complete": true,
+        "predictions_sha256": "793880ff1c324fa8599c73c7d4251d5b2cfba7510c53296a457f2d8b1e6b4cd4"
+      }
+    ]
+  }
+}

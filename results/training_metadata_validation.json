@@ -1,0 +1,14 @@
+{
+  "original_summary_matches_user_report": true,
+  "training_manifest_sha256": "d63570f2a42464fd6b34fa7bf7f4040eb34ee71f55c3157a3aabc0861783200b",
+  "training_summary_sha256": "17e082e64b3b8ff60023d12118214d6c77bf85a2091065cf603e162f67f1933f",
+  "train_ids_match_all_3500_frozen_training_records": true,
+  "dataset_base_and_package_revisions_verified": true,
+  "batch_size": 1,
+  "gradient_accumulation": 16,
+  "lora_rank": 16,
+  "wandb_version": "0.22.3",
+  "source_repo": "PalakAnand30/cafe-agent-qwen2.5-1.5b-lora-gguf",
+  "source_revision": "a41f869ceec177228db7abdc0d01a07967a4f409",
+  "scope": "Original metadata retrieved from the immutable private GGUF repository; export summary remains the user-supplied report."
+}

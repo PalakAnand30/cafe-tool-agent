@@ -9,7 +9,7 @@ Updated: 2026-10-23 (Europe/London).
 - [x] Phase 2: dataset and human-test annotation workflow.
 - [x] Phase 3: evaluation harness and Groq baseline.
 - [x] Phase 4: Kaggle training and GPU evaluation notebooks (written and locally validated).
-- [ ] Phase 5: GGUF evaluation and full report.
+- [x] Phase 5: GGUF evaluation and full report.
 - [ ] Phase 6: demo and deployment.
 - [ ] Phase 7: polish and reproducibility.
 
@@ -702,6 +702,79 @@ All direct pins predate the release cutoff; transitive versions remain in
   not change prediction coverage. Stop pending `continue to Phase 5`; no GitHub
   push, Hub visibility change or Phase 5 work was performed.
 
+## Phase 5: CPU evaluation and reporting (complete, 2026-10-23)
+
+- User explicitly authorized Phase 5. Preserve S1/S2/S3/S4 predictions, manifests,
+  shared inference/scoring rules and tokenizer identity. No Phase 6 or GitHub push.
+- Added exactly pinned Matplotlib 3.10.3 and updated uv.lock; activated the existing
+  optional llama-cpp-python 0.3.9 pin. Both releases date to 2025-05-08, before the
+  existing release cutoff. Version/source evidence is in
+  `results/phase5_dependency_validation.json`. No forbidden local packages installed.
+- Downloaded the exact private GGUF revision and verified 986,047,872 bytes against
+  Hub LFS SHA-256 `36ff02d9e08685a7e56298486273715b9c6914356f2a20fc0f4b6815d077e544`.
+  Weights remain ignored in models/. Receipt: `results/model_download.json`.
+  Retrieved original training manifest/summary from the same immutable revision;
+  verified their summary matches the user's report and all 3,500 frozen train IDs
+  are represented. Batch 1/accumulation 16, rank 16, W&B 0.22.3 and training Git
+  commit 3fb9663 match. Originals are retained under results/training/ and
+  `results/training_metadata_validation.json` records checks.
+- Initial native load failed before any predictions: the pinned upstream CMake
+  build forces Metal ON on macOS, overriding ordinary GGML_METAL=OFF. Retained
+  the failed manifest/status. Added configs/cpu_only.cmake and setup_cpu.py to
+  reapply CPU settings at nested project() calls. A first rebuild also rejected
+  the project path's spaces; copying the hook to a temporary path fixed it.
+  Successful build reports GPU offload unsupported. Native libraries and hook
+  hashes are in the S5 manifest; n_gpu_layers=0 and offload_kqv=False are explicit.
+- S5 now runs in results/predictions/cpu-v1/ with frozen source hashes, the shared
+  runner, fresh backends, clock advances and schema. Context 8,192; seed 42;
+  four CPU threads; max 512 generated tokens; temperature 0; repetition penalty
+  1.0. Every request compares native GGUF prompt token IDs with the frozen Qwen
+  tokenizer; reject overflow without truncation. Completed both sets: synthetic
+  876 gold-history turns and 400 full conversations; independent 143 turns and
+  84 full conversations. Frozen source/config hashes match the saved manifest.
+  Preserved the initial load-failure evidence separately and retained identical
+  canonical S5 copies beside S1–S4 for handoff.
+- Added a separate resumable latency job: three excluded warm-ups and 100 seeded
+  synthetic gold-history requests, resetting KV context before each measurement.
+  Executed after S5 completed, with no concurrent inference. Measured p50
+  9.510105 seconds and p95 11.027049 seconds on the recorded Apple M5 CPU.
+  Samples, provenance and summary are retained in results/cpu_latency*.
+- Implemented an offline five-system reporting pipeline and standalone PNG/SVG
+  charts, deterministic error categories/ten comparisons, README table and CV
+  excerpts. All read saved results; no prompt/evaluator tuning. Integration with
+  a temporary partial-results fixture produced ten chart files and ten failure
+  examples. The final report now scores all ten complete system/split groups.
+  Missing coverage fails before overwriting report artifacts. Regenerated all
+  18 artifacts offline with a different Python hash seed: byte-identical output.
+  API token prices apply only to S3. S5's USD 0.10/CPU-hour cost is explicitly
+  illustrative; GPU compute cost is unknown. Hardware evidence records Apple M5,
+  16 GiB RAM and ten physical cores, with four configured inference threads.
+- Added docs/PHASE5_LOCAL.md and setup/download/eval/latency/report commands.
+  make eval-local now runs S5; make eval-s3 retains the historical API workflow.
+  Later demo/Docker targets still fail explicitly. User's notebook settings and
+  unrelated guide URL edits remain untouched.
+- Verified all 484 S5 conversations by replaying recorded responses through fresh
+  shared backends: tool traces/results, final states, messages, errors and response
+  consumption matched exactly. A completed-run resume generated no new responses
+  and left JSONL hashes unchanged. S1/S2/S3/S4 inference bytes and frozen data
+  manifest remain unchanged; all historical S3 metrics/intervals match exactly.
+- S5 synthetic action accuracy is 96.2%, with 91.8% action-and-state success.
+  Independent results are 63.6% action accuracy [53.6%, 72.3%] and 31.0%
+  action-and-state success [21.4%, 41.7%]. S4 matches S3's independent action
+  point estimate (62.9%) but has lower action-and-state success (33.3% vs 40.5%).
+  These results do not establish superiority over the larger Groq model on the
+  independent benchmark; individual intervals do not test paired differences.
+- Restored-data support verifies exact private dataset revision/hashes without
+  regenerating or overwriting changed gold files. Receipt is retained locally.
+  Source/wheel builds passed; inspected archives exclude secrets, weights, cache
+  and full generated data. Installed-wheel imports and bundled settings work
+  outside the checkout without importing GPU packages. Integrity evidence is in
+  results/phase5_integrity.json, s5_validation.json and report_validation.json.
+- Final make lint passed (103 files); make test passed all 264 tests in 9.19s,
+  including 12 Phase 5 cases. Report, charts, failure examples, CV excerpts and
+  README values are generated from saved predictions. Local conventional commit
+  closes this phase; no GitHub push or Phase 6 work.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -716,10 +789,11 @@ All direct pins predate the release cutoff; transitive versions remain in
   confidence intervals. Keep free limits and preserve predictions/cache; future
   metrics recomputation and completed-run resumes require no new requests.
   The user reports completed GPU training/export; S1/S2/S4 GPU prediction files
-  are now received and locally integrity-checked. Real local GGUF inference and
-  the complete comparison/report remain pending Phase 5.
+  are now received and locally integrity-checked. Local CPU GGUF evaluation,
+  latency measurement and the complete comparison/report are also complete.
 - The user reports T4 batch-1/4,096-token fit and completed training/GGUF export.
-  Retain original JSON manifests, full checkpoints and private Hub artifacts.
+  Original training JSON metadata has been retrieved and verified. Retain it,
+  full checkpoints and private Hub artifacts.
   GPU evaluation has completed with the exact training Git reference and reported
   merged model revision. Retain the received prediction files and their backup;
   no GPU evaluation rerun is required.
@@ -731,10 +805,7 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Phase 4 GPU predictions are received, complete, integrity-checked and copied
-into results/predictions/ alongside unchanged S3 files. Preserve the original
-training_summary.json, training_manifest.json, export_summary.json and full
-checkpoint folders separately. Wait for `continue to Phase 5`
-before downloading/evaluating GGUF or building the full report. Preserve all
-existing predictions, immutable manifests and API cache. No GitHub remote or push
-has been performed by Codex.
+Phase 5 is complete. Review results/report.md and results/error_analysis.md.
+Preserve predictions, immutable manifests, private Hub weights, checkpoints and
+API cache. Stop and wait for `continue to Phase 6` before demo or deployment work.
+No GitHub push is authorized.
