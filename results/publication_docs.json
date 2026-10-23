@@ -1,0 +1,17 @@
+{
+  "published": false,
+  "inputs": {
+    "metrics.json": "e107fe24c0fb55241b5af261a63a83bcc6c6c9879cbccffe30037cea4e2ae2d0",
+    "dataset_upload.json": "5e729fd21ae873548647adf33f92ebec3dcc605f458ec3a209a349d4bf7cf8b2",
+    "model_download.json": "1278aa9c5dcf439f82fb6187b4ed8cc98933e780bc3bed851eb06832f2dc93b6",
+    "kaggle_training_user_report.json": "b6468e4b91a4c452938dfe2f3cc2256f425eff1b6d789974d1720749768d70ae"
+  },
+  "outputs": {
+    "README.md": "d514ce2d4648533f2b21660660d01684a8cb25cc15a4118403038cdf6ccc7b0e",
+    "docs/cards/adapter/README.md": "329e73ceb65495e80f17267762c029621b80897a8a7b96340423de03b0c6a042",
+    "docs/cards/merged/README.md": "dfcaa56cdad54d7875a7ecd3942470ad80ed0d0512f3095615faf3c4c7ec29fa",
+    "docs/cards/gguf/README.md": "387bc1fbb61ce675bec904a79d7f642f39d2c7b9f30307cd1e48ec660eba52ba",
+    "docs/cards/dataset/README.md": "b752800c3ad700c873e247eedf540c5632696f9b30dbb1e1faba939928e859aa"
+  },
+  "status": "Local review copies; code/data licenses, GIF, deployment and remote CI pending."
+}

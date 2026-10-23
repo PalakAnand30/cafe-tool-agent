@@ -1,0 +1,47 @@
+name: CPU smoke evaluation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      UV_CACHE_DIR: ${{ github.workspace }}/.cache/uv
+      TOKENIZERS_PARALLELISM: "false"
+      PYTHONHASHSEED: "42"
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.26"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv python install 3.11
+      - name: Install locked CPU dependencies except the native package
+        run: uv sync --locked --extra cpu --no-install-package llama-cpp-python
+      - name: Install the pinned Linux CPU wheel
+        run: >-
+          uv --no-config pip install --python .venv/bin/python --no-deps
+          --only-binary llama-cpp-python
+          --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+          --index-strategy unsafe-best-match llama-cpp-python==0.3.21
+      - name: Restore immutable model and gold evaluation data
+        run: .venv/bin/python scripts/download_models.py
+      - name: Run complete conversations and enforce the configured threshold
+        run: .venv/bin/python scripts/smoke_eval.py
+      - name: Retain predictions and provenance, including failed checks
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpu-smoke-evidence
+          path: |
+            results/smoke-cpu/
+            results/model_download.json
+            results/evaluation_data_receipt.json
+          retention-days: 14

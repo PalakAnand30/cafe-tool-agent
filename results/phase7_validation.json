@@ -1,0 +1,53 @@
+{
+  "lint": {
+    "passed": true,
+    "formatted_python_files": 119
+  },
+  "tests": {
+    "passed": 289,
+    "failed": 0,
+    "seconds": 5.46
+  },
+  "isolated_checkout_check": {
+    "method": "Copy tracked/new project files into a new temporary directory; no .env, model weights or optional CPU package. Reuse tokenizer cache; install locked dependencies offline.",
+    "lint_passed": true,
+    "tests_passed": 289,
+    "seconds": 5.92,
+    "fixture_issue_fixed": "Resume-manifest test previously depended on an ignored generated gold file; it now creates its own fixture.",
+    "offline_report_after_verified_gold_restoration_matches": [
+      "results/metrics.json",
+      "results/report.md",
+      "results/cv_bullets.md",
+      "README.md",
+      "docs/cards/dataset/README.md",
+      "docs/cards/gguf/README.md",
+      "docs/cards/adapter/README.md",
+      "docs/cards/merged/README.md"
+    ]
+  },
+  "frozen_predictions_and_train_local_fewshot_configs_unchanged": true,
+  "existing_inference_manifest_source_hash_checks_passed": true,
+  "metrics_sha256": "e107fe24c0fb55241b5af261a63a83bcc6c6c9879cbccffe30037cea4e2ae2d0",
+  "new_cpu_smoke_conversations": 50,
+  "new_cpu_smoke_successes": 45,
+  "new_cpu_smoke_threshold": 0.8,
+  "smoke_resume_added_predictions": 0,
+  "wheel_built_and_sources_configs_verified": true,
+  "wheel_sha256": "e3bd0949b54b8650e7cd383e82672b6828020c28412096df8a5b41a33719787a",
+  "documentation_regeneration_byte_identical": true,
+  "new_dependencies": [],
+  "python_versions": {
+    "python": "3.11.15",
+    "uv": "0.11.26",
+    "ruff": "0.12.2",
+    "pytest": "8.4.1"
+  },
+  "github_workflows_run_remotely": false,
+  "space_deployed": false,
+  "demo_gif_recorded": false,
+  "publication_performed": false,
+  "pending_owner_decisions": [
+    "Project code license",
+    "Dataset license and redistribution rights for supplied Claude benchmark"
+  ]
+}

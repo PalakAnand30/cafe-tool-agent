@@ -11,7 +11,7 @@ Updated: 2026-10-23 (Europe/London).
 - [x] Phase 4: Kaggle training and GPU evaluation notebooks (written and locally validated).
 - [x] Phase 5: GGUF evaluation and full report.
 - [x] Phase 6: demo and deployment (implemented; browser/Space checks user-run).
-- [ ] Phase 7: polish and reproducibility.
+- [x] Phase 7: polish and reproducibility (local implementation verified; remote CI/publication pending).
 
 ## Phase 0 scope and decisions
 
@@ -890,6 +890,74 @@ All direct pins predate the release cutoff; transitive versions remain in
   Preserve the user's existing guide/notebook edits and Inspiration directory.
   Restart the running demo and refresh the browser to load the new design.
 
+## Phase 7: polish and reproducibility (2026-10-23)
+
+- Authorized by `continue to Phase 7`; re-read the spec's CI, README and Phase 7
+  requirements. The owner chose to defer live Space deployment and the demo GIF.
+  This phase performs no remote upload, visibility change, deployment or GitHub push.
+- Reworked README into a project entry point with the actual UI preview, explicit
+  deferred-demo status, Mermaid serving/training diagrams, reproduction commands,
+  generated headline/data/training facts, five-system results and limitations.
+  The independent result remains weaker than the larger Groq model; no claim of
+  surpassing it is made. Customer text/annotation provenance and actual recorded
+  Transformers fallback remain explicit.
+- `scripts/update_readme.py` / `make release-docs` now generate the headline,
+  dataset/training excerpt and four review cards from persisted results/receipts,
+  while retaining the existing results block and three evidence-based CV bullets.
+  Cards for adapter, merged, GGUF and dataset are under docs/cards/. Their source
+  and output hashes are in results/publication_docs.json. No card was uploaded.
+  Adapter/merged export identities remain user-reported; GGUF LFS/hash and original
+  training metadata were independently verified in Phase 5.
+- Added manual workflow_dispatch CPU smoke CI, a local smoke command and strict
+  sample/scoring helpers. Uses 50 seeded whole synthetic conversations, fresh
+  backends, existing agent/parser/clock and frozen action-and-state endpoint,
+  with a 0.80 threshold. The single machine-readable YAML comment pragma in
+  configs/eval.yaml carries smoke settings without changing strict EvalConfig,
+  parsed historical config or frozen source hashes. Sample/threshold/source/
+  model/runtime manifests reject changed inputs on resume. Missing, duplicate,
+  wrong-provenance and incomplete predictions fail. No browser shortcuts apply.
+- Actual CPU smoke completed: 45/50 action-and-state successes (0.90), passing
+  the 0.80 guard. A separate saved-predictions check produced the same 45/50.
+  A completed-run resume added zero predictions and retained the prediction SHA.
+  Full local smoke evidence is copied to results/smoke-phase7/; its original
+  resumable output remains ignored at results/smoke-cpu/. The archived manifest
+  records that original path. Receipts: results/phase7_smoke_validation.json and
+  results/smoke-reference/. This is a synthetic regression guard, not a new
+  independent benchmark or a replacement for the complete S5 evaluation.
+- Added docs/PHASE7_PUBLICATION.md with fresh-checkout, offline-report, smoke CI,
+  licensing/attribution and publication steps. Verified official Qwen base and
+  GPT-OSS weight license files (Apache-2.0); these do not assign code/data or
+  supplied-benchmark redistribution rights. Code/data licenses and permission
+  to redistribute the supplied Claude benchmark remain explicit owner decisions.
+  No LICENSE or Hub license field was invented. Private artifacts may stay private.
+- Audited TODOs/stubs and documentation. Kept the historical model-client stubs
+  and inference docstrings because they are part of frozen source provenance.
+  Updated completed-phase guide links and made deferred deployment explicit.
+  No inference, prompt, parser, schema, data-generation, train/local/few-shot
+  configuration or existing prediction/manifest source was changed.
+- Fresh-checkout verification used an isolated temporary copy of tracked/new
+  project files, with no .env, model weights or CPU extra, and a reused tokenizer
+  cache. Locked offline setup and lint passed. It exposed an existing resume test
+  that read ignored generated gold; that test now creates its own fixture.
+  All 289 tests then passed in 5.92s without private data/API credentials.
+  Restored hash-verified local gold files into this isolated checkout and ran
+  make report / make release-docs: metrics, report, CV bullets, README and all
+  cards match the working checkout byte-for-byte. No model inference/API needed.
+- Working-checkout final make lint passed (119 Python files) and make test passed
+  289 tests in 5.46s. The wheel built and its new source/config bytes match the
+  checkout, with no local credentials, cache, inspiration images or model weights.
+  Build initially hit sandbox DNS restrictions; the approved network retry passed.
+  No dependencies or lockfile pins changed. New modules import without GPU packages.
+- make report passed with existing metrics and all frozen predictions/configs
+  unchanged. Some raster file encodings changed on regeneration; decoded PNG
+  pixels and SVG structure/embedded pixels were identical. Preserved the original
+  chart bytes and report receipt. Evidence: results/phase7_render_validation.json.
+  Documentation regeneration is byte-identical; overall checks are recorded in
+  results/phase7_validation.json. Remote GitHub workflow execution remains unrun;
+  local passing checks do not establish remote CI success or full Linux accuracy.
+- Preserve the user's pre-existing guide/notebook edits, deployment dry-run receipt
+  and Inspiration directory. End with a local conventional commit, then stop.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -902,7 +970,7 @@ All direct pins predate the release cutoff; transitive versions remain in
 - The existing local `.env` must remain untracked and must not be printed.
 - Phase 6 native chat and isolated Docker startup/UI/health are checked. Emulated
   Docker chat timed out at 180 seconds; native-amd64 Space behavior is unverified.
-  Run the browser demo and record a GIF; deploy explicitly when ready, then verify
+  The owner deferred the GIF and live deployment; deploy explicitly when ready, then verify
   the live Space. Keep its model secret private and retain existing Hub visibility.
 - S3 evaluation is complete on both test sets, including independent-set
   confidence intervals. Keep free limits and preserve predictions/cache; future
@@ -924,9 +992,10 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Phase 6 implementation is complete with the runtime limitations above. Follow
-docs/PHASE6_DEMO.md for the browser, optional private Space deployment and recording.
-The user-requested theme/menu follow-up is complete; restart the demo to load it.
-Preserve predictions, manifests, private Hub weights, checkpoints and API cache.
-Stop and wait for `continue to Phase 7` before final polish/publication work.
-No GitHub push is authorized.
+Phases 0–7 are implemented locally with the limitations above. Review
+docs/PHASE7_PUBLICATION.md and choose code/data licensing and supplied-benchmark
+redistribution permissions before publication. Remote GitHub CI/manual smoke
+execution remains pending until the owner requests a push. Live Space deployment
+and the GIF remain deferred and are optional for local use. Preserve predictions,
+manifests, private Hub weights, checkpoints and API cache. Stop after the local
+Phase 7 commit; no GitHub push or publication is authorized.

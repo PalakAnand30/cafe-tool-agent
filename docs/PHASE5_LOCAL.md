@@ -115,4 +115,5 @@ hardware purchase, setup and training. S1/S2/S4 GPU cost is unknown without a
 GPU-hour price; zero API fees do not imply free compute.
 
 Keep all predictions, model revisions, training metadata and checkpoints.
-Phase 6 (demo/Docker/deployment) requires a separate continuation.
+The completed demo is documented in [Phase 6](PHASE6_DEMO.md); documentation,
+manual CI and publication decisions are in the [Phase 7 checklist](PHASE7_PUBLICATION.md).

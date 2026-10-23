@@ -232,6 +232,12 @@ def test_conversation_bootstrap_is_deterministic_and_handles_undefined_metrics()
 def test_predictions_resume_without_requests_and_reject_stale_manifest(tmp_path):
     record, config, runtime = order_record(), load_eval_config(), load_runtime()
     config.output_dir = tmp_path
+    # Manifest hashing must use a self-contained fixture on fresh clones too.
+    gold = tmp_path / "gold.jsonl"
+    gold.write_text(record.model_dump_json() + "\n")
+    config.datasets = {
+        "test": config.datasets["test"].model_copy(update={"path": gold, "conversations": 1})
+    }
     fingerprint = run_manifest(config, runtime, tmp_path, "S3")
     responses = gold_responses(record)
     run_records(

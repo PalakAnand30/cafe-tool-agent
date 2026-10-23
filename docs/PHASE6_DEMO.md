@@ -92,6 +92,10 @@ index omits upload dates, after its release date was independently verified.
 
 ## Prepare and deploy a Docker Space
 
+Deployment is optional for local use. The owner has deferred live Space
+deployment and the demo recording; neither is required to use `make serve`.
+The [Phase 7 checklist](PHASE7_PUBLICATION.md) tracks these publication actions.
+
 ```sh
 uv run --locked python scripts/deploy_space.py
 ```

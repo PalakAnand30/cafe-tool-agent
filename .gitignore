@@ -32,6 +32,8 @@ results/predictions/.run.lock
 results/predictions/**/.s5.run.lock
 results/predictions/.s5.run.lock
 results/.cpu_latency.lock
+results/smoke-cpu/
+results/**/.run.lock
 .ipynb_checkpoints/
 .DS_Store
 

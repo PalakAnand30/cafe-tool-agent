@@ -1,3 +1,6 @@
+# Machine-readable smoke metadata; kept in a comment so the frozen EvalConfig
+# and historical inference fingerprints stay unchanged. Parsed by eval/smoke.py.
+# smoke_eval: {conversations: 50, split: test, min_action_and_state_success: 0.80}
 seed: 42
 temperature: 0
 max_tokens: 512

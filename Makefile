@@ -7,11 +7,12 @@ export PYTHONHASHSEED ?= 42
 DOCKER_IMAGE ?= cafe-tool-agent:phase6
 DOCKER_PLATFORM ?= linux/amd64
 
-.PHONY: help setup setup-cpu lint test benchmark data push-data eval-local eval-s3 latency report serve docker-build docker-run
+.PHONY: help setup setup-cpu lint test benchmark data push-data eval-local eval-s3 latency report serve docker-build docker-run smoke-eval release-docs
 
 help:
 	@echo "Available: setup, setup-cpu, lint, test, benchmark, data, push-data, eval-local, eval-s3, latency, report"
 	@echo "Demo: serve, docker-build, docker-run"
+	@echo "Polish: smoke-eval, release-docs"
 
 setup:
 	$(UV) sync --locked
@@ -46,6 +47,12 @@ latency:
 
 report:
 	$(UV) run --locked python scripts/make_report.py
+
+smoke-eval:
+	$(UV) run --locked --extra cpu python scripts/smoke_eval.py
+
+release-docs:
+	$(UV) run --locked python scripts/update_readme.py
 
 serve:
 	$(UV) run --locked --extra cpu python -m cafe_agent.serve

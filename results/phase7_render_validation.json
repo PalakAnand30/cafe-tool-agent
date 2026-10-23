@@ -1,0 +1,51 @@
+{
+  "metrics_unchanged": true,
+  "checks": {
+    "results/charts/confusion_matrices.png": {
+      "decoded_pixels_equal": true,
+      "bytes_equal": false
+    },
+    "results/charts/confusion_matrices.svg": {
+      "embedded_pixels_equal": true,
+      "svg_structure_equal": true,
+      "bytes_equal": false
+    },
+    "results/charts/independent_comparison.png": {
+      "decoded_pixels_equal": true,
+      "bytes_equal": false
+    },
+    "results/charts/independent_comparison.svg": {
+      "embedded_pixels_equal": true,
+      "svg_structure_equal": true,
+      "bytes_equal": true
+    },
+    "results/charts/latency_accuracy.png": {
+      "decoded_pixels_equal": true,
+      "bytes_equal": false
+    },
+    "results/charts/latency_accuracy.svg": {
+      "embedded_pixels_equal": true,
+      "svg_structure_equal": true,
+      "bytes_equal": true
+    },
+    "results/charts/per_intent_independent_test.png": {
+      "decoded_pixels_equal": true,
+      "bytes_equal": false
+    },
+    "results/charts/per_intent_independent_test.svg": {
+      "embedded_pixels_equal": true,
+      "svg_structure_equal": true,
+      "bytes_equal": false
+    },
+    "results/charts/per_intent_test.png": {
+      "decoded_pixels_equal": true,
+      "bytes_equal": false
+    },
+    "results/charts/per_intent_test.svg": {
+      "embedded_pixels_equal": true,
+      "svg_structure_equal": true,
+      "bytes_equal": false
+    }
+  },
+  "decision": "Retain original chart encodings and original report receipt; regenerated raster pixels and SVG structure match. Encoded PNG bytes differ."
+}
