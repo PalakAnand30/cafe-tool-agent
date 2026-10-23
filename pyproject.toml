@@ -11,6 +11,7 @@ requires-python = ">=3.11,<3.12"
 dependencies = [
     "anyio==4.9.0",
     "fastapi==0.115.12",
+    "gradio==5.31.0",
     "groq==0.28.0",
     "httpx==0.28.1",
     "huggingface-hub==0.30.2",
@@ -24,7 +25,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-cpu = ["llama-cpp-python==0.3.9"]
+cpu = [
+    "llama-cpp-python==0.3.9; sys_platform != 'linux'",
+    "llama-cpp-python==0.3.21; sys_platform == 'linux'",
+]
 
 [dependency-groups]
 dev = [

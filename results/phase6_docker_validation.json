@@ -1,0 +1,59 @@
+{
+  "scope": "Isolated serving check, not an S5 benchmark",
+  "platform": "linux/amd64",
+  "image_id": "sha256:7b9991665b7e781e6b2cc4d0bbb637b8f3fc71b34e2a1c05c4ed59d8328749bf",
+  "prebuilt_cpu_wheel": "llama-cpp-python==0.3.21",
+  "cpu_build_gpu_offload": false,
+  "n_gpu_layers": 0,
+  "uid": 1000,
+  "build_passed": true,
+  "model_startup_passed": true,
+  "health_http_status": 200,
+  "ui_http_status": 200,
+  "published_host_ports": false,
+  "weights_readonly": true,
+  "credentials_passed": false,
+  "chat_completed": false,
+  "chat_client_timeout_seconds": 180,
+  "limitation": "Chat request timed out under amd64 emulation on Apple Silicon. Native Mac create/status/cancel checks passed. Native-amd64 Space chat remains unverified.",
+  "previous_incompatible_wheel": {
+    "version": "0.3.18",
+    "error": "libc.musl-x86_64.so.1 missing on Debian",
+    "resolution": "Official 0.3.21 manylinux/glibc CPU wheel loaded successfully."
+  },
+  "hub_offline_mode": true,
+  "final_image_probe": {
+    "image_machine": "x86_64",
+    "uid": 1000,
+    "versions": {
+      "llama-cpp-python": "0.3.21",
+      "gradio": "5.31.0",
+      "fastapi": "0.115.12"
+    },
+    "/health": {
+      "status": 200,
+      "path": "/health",
+      "body": {
+        "status": "ok",
+        "backend": "llama.cpp",
+        "n_gpu_layers": 0
+      }
+    },
+    "/": {
+      "status": 200,
+      "path": "/demo/"
+    },
+    "/demo/config": {
+      "status": 200,
+      "path": "/demo/config"
+    },
+    "installed_source_hashes": {
+      "app.py": "5140b3af5b8d75efa4c6f84656acb898f6353d436cb3baceae44b261b84fb49f",
+      "service.py": "7f6f12739b49c6112dbfaef59aa97301d2e3f722fba0aaa9cbe98973539d577c",
+      "ui.py": "48b9254261dc84d22b75c07fa0bc770f0d8c2cf7be6c6a1e130a34e1ff7eb76a",
+      "model.py": "faa2b516e481f0b777b1cee2dfde05f0e27a9093333397745a555394496861b8"
+    }
+  },
+  "installed_sources_match_checkout": true,
+  "verification_container_stopped": true
+}

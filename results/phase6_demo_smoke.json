@@ -1,0 +1,430 @@
+{
+  "scope": "Serving smoke checks, not evaluation measurements",
+  "backend": "llama.cpp",
+  "n_gpu_layers": 0,
+  "requests": [
+    {
+      "message": "One medium latte with oat_milk, please.",
+      "response": {
+        "session_id": "bc3eaa73441daafc36d4771935f8952a1c243028a2f2637c4d3d0c9e464da171",
+        "reply": "That item is not on the menu. Would you like espresso, americano, latte?",
+        "trace": [
+          {
+            "call": {
+              "name": "create_order",
+              "arguments": {
+                "customer_name": "John Doe",
+                "items": [
+                  {
+                    "item_name": "latte",
+                    "quantity": 1,
+                    "modifiers": [],
+                    "size": "medium"
+                  },
+                  {
+                    "item_name": "oat_milk",
+                    "quantity": 1,
+                    "modifiers": [],
+                    "size": "medium"
+                  }
+                ]
+              },
+              "id": "call_2_0_0"
+            },
+            "result": {
+              "error": {
+                "code": "ITEM_NOT_FOUND",
+                "message": "That item is not on the menu.",
+                "details": {},
+                "alternatives": [
+                  {
+                    "name": "espresso",
+                    "category": "coffee",
+                    "prices": {
+                      "small": "2.20",
+                      "medium": "2.60",
+                      "large": "3.00"
+                    },
+                    "price": null,
+                    "modifiers": {
+                      "extra_shot": "0.60",
+                      "decaf": "0.00",
+                      "no_sugar": "0.00"
+                    },
+                    "available": true
+                  },
+                  {
+                    "name": "americano",
+                    "category": "coffee",
+                    "prices": {
+                      "small": "2.50",
+                      "medium": "2.90",
+                      "large": "3.30"
+                    },
+                    "price": null,
+                    "modifiers": {
+                      "oat_milk": "0.40",
+                      "soy_milk": "0.40",
+                      "extra_shot": "0.60",
+                      "decaf": "0.00"
+                    },
+                    "available": true
+                  },
+                  {
+                    "name": "latte",
+                    "category": "coffee",
+                    "prices": {
+                      "small": "3.00",
+                      "medium": "3.50",
+                      "large": "4.00"
+                    },
+                    "price": null,
+                    "modifiers": {
+                      "oat_milk": "0.40",
+                      "soy_milk": "0.40",
+                      "extra_shot": "0.60",
+                      "decaf": "0.00",
+                      "no_sugar": "0.00",
+                      "vanilla_syrup": "0.50",
+                      "iced": "0.20"
+                    },
+                    "available": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "current_order": null,
+        "state": {
+          "minute": 0,
+          "orders": []
+        },
+        "error": null
+      },
+      "seconds": 46.134003167040646
+    },
+    {
+      "message": "I'd like a latte.",
+      "response": {
+        "session_id": "6d10d33a1638cfe6040374f66aee8ee4ca63eb06a7b758c2dbe1ff70e61b3d28",
+        "reply": "Which size would you like: small, medium or large?",
+        "trace": [],
+        "current_order": null,
+        "state": {
+          "minute": 0,
+          "orders": []
+        },
+        "error": null
+      },
+      "seconds": 20.95036012493074
+    },
+    {
+      "message": "Can I order a pizza?",
+      "response": {
+        "session_id": "b1ccd38da69ce5db6e2c33753ab16a326d8008ea3bf8eee170dd4da62313ee13",
+        "reply": "We don't serve pizza; would you like a cheese sandwich?",
+        "trace": [],
+        "current_order": null,
+        "state": {
+          "minute": 0,
+          "orders": []
+        },
+        "error": null
+      },
+      "seconds": 31.390887208050117
+    },
+    {
+      "message": "One almond croissant, please.",
+      "response": {
+        "session_id": "aa2667f2f8b421b7f16a20df0a092fd13bf0727992c7026024bb28a9867318db",
+        "reply": "almond croissant is out of stock. Would you like butter croissant, blueberry muffin, chocolate brownie?",
+        "trace": [
+          {
+            "call": {
+              "name": "create_order",
+              "arguments": {
+                "customer_name": "Almond Croissant Customer",
+                "items": [
+                  {
+                    "item_name": "almond croissant",
+                    "quantity": 1,
+                    "modifiers": []
+                  }
+                ]
+              },
+              "id": "call_2_0_0"
+            },
+            "result": {
+              "error": {
+                "code": "OUT_OF_STOCK",
+                "message": "almond croissant is out of stock.",
+                "details": {},
+                "alternatives": [
+                  {
+                    "name": "butter croissant",
+                    "category": "bakery",
+                    "prices": {},
+                    "price": "2.50",
+                    "modifiers": {
+                      "warmed": "0.00"
+                    },
+                    "available": true
+                  },
+                  {
+                    "name": "blueberry muffin",
+                    "category": "bakery",
+                    "prices": {},
+                    "price": "2.80",
+                    "modifiers": {
+                      "warmed": "0.00"
+                    },
+                    "available": true
+                  },
+                  {
+                    "name": "chocolate brownie",
+                    "category": "bakery",
+                    "prices": {},
+                    "price": "2.90",
+                    "modifiers": {
+                      "warmed": "0.00"
+                    },
+                    "available": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "current_order": null,
+        "state": {
+          "minute": 0,
+          "orders": []
+        },
+        "error": null
+      },
+      "seconds": 28.21900541591458
+    },
+    {
+      "message": "Show me the coffee menu.",
+      "response": {
+        "session_id": "385b59885eea9e00217cfde78c3353a45fb73d3b9c25823d24890f07cbd089aa",
+        "reply": "The menu includes espresso, americano, latte, cappuccino, flat white, mocha, filter coffee.",
+        "trace": [
+          {
+            "call": {
+              "name": "get_menu",
+              "arguments": {
+                "category": "coffee"
+              },
+              "id": "call_2_0_0"
+            },
+            "result": {
+              "currency": "GBP",
+              "items": [
+                {
+                  "name": "espresso",
+                  "category": "coffee",
+                  "prices": {
+                    "small": "2.20",
+                    "medium": "2.60",
+                    "large": "3.00"
+                  },
+                  "price": null,
+                  "modifiers": {
+                    "extra_shot": "0.60",
+                    "decaf": "0.00",
+                    "no_sugar": "0.00"
+                  },
+                  "available": true
+                },
+                {
+                  "name": "americano",
+                  "category": "coffee",
+                  "prices": {
+                    "small": "2.50",
+                    "medium": "2.90",
+                    "large": "3.30"
+                  },
+                  "price": null,
+                  "modifiers": {
+                    "oat_milk": "0.40",
+                    "soy_milk": "0.40",
+                    "extra_shot": "0.60",
+                    "decaf": "0.00"
+                  },
+                  "available": true
+                },
+                {
+                  "name": "latte",
+                  "category": "coffee",
+                  "prices": {
+                    "small": "3.00",
+                    "medium": "3.50",
+                    "large": "4.00"
+                  },
+                  "price": null,
+                  "modifiers": {
+                    "oat_milk": "0.40",
+                    "soy_milk": "0.40",
+                    "extra_shot": "0.60",
+                    "decaf": "0.00",
+                    "no_sugar": "0.00",
+                    "vanilla_syrup": "0.50",
+                    "iced": "0.20"
+                  },
+                  "available": true
+                },
+                {
+                  "name": "cappuccino",
+                  "category": "coffee",
+                  "prices": {
+                    "small": "3.00",
+                    "medium": "3.50",
+                    "large": "4.00"
+                  },
+                  "price": null,
+                  "modifiers": {
+                    "oat_milk": "0.40",
+                    "soy_milk": "0.40",
+                    "extra_shot": "0.60",
+                    "decaf": "0.00"
+                  },
+                  "available": true
+                },
+                {
+                  "name": "flat white",
+                  "category": "coffee",
+                  "prices": {
+                    "small": "3.10",
+                    "medium": "3.60",
+                    "large": "4.10"
+                  },
+                  "price": null,
+                  "modifiers": {
+                    "oat_milk": "0.40",
+                    "soy_milk": "0.40",
+                    "extra_shot": "0.60",
+                    "decaf": "0.00"
+                  },
+                  "available": true
+                },
+                {
+                  "name": "mocha",
+                  "category": "coffee",
+                  "prices": {
+                    "small": "3.40",
+                    "medium": "3.90",
+                    "large": "4.40"
+                  },
+                  "price": null,
+                  "modifiers": {
+                    "oat_milk": "0.40",
+                    "soy_milk": "0.40",
+                    "extra_shot": "0.60",
+                    "decaf": "0.00"
+                  },
+                  "available": true
+                },
+                {
+                  "name": "filter coffee",
+                  "category": "coffee",
+                  "prices": {
+                    "small": "2.00",
+                    "medium": "2.40",
+                    "large": "2.80"
+                  },
+                  "price": null,
+                  "modifiers": {
+                    "oat_milk": "0.40",
+                    "no_sugar": "0.00"
+                  },
+                  "available": false
+                }
+              ]
+            }
+          }
+        ],
+        "current_order": null,
+        "state": {
+          "minute": 0,
+          "orders": []
+        },
+        "error": null
+      },
+      "seconds": 31.68093620799482
+    },
+    {
+      "message": "What is the status of ORD-00001?",
+      "response": {
+        "session_id": "bc3eaa73441daafc36d4771935f8952a1c243028a2f2637c4d3d0c9e464da171",
+        "reply": "Order not found.",
+        "trace": [
+          {
+            "call": {
+              "name": "get_order_status",
+              "arguments": {
+                "order_id": "ORD-00001"
+              },
+              "id": "call_6_0_0"
+            },
+            "result": {
+              "error": {
+                "code": "ORDER_NOT_FOUND",
+                "message": "Order not found.",
+                "details": {},
+                "alternatives": []
+              }
+            }
+          }
+        ],
+        "current_order": null,
+        "state": {
+          "minute": 0,
+          "orders": []
+        },
+        "error": null
+      }
+    },
+    {
+      "message": "Cancel ORD-00001, please.",
+      "response": {
+        "session_id": "bc3eaa73441daafc36d4771935f8952a1c243028a2f2637c4d3d0c9e464da171",
+        "reply": "Order not found.",
+        "trace": [
+          {
+            "call": {
+              "name": "cancel_order",
+              "arguments": {
+                "order_id": "ORD-00001"
+              },
+              "id": "call_10_0_0"
+            },
+            "result": {
+              "error": {
+                "code": "ORDER_NOT_FOUND",
+                "message": "Order not found.",
+                "details": {},
+                "alternatives": []
+              }
+            }
+          }
+        ],
+        "current_order": null,
+        "state": {
+          "minute": 0,
+          "orders": []
+        },
+        "error": null
+      }
+    }
+  ],
+  "health": {
+    "status": "ok",
+    "backend": "llama.cpp",
+    "n_gpu_layers": 0
+  },
+  "ui_status": 200,
+  "reset_status": 204,
+  "expired_status": 404
+}

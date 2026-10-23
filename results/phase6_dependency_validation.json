@@ -1,0 +1,26 @@
+{
+  "gradio": {
+    "version": "5.31.0",
+    "release_date": "2025-05-22",
+    "source": "https://pypi.org/pypi/gradio/5.31.0/json",
+    "compatible_existing_pins": [
+      "fastapi==0.115.12",
+      "pydantic==2.11.7",
+      "huggingface-hub==0.30.2"
+    ]
+  },
+  "llama_cpp_python": {
+    "macos_evaluation_and_serving": "0.3.9",
+    "linux_docker": "0.3.21",
+    "linux_release_date": "2026-04-27",
+    "source": "https://pypi.org/pypi/llama-cpp-python/0.3.21/json",
+    "cpu_wheel_index": "https://abetlen.github.io/llama-cpp-python/whl/cpu/llama-cpp-python/",
+    "wheel": "llama_cpp_python-0.3.21-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "decision": "Official CPU index has no 0.3.9 wheel. 0.3.18 generic Linux wheel links musl and failed on Debian. Use explicit manylinux/glibc 0.3.21; retain the evaluated Mac pin."
+  },
+  "release_cutoff": "2026-09-30T00:00:00Z",
+  "uv": "0.11.26",
+  "python": "3.11.15",
+  "forbidden_gpu_packages_installed": false,
+  "docker_install": "Exact uv.lock export, no dependency re-resolution, CPU binary required. Ignore release-date filter for wheel index without upload timestamps after independently verifying release date."
+}

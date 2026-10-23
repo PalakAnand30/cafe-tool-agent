@@ -49,7 +49,10 @@ section at the start of each phase. Resolve conflicts in favour of the spec.
 - `make latency`: separate CPU benchmark with three warm-ups and 100 fixed requests.
 - Offline scoring: `uv run --locked python scripts/evaluate.py --metrics-only`.
 - `make report`: regenerate the complete five-system comparison offline from results.
-- `make serve`, `make docker-build`, `make docker-run`: Phase 6.
+- `make serve`: CPU model, chat API and Gradio demo on loopback port 7860.
+- `make docker-build`, `make docker-run`: linux/amd64 CPU image and local demo.
+- `uv run --locked python scripts/deploy_space.py`: prepare an allowlisted Space
+  bundle without uploading; `--deploy` explicitly creates/updates the private Space.
 - Later-phase targets fail explicitly until implemented; do not report them as working.
 
 ## Secrets, APIs and resumability

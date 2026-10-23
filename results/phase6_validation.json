@@ -1,0 +1,22 @@
+{
+  "scope": "Phase 6 serving verification; not new evaluation results",
+  "lint_passed": true,
+  "unit_tests": 272,
+  "test_runtime_seconds": 9.75,
+  "native_cpu_chat": {
+    "receipt": "results/phase6_order_smoke.json",
+    "create_order": true,
+    "status_lookup": true,
+    "cancel_order": true,
+    "ui_status": 200,
+    "health_status": 200,
+    "n_gpu_layers": 0
+  },
+  "preserved_failed_example": "results/phase6_demo_smoke.json",
+  "preexisting_results_byte_identical": true,
+  "frozen_inference_sources_unchanged": true,
+  "source_and_wheel_built": true,
+  "archive_exclusions_verified": true,
+  "space_published": false,
+  "browser_and_gif_verification": "User-run; host-listening make serve launch was declined."
+}

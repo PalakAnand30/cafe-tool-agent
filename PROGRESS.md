@@ -10,7 +10,7 @@ Updated: 2026-10-23 (Europe/London).
 - [x] Phase 3: evaluation harness and Groq baseline.
 - [x] Phase 4: Kaggle training and GPU evaluation notebooks (written and locally validated).
 - [x] Phase 5: GGUF evaluation and full report.
-- [ ] Phase 6: demo and deployment.
+- [x] Phase 6: demo and deployment (implemented; browser/Space checks user-run).
 - [ ] Phase 7: polish and reproducibility.
 
 ## Phase 0 scope and decisions
@@ -775,6 +775,68 @@ All direct pins predate the release cutoff; transitive versions remain in
   README values are generated from saved predictions. Local conventional commit
   closes this phase; no GitHub push or Phase 6 work.
 
+## Phase 6: CPU chat demo and deployment preparation (2026-10-23)
+
+- User explicitly authorized Phase 6. Implemented a FastAPI chat application with
+  POST /chat, GET /health, reset and explicit logical-time advancement. Gradio at
+  /demo/ supplies the chat panel, five clickable behavior examples, collapsible
+  JSON tool calls/results and an escaped HTML order board including sizes,
+  modifiers and decimal-string totals. The root redirects to /demo/ to avoid
+  Gradio's duplicate-slash root-mount redirect. No shared prompt/scorer changes.
+- Reused the verified Phase 5 CPU client with exact model revision/hash checks,
+  native/HF token equality, greedy decoding, n_gpu_layers=0 and no K/Q/V offload.
+  Startup rejects native builds that support GPU offload. Serving downloads only
+  missing model/tokenizer files; it never downloads evaluation gold or modifies
+  prediction manifests. Model load completes before readiness is served.
+- Customer sessions use independent in-memory SQLite cafés and server-owned
+  histories, random bearer identifiers, idle expiry, turn/message/session limits
+  and explicit reset. One lock serializes model access; KV state resets between
+  customer requests. Only explicit clock advances progress order preparation.
+  Exceptions or invalid/unfinished agent responses retain executed tool traces
+  and backend state and require reset, preventing a blind order retry.
+- Added exactly pinned Gradio 5.31.0 (2025-05-22), compatible with existing
+  FastAPI 0.115.12, Pydantic 2.11.7 and huggingface-hub 0.30.2. The CPU extra now
+  retains macOS 0.3.9 and pins Linux 0.3.21 (2026-04-27), using the official
+  manylinux CPU wheel. The official CPU index lacks 0.3.9; attempted 0.3.18 had a
+  musl libc dependency and failed on Debian. The 0.3.21 glibc wheel loaded.
+  Evidence/URLs are in results/phase6_dependency_validation.json. uv.lock fixes
+  all Python versions; no local CUDA/MLX packages were installed or imported.
+- Implemented make serve, docker-build and docker-run. Docker targets linux/amd64,
+  installs a prebuilt CPU wheel (source builds prohibited for llama-cpp-python),
+  runs as UID 1000, exposes 7860 and caches startup weights/tokenizer. A Docker
+  allowlist excludes secrets, datasets, predictions, notebooks and model weights.
+  Exact requirements come from uv.lock; wheel installation ignores the release
+  cutoff because upstream wheel links omit upload timestamps, after independent
+  release-date verification. Mac CPU build and existing S5 results are unchanged.
+- Real native-Mac in-process API checks placed a medium latte as ORD-00001 for
+  GBP 3.50, looked up its status and cancelled it. Gradio HTML/health and reset
+  also passed. Five other example requests and their raw traces are retained:
+  the initial oat_milk example incorrectly treated the modifier as an item;
+  the backend rejected it and no order was created. Preserve that limitation
+  in results/phase6_demo_smoke.json; the simple-order flow is recorded separately
+  in results/phase6_order_smoke.json. These are serving checks, not new benchmarks.
+- Docker builds passed and isolated runtime verification loaded the real model
+  and served UI/health with read-only cached weights, no credentials and no host
+  port mappings. A chat request exceeded its 180-second client timeout under
+  amd64 emulation on Apple Silicon; it is not recorded as a passed chat check.
+  Prefer native make serve locally. A live native-amd64 Space chat check remains
+  user-run. The host-listening make serve launch was declined; used in-process
+  API checks instead and did not expose a host listener through another route.
+- Added deploy_space.py: default behavior prepares a content-hashed, allowlisted
+  bundle and receipt without contacting/mutating the Hub. Explicit --deploy
+  creates a private Docker Space, preserves existing Docker Space visibility,
+  sets HF_TOKEN through the secret API and uploads only reviewed files. Existing
+  non-Docker Spaces fail before upload. No Space deployment, paid hardware,
+  Hub visibility change or GitHub push was performed. Instructions are in
+  docs/PHASE6_DEMO.md; browser verification and a demo recording remain user steps.
+- Final make lint passed (112 files); make test passed all 272 tests in 9.75s,
+  including eight new serving/deployment cases. Source and wheel builds passed;
+  archive inspection verified demo/config/deployment code and excluded secrets,
+  cache and weights. Every previously committed results artifact is byte-identical,
+  as are frozen CPU/inference/agent/train/runtime configs and sources. Existing
+  user edits in the Phase 4 guide and notebooks remain untouched and unstaged.
+  Local conventional commit closes implementation; stop before Phase 7.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -785,6 +847,10 @@ All direct pins predate the release cutoff; transitive versions remain in
 - uv warns that its in-project cache may enter source distributions; archive
   inspection confirmed the ignore rules exclude it.
 - The existing local `.env` must remain untracked and must not be printed.
+- Phase 6 native chat and isolated Docker startup/UI/health are checked. Emulated
+  Docker chat timed out at 180 seconds; native-amd64 Space behavior is unverified.
+  Run the browser demo and record a GIF; deploy explicitly when ready, then verify
+  the live Space. Keep its model secret private and retain existing Hub visibility.
 - S3 evaluation is complete on both test sets, including independent-set
   confidence intervals. Keep free limits and preserve predictions/cache; future
   metrics recomputation and completed-run resumes require no new requests.
@@ -805,7 +871,8 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Phase 5 is complete. Review results/report.md and results/error_analysis.md.
-Preserve predictions, immutable manifests, private Hub weights, checkpoints and
-API cache. Stop and wait for `continue to Phase 6` before demo or deployment work.
+Phase 6 implementation is complete with the runtime limitations above. Follow
+docs/PHASE6_DEMO.md for the browser, optional private Space deployment and recording.
+Preserve predictions, manifests, private Hub weights, checkpoints and API cache.
+Stop and wait for `continue to Phase 7` before final polish/publication work.
 No GitHub push is authorized.

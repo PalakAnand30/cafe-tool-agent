@@ -1,0 +1,16 @@
+host: 127.0.0.1
+port: 7860
+max_sessions: 100
+session_ttl_seconds: 3600
+max_turns: 24
+max_message_chars: 2000
+queue_size: 16
+advance_minutes: 5
+model_sha256: 36ff02d9e08685a7e56298486273715b9c6914356f2a20fc0f4b6815d077e544
+examples:
+  - "One medium latte, please."
+  - "I'd like a latte."
+  - "Can I order a pizza?"
+  - "One almond croissant, please."
+  - "Show me the coffee menu."
+space_name: cafe-tool-agent

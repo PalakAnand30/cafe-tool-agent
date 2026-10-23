@@ -1,0 +1,13 @@
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!src/
+!src/**
+!configs/
+!configs/**
+!docker/
+!docker/Dockerfile
+!docker/entrypoint.sh
+**/__pycache__
+**/*.pyc

@@ -10,11 +10,13 @@ annotation CLI, independent LLM benchmark conversion and private dataset publish
 Training/export ran on Kaggle and S1/S2/S4 predictions were received and validated.
 The GPT-OSS 120B S3 baseline is complete on both test sets. Phase 5 adds CPU-only
 GGUF evaluation, a 100-request latency benchmark and the shared five-system report.
-The chat demo remains Phase 6. Results and limitations are shown below.
+The CPU chat API, Gradio demo, Docker image and Space deployment script are
+implemented. Results and limitations are shown below.
 
 Follow the [Kaggle handoff](docs/PHASE4_KAGGLE.md) for GPU reproduction and the
 [local Phase 5 guide](docs/PHASE5_LOCAL.md) for CPU setup, downloads, resumable
-evaluation and deterministic report generation.
+evaluation and deterministic report generation. The [demo guide](docs/PHASE6_DEMO.md)
+covers the browser UI, chat API, Docker and private Space deployment.
 
 ## Local setup
 
@@ -37,14 +39,14 @@ Never commit or share `.env`.
 ## Project layout
 
 - `src/cafe_agent/`: domain, backend, tools, parser, prompting, clients,
-  agent loop, dataset pipeline and local evaluation; the demo remains a placeholder.
+  agent loop, dataset pipeline, local evaluation and session-isolated chat demo.
 - `configs/domain.yaml`: menu, prices, supported modifiers, stock and timing.
 - `configs/runtime.yaml`: decoding, caching, retry, CPU and agent settings.
   `data.yaml` controls generation; `train.yaml` pins the tokenizer/model revision.
 - `tests/`: backend, tools, HTTP API, parser, agent, client, replay, leakage,
   masking, annotation and publishing tests.
 - `scripts/`: data, evaluation and notebook build/validation entry points.
-  `notebooks/` contains the two Kaggle workflows; `docker/` remains a placeholder.
+  `notebooks/` contains the two Kaggle workflows; `docker/` contains the CPU image.
 - `data/`: generated data and API cache are ignored; human tests and small
   samples can be versioned.
 - `results/`: versioned predictions, metrics, validation evidence and reports.
@@ -55,11 +57,9 @@ Never commit or share `.env`.
 
 `make setup`, `make setup-cpu`, `make lint`, `make test`, `make benchmark`, `make data`,
 `make push-data`, `make eval-local` (S5), `make eval-s3`, `make latency` and
-`make report` are implemented. Remaining targets report their planned phase:
-
-| Target | Planned phase |
-| --- | --- |
-| `make serve`, `make docker-build`, `make docker-run` | 6 |
+`make report`, `make serve`, `make docker-build` and `make docker-run` are implemented.
+`uv run --locked python scripts/deploy_space.py` prepares a reviewable deployment
+bundle; add `--deploy` only when ready to create/update the private Docker Space.
 
 GPU training and inference run only on Kaggle T4 notebooks. Local GGUF
 inference uses CPU only (`n_gpu_layers=0`, no K/Q/V offload).
@@ -74,7 +74,7 @@ uv run --locked uvicorn cafe_agent.backend.app:create_app --factory
 
 Visit `http://127.0.0.1:8000/docs` for the routes. The service persists orders
 in the SQLite path configured in `configs/runtime.yaml`. This is the café
-backend; the `/chat` endpoint and Gradio demo arrive in Phase 6.
+backend; the separate demo application exposes `/chat` and a Gradio UI on port 7860.
 
 The API exposes `GET /health`, `GET /menu`, `POST /availability`,
 `POST /orders`, `GET /orders/{order_id}`, `POST /orders/{order_id}/cancel`
