@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 2026-10-23 (Europe/London).
+Updated: 2026-10-24 (Europe/London).
 
 ## Phase checklist
 
@@ -957,6 +957,31 @@ All direct pins predate the release cutoff; transitive versions remain in
   local passing checks do not establish remote CI success or full Linux accuracy.
 - Preserve the user's pre-existing guide/notebook edits, deployment dry-run receipt
   and Inspiration directory. End with a local conventional commit, then stop.
+
+## Phase 7 follow-up: recruiter-facing GitHub README (2026-10-24)
+
+- User requested a portfolio README covering stack, operation, achievements,
+  reproduction and the full pipeline through deployment, omitting pending-work
+  and missing-work discussion from that document. This presentation preference
+  supersedes the earlier README placeholder/status layout; detailed experiment
+  scope, provenance and project status remain in the existing reports and guides.
+- Rewrote README with an opening result, UI screenshot, generated achievements,
+  technology table, serving/training Mermaid diagrams, tool-call example,
+  dataset/training tables, synthetic and independent comparisons, local setup,
+  Kaggle reproduction, CPU evaluation, Docker and Space deployment instructions.
+  Deployment is described as tooling and executable instructions, not a completed
+  live-hosting claim. Synthetic results remain labelled as synthetic, and the
+  independent table retains Claude/Codex provenance and confidence intervals.
+- Updated reporting/publication generators so report and documentation refreshes
+  retain the recruiter presentation. All achievement numbers, training settings
+  and benchmark tables are computed from saved results/receipts; no results were
+  invented or rerun. The full report, metrics, CV bullets, cards, predictions,
+  frozen inference sources and training configuration are unchanged.
+- `make release-docs` passed; generated README is stable on rerender and all local
+  Markdown link targets exist. `make lint` passed (119 Python files); `make test`
+  passed all 289 tests in 11.33s. No dependency changes, model calls, deployment
+  or GitHub push. Preserve the user's existing notebook/guide/deployment edits.
+  Save a local conventional commit and stop after this documentation follow-up.
 
 ## Known issues and user actions
 

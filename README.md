@@ -1,142 +1,251 @@
 # Café Ordering Agent
 
+### QLoRA fine-tuning · Structured tool calling · CPU inference · Full-stack ML
+
 <!-- HEADLINE:START -->
-A café ordering agent with a validated SQLite tool backend, a QLoRA-trained Qwen2.5-1.5B model and a CPU chat demo. The exported Q4_K_M model achieved **91.8%** action-and-state success on 400 synthetic cases and **31.0% [21.4%, 41.7%]** on 84 independent Claude-authored cases with Codex gold labels. The larger GPT-OSS model through Groq reached **40.5% [29.8%, 51.2%]** on the independent set. These are LLM-authored benchmarks, not customer evidence.
+
+An end-to-end ML engineering project that turns natural-language café orders into validated tool calls. It combines **QLoRA fine-tuning of Qwen2.5-1.5B**, a stateful FastAPI/SQLite backend, reproducible model evaluation and a CPU-powered chat interface, with Docker and Hugging Face Spaces deployment tooling. The quantized CPU model achieved **91.8% action-and-state task success** on 400 held-out synthetic conversations.
+
 <!-- HEADLINE:END -->
 
-## Try the café counter
+![The café counter: chat, menu and order board](results/ui/cafe-counter-desktop.png)
 
-![Café counter interface](results/ui/cafe-counter-desktop.png)
+[Results](#results) · [Architecture](#architecture) · [Tech stack](#tech-stack) ·
+[Run locally](#run-locally) · [Reproduce](#reproduce-the-pipeline) ·
+[Deployment](#deployment)
 
-The cream-and-espresso chat interface includes a menu, tool trace and order
-board. The screenshot is a UI preview, not benchmark evidence.
-**Demo GIF: pending. Live Space: deployment deferred.** The planned destination
-is [PalakAnand30/cafe-tool-agent](https://huggingface.co/spaces/PalakAnand30/cafe-tool-agent);
-it is not a working-demo claim and may be unavailable or private.
+## Achievements
 
-From a clone, use Python 3.11, uv and a C/C++ compiler:
+<!-- ACHIEVEMENTS:START -->
 
-```sh
-make setup
-# Create .env from .env.example only if you do not already have one.
-# Set HF_TOKEN locally with read access to the private model and dataset.
-make setup-cpu
-uv run --locked python scripts/download_models.py
-make serve
-```
+- **96.6% action accuracy** for the fine-tuned model on the held-out synthetic set.
+- **+59.0 percentage points** in synthetic action-and-state success for merged fine-tuning over few-shot prompting.
+- **0.99 GB GGUF export** for CPU inference, with **0 GPU layers**.
+- **2,420 complete conversation runs + 5,095 next-action predictions** across the five-system comparison.
+- **CPU latency: 9.51s p50 / 11.03s p95**, measured over 100 requests on Apple M5 with fresh KV context per request.
 
-Open `http://127.0.0.1:7860/`. Try “One medium latte, please”, inspect the tool
-trace, then check or cancel the order. Each browser session has its own backend.
-The CPU model is lazy-loaded; initial download/startup takes longer than a warm reply.
-Standalone menu browsing has a serving-only helper with real backend traces;
-orders use the model. These conveniences are excluded from the benchmark.
+<!-- ACHIEVEMENTS:END -->
 
-For API routes, Docker and optional private Space deployment, see the
-[demo guide](docs/PHASE6_DEMO.md). Local use does not require a Space deployment.
+## What it does
+
+The assistant translates customer requests into structured actions: browse the
+menu, check availability, create an order, look up its status and cancel it.
+A chat interface brings together conversational replies, an expandable tool trace,
+menu cards and a live order board.
+
+The engineering challenge is making generated actions agree with executable
+business rules. Tool calls pass through strict JSON parsing, Pydantic schemas and
+backend validation before they affect an order. The same contracts support data
+creation, model training, evaluation and serving.
+
+## Tech stack
+
+| Layer | Technologies | Purpose |
+| --- | --- | --- |
+| Language and packaging | Python 3.11, uv, pinned lockfile | Reproducible, installable Python package |
+| Backend and contracts | FastAPI, SQLite, Pydantic v2, Decimal | Validated tools, order state and exact monetary totals |
+| Base model | Qwen2.5-1.5B-Instruct | Open-weight conversational tool calling |
+| Fine-tuning | PyTorch, Transformers, PEFT, TRL, bitsandbytes | QLoRA with NF4 quantization and assistant-only supervision |
+| GPU execution | Kaggle Tesla T4, Transformers; vLLM worker | Training and shared-schema GPU evaluation |
+| Data and API baseline | Groq, GPT-OSS-120B | Cached customer paraphrases and a larger-model comparison |
+| Experiment tracking | Weights & Biases, Hugging Face Hub | Training logs, versioned datasets and model artifacts |
+| Quantization and serving | llama.cpp, GGUF Q4_K_M, llama-cpp-python | CPU model inference |
+| Interface | Gradio, FastAPI chat API, CSS/SVG | Session-isolated chat, menu and order board |
+| Evaluation | Shared runner, conversation bootstrap, Matplotlib | Metrics, confidence intervals, charts and error analysis |
+| Delivery and quality | Docker, Hugging Face Spaces, GitHub Actions, pytest, Ruff | Container packaging, deployment tooling and automated checks |
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    U[Customer] --> UI[Gradio / chat API]
-    UI --> A[Agent + CPU GGUF model]
-    A --> P[Strict tool-call parser]
-    P --> V[Validated tool executor]
-    V --> B[Café API / SQLite]
+    U[Customer] --> UI[Gradio UI / FastAPI chat]
+    UI --> A[Agent loop]
+    A --> M[Qwen GGUF / CPU]
+    M --> P[Strict tool-call parser]
+    P --> V[Pydantic validation]
+    V --> T[Tool executor]
+    T --> B[SQLite café service]
     B --> A
-    UI --> M[Standalone menu helper]
-    M --> B
+    A --> UI
+    UI --> R[Order board + tool trace]
 ```
+
+### How a request works
+
+1. The UI sends a customer message with its session ID to the chat API.
+2. The agent renders the conversation and tool schemas using the pinned Qwen
+   tokenizer and generates the next response.
+3. The parser extracts a structured tool call and validates its arguments.
+4. The café service applies availability, pricing and order-state rules, then
+   returns a structured result to the agent.
+5. The assistant replies, while the interface displays the actual tool trace
+   and backend order state.
+
+For example, “One medium latte, please” maps to the tool contract:
+
+```json
+{
+  "name": "create_order",
+  "arguments": {
+    "items": [
+      {"item_name": "latte", "size": "medium", "quantity": 1}
+    ]
+  }
+}
+```
+
+Each session owns an isolated café backend. Preparation advances through an
+explicit logical clock, which makes order-status and cancellation scenarios
+replayable. Standalone menu browsing reads the same backend through a serving
+helper; ordering uses the model-driven agent loop.
+
+## End-to-end ML pipeline
 
 ```mermaid
-flowchart LR
-    D[Domain + programmatic gold] --> W[Cached Groq paraphrases]
-    W --> C[Schema / replay / leakage / token checks]
-    C --> T[Kaggle T4 QLoRA]
-    T --> L[Adapter + merged weights]
-    L --> G[GGUF Q4_K_M]
-    G --> E[CPU evaluation + demo]
-    C --> Q[Held-out tests]
-    I[Independent Claude text + Codex gold] --> Q
-    Q --> R[Shared five-system evaluator]
-    E --> R
-    R --> S[Saved predictions / reports / charts]
+flowchart TD
+    D[Menu + domain rules] --> G[Programmatic gold conversations]
+    G --> P[Cached Groq customer paraphrases]
+    P --> V[Schema / replay / leakage / token validation]
+    V --> H[Versioned Hugging Face dataset]
+    H --> T[Kaggle T4 QLoRA training]
+    T --> W[Weights & Biases tracking]
+    T --> A[LoRA adapter]
+    A --> M[Merged FP16 model]
+    M --> Q[llama.cpp Q4_K_M export]
+    H --> E[Shared five-system evaluation]
+    M --> E
+    Q --> E
+    E --> R[Predictions / metrics / charts / report]
+    Q --> S[CPU chat API + Gradio]
+    S --> C[Docker image]
+    C --> F[Hugging Face Spaces deployment]
 ```
 
-Tool schemas, prompt renderer, strict parser, backend state and logical clock
-are shared across systems. The backend uses decimal money strings and only
-advances time through explicit `advance_time(minutes)` calls. Invalid JSON is
-never repaired. The demo and benchmark use separate session/state storage.
+### Data and training
+
+<!-- DATA_TRAINING:START -->
+
+| Split | Conversations | Construction |
+| --- | --- | --- |
+| Train | 3,500 | Backend-generated gold + Groq customer paraphrases |
+| Validation | 300 | Backend-generated gold + Groq customer paraphrases |
+| Test | 400 | Backend-generated gold + Groq customer paraphrases |
+| Independent test | 84 | Claude customer messages + Codex gold |
+
+| Training setting | Recorded run |
+| --- | --- |
+| GPU | Tesla T4 |
+| LoRA rank / alpha / dropout | 16 / 32 / 0.05 |
+| Full-conversation token budget | 4,096 |
+| Batch × gradient accumulation | 1 × 16 |
+| Epochs / learning rate | 3 / 0.0002 |
+| Scheduler | cosine |
+| Validation loss · initial → final | 1.00845 → 0.01044 |
+
+[Weights & Biases training run](https://wandb.ai/palak-anand-the-university-of-edinburgh/cafe-tool-agent/runs/mz9t5xh9) · [Training manifest](results/training/training_manifest.json)
+
+<!-- DATA_TRAINING:END -->
+
+Gold tool calls, results and final states are generated against the actual café
+backend. GPT-OSS-120B through Groq paraphrases customer wording, with entity
+checks and response caching. Synthetic test template families and item/modifier
+pairs are reserved before sampling; normalized customer text is checked across
+splits for leakage. Every conversation is schema-validated, replayed and checked
+against the full-conversation token budget.
+
+Training uses NF4 with double quantization, FP16 compute and LoRA adapters on the
+attention and feed-forward projections. The custom collator supervises assistant
+payloads and closing tokens while masking customer/tool content. Gradient
+checkpointing and accumulation keep full conversations within the T4 memory budget.
+
+### Evaluation design
+
+The shared evaluator compares zero-shot prompting, few-shot prompting, a larger
+Groq model, merged fine-tuning and quantized CPU inference. Every system uses the
+same tool schemas, prompt renderer, parser and café business rules.
+
+It measures both next-action predictions from gold histories and complete agent
+conversations on fresh backends. Append-only prediction files, source hashes,
+model revisions and resumable manifests connect each reported metric to its run.
+The independent benchmark preserves Claude customer-message authorship and Codex
+gold annotation provenance.
 
 ## Results
 
-S1 is the base model, S2 adds frozen few-shot examples, S3 is
-`openai/gpt-oss-120b` through **Groq** at low reasoning effort, S4 is the merged
-fine-tuned model, and S5 is its CPU GGUF export. S1/S2/S4 actually ran with the
-recorded **Transformers float16 fallback on T4**, rather than vLLM. The bundle
-did not preserve the reason for that fallback.
-
-Action/argument accuracy uses gold histories. End-to-end runs replay complete
-scripted customer conversations against fresh backends. **Action + state**
-requires the correct calls/arguments and final state; state-only success can
-reward an empty backend after an incorrect reply. Textual clarification and
-decline recognition uses frozen approximate lexical rules and does not verify
-reply factuality. Independent intervals resample complete cases, not turns.
-
 <!-- RESULTS:START -->
-| System | Set | Coverage (turn / end) | Action accuracy | Argument exact | Field F1 | End success | Action + state |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| S1 | independent_test (complete) | 143/143 turns; 84/84 conversations | 51.7% [43.0%, 60.1%] | 51.3% [35.1%, 66.7%] | 34.3% [19.6%, 50.0%] | 76.2% [66.7%, 84.5%] | 26.2% [16.7%, 36.9%] |
-| S1 | test (complete) | 876/876 turns; 400/400 conversations | 75.0% | 37.0% | 47.3% | 43.8% | 29.0% |
-| S2 | independent_test (complete) | 143/143 turns; 84/84 conversations | 46.2% [38.7%, 53.6%] | 23.1% [9.7%, 36.4%] | 38.8% [17.8%, 60.1%] | 79.8% [71.4%, 88.1%] | 21.4% [13.1%, 29.8%] |
-| S2 | test (complete) | 876/876 turns; 400/400 conversations | 72.5% | 48.7% | 66.3% | 57.5% | 32.5% |
-| S3 | independent_test (complete) | 143/143 turns; 84/84 conversations | 62.9% [54.1%, 71.4%] | 61.5% [45.2%, 77.6%] | 49.3% [28.3%, 69.4%] | 82.1% [73.8%, 89.3%] | 40.5% [29.8%, 51.2%] |
-| S3 | test (complete) | 876/876 turns; 400/400 conversations | 81.2% | 67.6% | 72.4% | 69.5% | 57.5% |
-| S4 | independent_test (complete) | 143/143 turns; 84/84 conversations | 62.9% [52.8%, 71.8%] | 46.2% [31.4%, 62.2%] | 29.4% [18.0%, 42.1%] | 73.8% [63.1%, 83.3%] | 33.3% [22.6%, 44.0%] |
-| S4 | test (complete) | 876/876 turns; 400/400 conversations | 96.6% | 98.4% | 95.6% | 96.0% | 91.5% |
-| S5 | independent_test (complete) | 143/143 turns; 84/84 conversations | 63.6% [53.6%, 72.3%] | 46.2% [31.6%, 61.1%] | 34.2% [21.7%, 46.9%] | 75.0% [65.5%, 83.3%] | 31.0% [21.4%, 41.7%] |
-| S5 | test (complete) | 876/876 turns; 400/400 conversations | 96.2% | 100.0% | 94.9% | 97.8% | 91.8% |
 
-The independent benchmark contains 84 Claude-authored cases with Codex gold labels, not human or real-customer evidence. It is weighted toward unsupported requests and has limited successful multi-item-order coverage. Synthetic templates and LLM wording can bias results. Intervals reflect case-sampling uncertainty, not real-world generalization. Plain-text actions use frozen approximate lexical rules; reply factuality and which detail was clarified are not judged. State-only success can overstate clarification, decline and lookup performance; action + state is the stronger endpoint. Hardware, quantization, tokenizer/runtime numerics and inference backends differ.
+### Synthetic held-out set · 400 conversations
 
-See [the full report](results/report.md) for execution, latency and cost provenance.
+| System | Action accuracy | Argument exact match | Action + state success |
+| --- | --- | --- | --- |
+| S1 · Base Qwen · zero-shot | 75.0% | 37.0% | 29.0% |
+| S2 · Base Qwen · few-shot | 72.5% | 48.7% | 32.5% |
+| S3 · GPT-OSS-120B · Groq | 81.2% | 67.6% | 57.5% |
+| S4 · Fine-tuned Qwen · merged FP16 | 96.6% | 98.4% | 91.5% |
+| S5 · Fine-tuned Qwen · CPU Q4_K_M | 96.2% | 100.0% | 91.8% |
 
-![Independent comparison](results/charts/independent_comparison.png)
+### Independent LLM-authored set · 84 conversations
+
+| System | Action accuracy | Argument exact match | Action + state success |
+| --- | --- | --- | --- |
+| S1 · Base Qwen · zero-shot | 51.7% [43.0%, 60.1%] | 51.3% [35.1%, 66.7%] | 26.2% [16.7%, 36.9%] |
+| S2 · Base Qwen · few-shot | 46.2% [38.7%, 53.6%] | 23.1% [9.7%, 36.4%] | 21.4% [13.1%, 29.8%] |
+| S3 · GPT-OSS-120B · Groq | 62.9% [54.1%, 71.4%] | 61.5% [45.2%, 77.6%] | 40.5% [29.8%, 51.2%] |
+| S4 · Fine-tuned Qwen · merged FP16 | 62.9% [52.8%, 71.8%] | 46.2% [31.4%, 62.2%] | 33.3% [22.6%, 44.0%] |
+| S5 · Fine-tuned Qwen · CPU Q4_K_M | 63.6% [53.6%, 72.3%] | 46.2% [31.6%, 61.1%] | 31.0% [21.4%, 41.7%] |
+
+**Action accuracy** scores the next action from gold history. **Action + state success** requires the correct executed tool actions/arguments and final backend state across the complete conversation.
+
+Synthetic customer wording uses GPT-OSS through Groq; independent customer messages are Claude-authored with Codex gold labels. Evaluation covers the configured café domain, with frozen lexical rules for clarification and decline.
+
+Independent brackets show 95% conversation-bootstrap intervals (1,000 resamples, seed 42). S1/S2/S4 use Transformers FP16 on T4; S3 uses Groq; S5 uses CPU llama.cpp.
+
+![Independent benchmark comparison](results/charts/independent_comparison.png)
+
+[Full evaluation report](results/report.md) · [Metrics and provenance](results/metrics.json) · [Error analysis](results/error_analysis.md)
+
 <!-- RESULTS:END -->
 
-The [full report](results/report.md), [error analysis](results/error_analysis.md),
-[machine-readable metrics](results/metrics.json) and
-[evidence-based CV bullets](results/cv_bullets.md) retain the limitations and
-provenance. `make report` regenerates metrics from preserved predictions;
-`make release-docs` refreshes README excerpts and local Hub cards from saved results.
-No performance numbers are hand-edited into these excerpts.
+The comparison distinguishes prompting, adaptation and quantization across the
+two datasets. The [full report](results/report.md) includes per-intent scores,
+confusion matrices, latency definitions and experiment provenance.
 
-## Dataset and training
+## Run locally
 
-<!-- DATA_TRAINING:START -->
-Synthetic splits: **3,500 train / 300 validation / 400 test**. Separate independent set: **84 Claude-authored conversations**, with Codex gold labels; **0 genuine human cases** and **5 excluded worked examples**.
+**Requirements:** Python 3.11, uv, a C/C++ compiler for the CPU build and a Hugging
+Face token with read access to the configured model/dataset repositories.
 
-Training used a Tesla T4, LoRA rank 16, 4,096-token full conversations, batch 1 × accumulation 16, 3 epochs and learning rate 0.0002. Measured GPU-worker time: 5.59 hours (not billing). Validation loss: 1.00845 → 0.01044; this is not test accuracy. Assistant payloads and closing tokens are supervised; user and tool content is masked. No conversation truncation.
+```sh
+git clone https://github.com/PalakAnand30/cafe-tool-agent.git
+cd cafe-tool-agent
+make setup
+```
 
-[Training run](https://wandb.ai/palak-anand-the-university-of-edinburgh/cafe-tool-agent/runs/mz9t5xh9) · [Original metadata](results/training/training_manifest.json) · [Dataset validation](results/independent_validation.json)
-<!-- DATA_TRAINING:END -->
+Create `.env` from `.env.example` if you do not already have one, then set
+`HF_TOKEN` locally. Keep secret values in `.env`.
 
-Training customer wording was paraphrased by GPT-OSS through Groq, with cached
-responses and entity checks; assistant calls/results came from the deterministic
-backend. This uses the Groq API, not the OpenAI API. Synthetic test template
-families and item/modifier pairs were reserved before sampling, and normalized
-customer-text leakage was checked across synthetic splits. Independent customer
-messages retain Claude authorship; Codex gold changes are recorded separately.
-The historical `human_test` path does not imply human-authored evidence.
+```sh
+make setup-cpu
+uv run --locked python scripts/download_models.py
+make serve
+```
 
-Prepared cards: [dataset](docs/cards/dataset/README.md),
-[adapter](docs/cards/adapter/README.md), [merged](docs/cards/merged/README.md),
-[GGUF](docs/cards/gguf/README.md). These are local review copies, not uploaded
-replacements. Hub model/data repositories remain private at the recorded handoff.
+Open **http://127.0.0.1:7860/**. Try placing an order, expand **Behind the counter**
+to inspect tool calls, then check the order board. Use **Let 5 minutes pass** to
+advance preparation and **Start fresh** to reset the session.
 
-## Reproduce
+The chat API exposes `POST /chat` and `GET /health`. To run the café backend
+separately with interactive API documentation:
 
-A fresh clone can run the installed-package checks without weights or CUDA:
+```sh
+uv run --locked uvicorn cafe_agent.backend.app:create_app --factory
+```
+
+Open **http://127.0.0.1:8000/docs** for the tool endpoints.
+
+## Reproduce the pipeline
+
+### 1. Validate the local package
 
 ```sh
 make setup
@@ -144,75 +253,133 @@ make lint
 make test
 ```
 
-Tests cache only the pinned tokenizer/config files. Add the CPU extra explicitly
-for inference; normal setup excludes it. Do not install CUDA torch, bitsandbytes,
-vLLM or MLX on the Mac. CPU inference uses zero GPU layers and no K/Q/V offload.
-The evaluated Mac native build and the Linux Docker wheel use different pinned
-llama-cpp-python versions; a full Linux model benchmark has not been recorded.
+These checks use the installed package and the pinned tokenizer. The local
+stack separates CPU/backend work from GPU execution in Kaggle notebooks.
 
-| Task | Entry point / guide |
+### 2. Rebuild the data
+
+Set `GROQ_API_KEY` in `.env` for customer paraphrasing, then run:
+
+```sh
+make data
+make benchmark
+```
+
+The generator resumes from append-only journals and reuses cached API responses.
+`make benchmark` converts the reviewed independent source into the shared
+conversation schema. Data configuration lives in `configs/data.yaml`; the menu
+and business rules live in `configs/domain.yaml`.
+
+### 3. Train, export and evaluate on Kaggle
+
+Follow the [Kaggle reproduction guide](docs/PHASE4_KAGGLE.md):
+
+1. Open [train_kaggle.ipynb](notebooks/train_kaggle.ipynb) on a T4 runtime.
+2. Set the exact pushed Git commit, dataset revision and base-model revision.
+   Attach `HF_TOKEN` and `WANDB_API_KEY` through Kaggle Secrets; private GitHub
+   access also uses a `GITHUB_TOKEN` secret.
+3. Run training and export the adapter, merged weights and GGUF artifacts.
+4. Set the exported merged revision in
+   [eval_gpu_kaggle.ipynb](notebooks/eval_gpu_kaggle.ipynb), run evaluation and
+   extract its prediction bundle into `results/predictions/`, retaining S3 files.
+
+Use `make push-data` to publish a validated corpus to the configured private Hub
+repository when training on a newly generated dataset. Keep dataset identities
+and output directories distinct between experiments.
+
+### 4. Run CPU inference and reproduce reports
+
+Restore the pinned model and evaluation gold, then rebuild the published tables
+from saved predictions:
+
+```sh
+uv run --locked python scripts/download_models.py
+make report
+make release-docs
+```
+
+For a fresh CPU model evaluation, write to a new run directory:
+
+```sh
+uv run --locked --extra cpu python -m cafe_agent.cpu.evaluate \
+  --output-dir results/predictions/cpu-reproduction
+```
+
+The [CPU evaluation guide](docs/PHASE5_LOCAL.md) covers run selection, latency
+measurement and aggregation. `make eval-s3` runs the cached Groq baseline;
+`make latency` runs the separate CPU latency benchmark. `make smoke-eval` checks
+a fixed sample of complete conversations against the configured regression threshold.
+
+## Deployment
+
+### Docker
+
+With Docker running and the model/cache folders prepared by the local setup:
+
+```sh
+make docker-build
+make docker-run
+```
+
+The image targets `linux/amd64`, uses a pinned CPU inference wheel and exposes
+the chat app on **http://127.0.0.1:7860/**. Model files and tokenizer cache are
+mounted at runtime; credentials come from the environment file. The container
+runs as a non-root user.
+
+### Hugging Face Spaces
+
+Set `HF_USERNAME` and an `HF_TOKEN` with Space write permissions and model read
+access in `.env`. Prepare the deployment bundle, then deploy it:
+
+```sh
+uv run --locked python scripts/deploy_space.py
+uv run --locked python scripts/deploy_space.py --deploy
+```
+
+The deployment script creates or updates `HF_USERNAME/cafe-tool-agent` using
+the Docker SDK, stores `HF_TOKEN` as a Space secret and uploads an allowlisted
+application bundle. Startup downloads and SHA-256-verifies the pinned GGUF.
+After deployment, check `/health`, open the chat interface and inspect an order's
+tool trace. See the [serving guide](docs/PHASE6_DEMO.md) for runtime details.
+
+## Engineering highlights
+
+- **Shared contracts:** one schema registry and tool executor across data,
+  training, evaluation, HTTP endpoints and serving.
+- **Deterministic replay:** explicit clocks, seeded state, fresh SQLite backends
+  and exact decimal money preserve executable ground truth.
+- **Resumable experiments:** append-only predictions, request caches and immutable
+  manifests make long data and inference jobs recoverable.
+- **Traceable reporting:** generated README results, model cards and CV excerpts
+  read persisted experiment evidence.
+- **Automated delivery checks:** GitHub Actions defines locked setup, lint and
+  unit tests, plus a manually triggered CPU smoke evaluation with retained artifacts.
+- **Deployment packaging:** CPU Docker image, startup model verification,
+  session isolation and an allowlisted Hugging Face Space bundle.
+
+## Repository guide
+
+| Path | Contents |
 | --- | --- |
-| Restore private GGUF and gold tests | `uv run --locked python scripts/download_models.py` |
-| Run S5 and its latency benchmark | `make eval-local`, then `make latency`; [CPU guide](docs/PHASE5_LOCAL.md) |
-| Score all preserved predictions offline | `make report` |
-| Refresh README and review cards | `make release-docs` |
-| Generate synthetic data with cached Groq calls | `make data` (API access needed on cache misses) |
-| Convert the reviewed independent set | `make benchmark` |
-| Repeat GPU training/export and evaluation | [Kaggle guide](docs/PHASE4_KAGGLE.md) |
-| Run the café backend alone | `uv run --locked uvicorn cafe_agent.backend.app:create_app --factory` |
-| Chat, Docker and optional deployment | [Demo guide](docs/PHASE6_DEMO.md) |
-| CPU regression guard and release steps | [Phase 7 checklist](docs/PHASE7_PUBLICATION.md) |
+| `src/cafe_agent/backend`, `domain`, `tools` | Café API, business rules and validated tool execution |
+| `src/cafe_agent/agent`, `parsing`, `prompting` | Agent loop, strict parsing and shared chat rendering |
+| `src/cafe_agent/data` | Synthetic generation, paraphrasing, validation and label masking |
+| `src/cafe_agent/kaggle`, `notebooks` | GPU training, export and evaluation workflows |
+| `src/cafe_agent/cpu`, `eval`, `reporting` | CPU inference, scoring, charts and documentation generation |
+| `src/cafe_agent/serve`, `docker` | Chat API, Gradio interface and container packaging |
+| `configs`, `tests`, `.github/workflows` | Experiment settings, automated tests and CI definitions |
+| `results` | Predictions, metrics, charts, reports and verification receipts |
 
-Generated gold data, API caches and weights are ignored by Git. Model/gold
-restoration needs a read-enabled `HF_TOKEN`; running checks against saved
-predictions does not need a model API key. Fresh-clone report reproduction needs
-the restored gold files in addition to committed predictions. Changed inference
-inputs require a new output directory; keep old manifests, checkpoints and API cache.
+## Artifacts and attribution
 
-## CI and smoke evaluation
+[Dataset card](docs/cards/dataset/README.md) ·
+[LoRA adapter card](docs/cards/adapter/README.md) ·
+[Merged model card](docs/cards/merged/README.md) ·
+[GGUF model card](docs/cards/gguf/README.md) ·
+[Evidence-based CV bullets](results/cv_bullets.md)
 
-Push/PR CI installs the locked environment, caches the tokenizer, runs Ruff and
-pytest. A separate manual `CPU smoke evaluation` workflow downloads the pinned
-private GGUF and data and executes the configured sample of full synthetic test
-conversations. It requires a repository `HF_TOKEN` secret, uploads evidence even
-when scoring fails, and enforces the action-and-state threshold in
-`configs/eval.yaml`. It does not run on every push.
-
-The smoke settings are an explicit YAML comment pragma so the historical strict
-`EvalConfig` and inference manifests retain their frozen meaning. The regression
-sample and threshold are engineering checks; they do not replace the independent
-benchmark. Local checks are recorded in `PROGRESS.md`; remote workflow execution
-is pending until the owner pushes and triggers it. See the checklist for commands.
-
-## Limits and publication status
-
-The benchmark covers one configured café domain. Successful multi-item independent
-orders are scarce; unsupported requests are overrepresented. Real demo failures
-included modifier handling and an invalid food-category argument. The menu helper
-improves browsing without establishing better model performance. Orders, prices,
-allergies and payments have not been validated for real customer use.
-
-Latency mixes local CPU, T4 and remote API hardware. The separate CPU latency
-benchmark resets KV context; normal evaluation can reuse prefixes. Groq cost is a
-dated paid-equivalent estimate, and CPU cost uses an illustrative hourly assumption.
-Neither is an invoice. See the report for exact definitions.
-
-The local demo works. Live Space deployment and the GIF remain deferred by the
-owner. Docker startup/UI/health passed; an emulated Docker chat timed out, so a
-completed Docker model-chat check remains pending. Nothing in Phase 7 publishes
-repositories or changes visibility. Follow the [publication checklist](docs/PHASE7_PUBLICATION.md)
-when ready.
-
-## Licenses and attribution
-
-The [Qwen base weights](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/LICENSE)
-and [GPT-OSS paraphraser weights](https://huggingface.co/openai/gpt-oss-120b/blob/main/LICENSE)
-use Apache-2.0. No GPT-OSS weights are distributed here. Preserve applicable
-upstream licenses/notices and derivative attribution when distributing model files.
-That model license does not assign a license to this repository's code, generated
-data or supplied Claude benchmark. Code/data license choices and permission to
-redistribute the supplied benchmark require the owner's review before publication.
-
-`PROJECT_SPEC.md` is the source of truth. `PROGRESS.md` records actual runs,
-version decisions and known issues. Legacy model-client stubs are intentionally
-retained because their hashes are part of frozen evaluation provenance.
+Built on [Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct)
+and [GPT-OSS-120B](https://huggingface.co/openai/gpt-oss-120b), whose model weights
+use Apache-2.0. Customer paraphrases and the larger-model baseline use Groq.
+Independent benchmark messages retain Claude authorship with Codex gold labels.
+Model cards and experiment manifests retain revision and attribution details.

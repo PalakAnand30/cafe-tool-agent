@@ -26,6 +26,60 @@ def percent(metric: dict) -> str:
     return value
 
 
+def readme_results(data: dict) -> str:
+    """Render a compact portfolio comparison with dataset and metric scope attached."""
+    labels = {
+        "S1": "Base Qwen · zero-shot",
+        "S2": "Base Qwen · few-shot",
+        "S3": "GPT-OSS-120B · Groq",
+        "S4": "Fine-tuned Qwen · merged FP16",
+        "S5": "Fine-tuned Qwen · CPU Q4_K_M",
+    }
+    lines = []
+    for split, title in [
+        ("test", "Synthetic held-out set"),
+        ("independent_test", "Independent LLM-authored set"),
+    ]:
+        groups = [group for group in data["groups"] if group["split"] == split]
+        count = groups[0]["expected_conversations"]
+        lines += [
+            f"### {title} · {count} conversations",
+            "",
+            "| System | Action accuracy | Argument exact match | Action + state success |",
+            "| --- | --- | --- | --- |",
+        ]
+        for group in groups:
+            turn = group["modes"]["turn"]["metrics"]
+            end = group["modes"]["end_to_end"]["metrics"]
+            lines.append(
+                f"| {group['system']} · {labels[group['system']]} | "
+                f"{percent(turn['action_accuracy'])} | {percent(turn['argument_exact_match'])} | "
+                f"{percent(end['action_and_state_success'])} |"
+            )
+        lines.append("")
+    bootstrap = data["bootstrap"]
+    lines += [
+        "**Action accuracy** scores the next action from gold history. "
+        "**Action + state success** requires the correct executed tool actions/arguments "
+        "and final backend state across the complete conversation.",
+        "",
+        "Synthetic customer wording uses GPT-OSS through Groq; independent customer "
+        "messages are Claude-authored with Codex gold labels. Evaluation covers the "
+        "configured café domain, with frozen lexical rules for clarification and decline.",
+        "",
+        f"Independent brackets show {bootstrap['confidence']:.0%} conversation-bootstrap "
+        f"intervals ({bootstrap['resamples']:,} resamples, seed {bootstrap['seed']}). "
+        "S1/S2/S4 use Transformers FP16 on T4; S3 uses Groq; S5 uses CPU llama.cpp.",
+        "",
+        "![Independent benchmark comparison](results/charts/independent_comparison.png)",
+        "",
+        "[Full evaluation report](results/report.md) · "
+        "[Metrics and provenance](results/metrics.json) · "
+        "[Error analysis](results/error_analysis.md)",
+    ]
+    return "\n".join(lines)
+
+
 def write_text(metrics_path: Path, directory: Path) -> None:
     data = json.loads(metrics_path.read_text())
     table = baseline_table(data)
@@ -187,17 +241,7 @@ def write_text(metrics_path: Path, directory: Path) -> None:
             raise ValueError("README must contain exactly one results marker pair")
         prefix, rest = content.split(start)
         _, suffix = rest.split(stop)
-        readme.write_text(
-            prefix
-            + start
-            + "\n"
-            + table
-            + "\n\n"
-            + LIMITATIONS
-            + "\n\nSee [the full report](results/report.md) for execution, latency "
-            "and cost provenance.\n\n"
-            "![Independent comparison](results/charts/independent_comparison.png)\n" + stop + suffix
-        )
+        readme.write_text(prefix + start + "\n\n" + readme_results(data) + "\n\n" + stop + suffix)
     s4, s2 = [
         groups[(s, "independent_test")]["modes"]["turn"]["metrics"]["action_accuracy"]
         for s in ["S4", "S2"]
