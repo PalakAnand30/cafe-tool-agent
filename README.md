@@ -1,6 +1,7 @@
 # Café Ordering Agent
 
 [![CI](https://github.com/PalakAnand30/cafe-tool-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/PalakAnand30/cafe-tool-agent/actions/workflows/ci.yml)
+[![CPU smoke](https://github.com/PalakAnand30/cafe-tool-agent/actions/workflows/smoke_eval.yml/badge.svg?event=workflow_dispatch)](https://github.com/PalakAnand30/cafe-tool-agent/actions/workflows/smoke_eval.yml)
 
 ### QLoRA fine-tuning · Structured tool calling · CPU inference · Full-stack ML
 

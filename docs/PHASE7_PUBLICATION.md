@@ -7,11 +7,13 @@ code uses Apache-2.0 and owner-held dataset rights use CC BY 4.0; see LICENSE,
 DATA_LICENSE.md and NOTICE. The owner confirmed the Claude benchmark was
 generated in their own account. Actual remote outcomes are recorded in PROGRESS.md.
 
-Release update: the latest code/licences were pushed and the regular GitHub CI
-run passed. Space creation returned HTTP 402 (PRO required by the provider), so
-the owner chose to skip hosting. Models and datasets remain private. The manual
-CPU workflow requires an Actions repository secret named HF_TOKEN with read
-access to the private GGUF model and dataset.
+Release update: the code/licences are pushed, and both regular GitHub CI and
+manual CPU smoke evaluation passed. The CPU run scored 45/50 against the 0.80
+guard; its downloaded predictions were independently rescored locally. Evidence:
+`results/publication_remote_validation.json` and `results/smoke-github-20261024/`.
+The Actions HF_TOKEN secret is configured and its private downloads succeeded.
+Space creation returned HTTP 402 (PRO required by the provider), so the owner
+chose to skip hosting. Models and datasets remain private.
 
 ## Reproduce from a fresh checkout
 
@@ -95,6 +97,10 @@ The completed local Phase 7 run is archived in `results/smoke-phase7/`, with its
 check receipt in `results/phase7_smoke_validation.json`. This archive is a copy
 of the original resumable output, whose manifest records `results/smoke-cpu`.
 It is separate regression evidence and is not merged into the five-system metrics.
+
+The remote Linux run is archived separately in `results/smoke-github-20261024/`.
+Its evaluated Git commit and run URL are in `results/publication_remote_validation.json`.
+It is a 50-case CPU regression run, not a replacement for the full Mac S5 benchmark.
 
 Linux uses the pinned CPU wheel while the evaluated Mac run used its own pinned
 native build. Numerical differences can change results. A failed guard should

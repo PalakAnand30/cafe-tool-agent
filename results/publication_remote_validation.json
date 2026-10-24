@@ -65,7 +65,13 @@
           }
         ]
       }
-    ]
+    ],
+    "latest_verified_ci": {
+      "run_id": 40095312300,
+      "head_sha": "80f068f9f28db1b9df160d630666d76f79201183",
+      "conclusion": "success",
+      "url": "https://github.com/PalakAnand30/cafe-tool-agent/actions/runs/40095312300"
+    }
   },
   "hub_privacy_verified": [
     {
@@ -98,6 +104,80 @@
     "billing_or_hardware_changes": false
   },
   "cpu_workflow": {
-    "state": "awaiting repository HF_TOKEN secret"
+    "state": "completed",
+    "conclusion": "success",
+    "run_id": 40095384930,
+    "head_sha": "80f068f9f28db1b9df160d630666d76f79201183",
+    "url": "https://github.com/PalakAnand30/cafe-tool-agent/actions/runs/40095384930",
+    "artifact_name": "cpu-smoke-evidence",
+    "artifact_zip_sha256": "7715d2b5b7047f1c77b75a85414a4ae7a837dc70ec9d7e23cd1dce3d1ecef166",
+    "archive_directory": "results/smoke-github-20261024",
+    "local_rescore_matches": true,
+    "summary": {
+      "metric": "action_and_state_success",
+      "conversations": 50,
+      "successful_conversations": 45,
+      "value": 0.9,
+      "threshold": 0.8,
+      "passed": true,
+      "case_ids": [
+        "test-00003",
+        "test-00012",
+        "test-00013",
+        "test-00015",
+        "test-00016",
+        "test-00022",
+        "test-00044",
+        "test-00047",
+        "test-00049",
+        "test-00052",
+        "test-00057",
+        "test-00071",
+        "test-00079",
+        "test-00081",
+        "test-00101",
+        "test-00110",
+        "test-00111",
+        "test-00112",
+        "test-00114",
+        "test-00119",
+        "test-00125",
+        "test-00135",
+        "test-00140",
+        "test-00142",
+        "test-00172",
+        "test-00174",
+        "test-00176",
+        "test-00183",
+        "test-00194",
+        "test-00214",
+        "test-00216",
+        "test-00229",
+        "test-00258",
+        "test-00279",
+        "test-00287",
+        "test-00301",
+        "test-00302",
+        "test-00308",
+        "test-00309",
+        "test-00327",
+        "test-00332",
+        "test-00346",
+        "test-00357",
+        "test-00359",
+        "test-00366",
+        "test-00373",
+        "test-00377",
+        "test-00379",
+        "test-00388",
+        "test-00390"
+      ],
+      "definition": "Frozen action sequence plus final backend state; full scripted conversations.",
+      "limitation": "Synthetic regression guard; not new independent benchmark evidence.",
+      "execution": "cpu_inference",
+      "predictions_sha256": "dedcdec92480426a8a2f6a9a7cdb2bd7fdee10ea91088ba8dc71768ba46e2fb0",
+      "selection_sha256": "8e67259d4c7e18026c091fbc4e539fe19201311c10f95a073a7f43093eb7414e",
+      "inference_fingerprint": "cd7534d06b162e2859ead4caf015a4961327c134d90f7fc40eaccd1770eba06d"
+    }
   }
 }

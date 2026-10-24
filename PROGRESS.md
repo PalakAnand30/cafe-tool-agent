@@ -1047,6 +1047,26 @@ All direct pins predate the release cutoff; transitive versions remain in
   results/publication_remote_validation.json. The prior user-generated deployment
   dry-run receipt is preserved unchanged. No new benchmark/model results claimed.
 
+## Remote CPU smoke verification completed (2026-10-24)
+
+- The owner added the GitHub Actions HF_TOKEN repository secret. Its value was
+  never read back or printed. Private model and gold downloads succeeded remotely.
+- Dispatched CPU smoke evaluation on main through the GitHub REST API. Run
+  40095384930 on 80f068f9f28db1b9df160d630666d76f79201183 completed successfully:
+  45/50 action-and-state successes (0.90), above the configured 0.80 threshold.
+  URL: https://github.com/PalakAnand30/cafe-tool-agent/actions/runs/40095384930
+- Downloaded the workflow's cpu-smoke-evidence artifact before retention expiry,
+  archived the manifest, selection, full predictions and summary under
+  results/smoke-github-20261024/, verified SHA-256/fingerprint/source integrity,
+  and independently rescored all selected frozen gold cases locally. Scores and
+  counts match the remote summary exactly. This is separate Linux CPU regression
+  evidence; no existing five-system metric or Mac latency claim was changed.
+- Regular CI on the same commit also passed (run 40095312300). Added the CPU
+  workflow badge after verification. Receipts are in
+  results/publication_remote_validation.json. Final publication consists only
+  of evidence/docs updates; model/data repositories remain private and hosting
+  stays skipped as requested. Preserve the user's unstaged notebook/guide edits.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -1081,8 +1101,9 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-The reviewed GitHub release is pushed and regular CI passed. The owner must add
-the GitHub Actions HF_TOKEN repository secret; then run/verify manual CPU smoke CI.
-Preserve private Hub model/data visibility, predictions, manifests, checkpoints
-and API cache. The owner chose to skip hosting after the provider's PRO requirement;
-retain the local demo and do not request paid resources. A recording is optional.
+The GitHub release, licences, regular CI and manual CPU smoke evaluation are
+verified. Push the final evidence/docs commit and verify its ordinary CI, then
+stop. Preserve private Hub model/data visibility, predictions, manifests,
+checkpoints and API cache. The owner chose to skip hosting after the provider's
+PRO requirement; retain the local demo and do not request paid resources.
+A recording is optional. No further implementation phase is required.
