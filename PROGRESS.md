@@ -1018,6 +1018,35 @@ All direct pins predate the release cutoff; transitive versions remain in
   No dependency changes. Release review receipt: results/publication_release_review.json.
   Remote push, CI and deployment outcomes will be recorded after execution.
 
+## GitHub publication and hosted-demo outcome (2026-10-24)
+
+- Pushed all reviewed local commits through b86bb5b to public main on GitHub.
+  The .env notebook GITHUB_TOKEN returned 403 for push; the existing system Git
+  credential helper succeeded. Its credentials were used only in process memory,
+  never printed or copied into .env. It also permits Actions monitoring.
+- Remote CI run 40094731862 on b86bb5b118e39b4c5bc9eda7bdfa2c052d429fbf
+  completed successfully: locked setup, Ruff, tokenizer cache and unit tests all
+  passed. URL: https://github.com/PalakAnand30/cafe-tool-agent/actions/runs/40094731862
+  Added the standard CI badge to the recruiter README after verifying success.
+- Attempted the explicitly authorized public Docker Space deployment. Hugging
+  Face refused creation with HTTP 402 and the message that Docker/Gradio Spaces
+  on cpu-basic require PRO. No Space was created, no bundle uploaded and no
+  subscription, hardware upgrade or billing change was made. The owner explicitly
+  chose: "Skip hosting for now; keep the local demo." Do not retry hosting unless
+  the owner changes that decision. This replaces the earlier public-deploy plan.
+- Rechecked all adapter/merged/GGUF model repositories and cafe-tool-calls:
+  all remain private. License/attribution changes affect the GitHub repository
+  and prepared local cards, not the immutable evaluated Hub revisions.
+- GitHub currently has no Actions repository secrets. The owner is adding a
+  separate read token for CPU evaluation. Clarified that the GitHub secret name
+  is HF_TOKEN and its value must be the full hf_ token, not its token ID/name;
+  leave .env unchanged and do not use HF_TOKEN1. Supplied exact GitHub UI steps
+  and the two private repositories that need read access. Manual CPU workflow
+  dispatch remains dependent on that repository-secret setup.
+- Remote receipts and the provider failure/owner decision are recorded in
+  results/publication_remote_validation.json. The prior user-generated deployment
+  dry-run receipt is preserved unchanged. No new benchmark/model results claimed.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -1052,8 +1081,8 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-The owner has authorized this release, public Space deployment and remote CI.
-Finish the push and remote verification, preserving private model/data visibility,
-predictions, manifests, checkpoints and API cache. The owner must add HF_TOKEN
-through GitHub settings because the existing token cannot manage repository secrets.
-Record actual deployment/CI outcomes; a demo recording remains optional.
+The reviewed GitHub release is pushed and regular CI passed. The owner must add
+the GitHub Actions HF_TOKEN repository secret; then run/verify manual CPU smoke CI.
+Preserve private Hub model/data visibility, predictions, manifests, checkpoints
+and API cache. The owner chose to skip hosting after the provider's PRO requirement;
+retain the local demo and do not request paid resources. A recording is optional.

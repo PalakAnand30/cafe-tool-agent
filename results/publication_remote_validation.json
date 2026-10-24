@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-24",
+  "github": {
+    "repo": "PalakAnand30/cafe-tool-agent",
+    "pushed_commit": "b86bb5b118e39b4c5bc9eda7bdfa2c052d429fbf",
+    "ci_run_id": 40094731862,
+    "ci_url": "https://github.com/PalakAnand30/cafe-tool-agent/actions/runs/40094731862",
+    "ci_conclusion": "success",
+    "jobs": [
+      {
+        "name": "lint-and-test",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run astral-sh/setup-uv@v6",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install Python 3.11",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install locked dependencies",
+            "conclusion": "success"
+          },
+          {
+            "name": "Lint and format checks",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/cache@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Cache the pinned tokenizer (no weights)",
+            "conclusion": "success"
+          },
+          {
+            "name": "Unit tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/cache@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run astral-sh/setup-uv@v6",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ]
+  },
+  "hub_privacy_verified": [
+    {
+      "repo": "PalakAnand30/cafe-agent-qwen2.5-1.5b-lora",
+      "type": "model",
+      "private": true
+    },
+    {
+      "repo": "PalakAnand30/cafe-agent-qwen2.5-1.5b-lora-merged",
+      "type": "model",
+      "private": true
+    },
+    {
+      "repo": "PalakAnand30/cafe-agent-qwen2.5-1.5b-lora-gguf",
+      "type": "model",
+      "private": true
+    },
+    {
+      "repo": "PalakAnand30/cafe-tool-calls",
+      "type": "dataset",
+      "private": true
+    }
+  ],
+  "space": {
+    "created": false,
+    "deployed": false,
+    "attempt_http_status": 402,
+    "provider_message": "Static Spaces are free for everyone, but hosting Gradio and Docker Spaces on free cpu-basic requires a PRO subscription.",
+    "owner_decision": "Skip hosting for now; keep the local demo",
+    "billing_or_hardware_changes": false
+  },
+  "cpu_workflow": {
+    "state": "awaiting repository HF_TOKEN secret"
+  }
+}

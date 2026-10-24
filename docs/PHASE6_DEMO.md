@@ -98,6 +98,12 @@ only when that visibility is intended; the default deployment creates a private
 Space and preserves existing visibility. The [publication guide](PHASE7_PUBLICATION.md)
 records the release steps.
 
+The 2026-10-24 attempt was rejected by Hugging Face with HTTP 402: the provider
+reported that Docker/Gradio Spaces on `cpu-basic` require a PRO subscription for
+this account. The owner chose to skip hosting and retain the local demo. No Space
+was created and no subscription or paid hardware was enabled. Check account
+eligibility before a future deployment attempt.
+
 ```sh
 uv run --locked python scripts/deploy_space.py
 ```

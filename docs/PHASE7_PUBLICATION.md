@@ -7,6 +7,12 @@ code uses Apache-2.0 and owner-held dataset rights use CC BY 4.0; see LICENSE,
 DATA_LICENSE.md and NOTICE. The owner confirmed the Claude benchmark was
 generated in their own account. Actual remote outcomes are recorded in PROGRESS.md.
 
+Release update: the latest code/licences were pushed and the regular GitHub CI
+run passed. Space creation returned HTTP 402 (PRO required by the provider), so
+the owner chose to skip hosting. Models and datasets remain private. The manual
+CPU workflow requires an Actions repository secret named HF_TOKEN with read
+access to the private GGUF model and dataset.
+
 ## Reproduce from a fresh checkout
 
 Use Python 3.11 and uv 0.11.26. From the repository root:
