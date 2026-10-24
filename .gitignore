@@ -37,6 +37,7 @@ results/**/.run.lock
 .ipynb_checkpoints/
 .DS_Store
 /Inspiration/
+/results/cv_bullets.md
 
 # Generated data and API cache; retain curated human data and small samples
 data/*

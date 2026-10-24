@@ -7,7 +7,7 @@
 
 <!-- HEADLINE:START -->
 
-An end-to-end ML engineering project that turns natural-language café orders into validated tool calls. It combines **QLoRA fine-tuning of Qwen2.5-1.5B**, a stateful FastAPI/SQLite backend, reproducible model evaluation and a CPU-powered chat interface, with Docker and Hugging Face Spaces deployment tooling. The quantized CPU model achieved **91.8% action-and-state task success** on 400 held-out synthetic conversations.
+An end-to-end ML engineering project for café tool calling, QLoRA fine-tuning and CPU serving. **Action + state success:** synthetic held-out — **S5 91.8% vs S3 57.5%**; independent 84-case Claude-authored set with Codex gold — **S4 33.3% (95% CI 22.6%–44.0%) vs S3 40.5% (95% CI 29.8%–51.2%)**. **The fine-tuned model overfits the synthetic data distribution.**
 
 <!-- HEADLINE:END -->
 
@@ -213,6 +213,30 @@ The comparison distinguishes prompting, adaptation and quantization across the
 two datasets. The [full report](results/report.md) includes per-intent scores,
 confusion matrices, latency definitions and experiment provenance.
 
+## Key finding: synthetic-data overfitting
+
+The fine-tuned model overfits the synthetic data distribution. For the same merged
+model, S4 action + state success falls from **91.5% on synthetic held-out data**
+to **33.3% (95% CI 22.6%–44.0%)** on the independent set.
+S3 moves from **57.5%** to **40.5% (95% CI 29.8%–51.2%)**.
+Strong synthetic results therefore do not establish broader generalisation.
+These are per-system intervals, not a paired significance test.
+
+Likely contributors, rather than established causal findings:
+
+- Template-derived training data concentrates repeated structures and domain patterns.
+- A single paraphrase model's style limits linguistic diversity across synthetic splits.
+- Near-zero validation loss (**0.01044**) suggests memorisation, though loss alone does not prove it.
+- Checkpoint selection on in-distribution validation rewards fitting that same distribution.
+
+### What I would do next
+
+- **Evaluation audit:** review gold labels, lexical action scoring, leakage and intent coverage; version any corrections.
+- **Broader training data:** use persona-diverse, multi-generator conversations and more varied interaction styles.
+- **Shift-aware checkpoint selection:** select checkpoints on a separate distribution-shift dev set, keeping test sets untouched.
+- **Human test data:** add human-authored conversations, such as coffee-ordering cases from [Taskmaster-1](https://github.com/google-research-datasets/Taskmaster/tree/master/TM-1-2019), with reviewed mappings to this café's tools.
+- **CPU performance:** benchmark [prompt-prefix KV caching](https://github.com/ggml-org/llama.cpp/tree/master/tools/server#post-completion-given-a-prompt-it-returns-the-predicted-completion) for the shared system/tool prefix against the **9.5s p50** fresh-context baseline, comparing cold/warm latency and output correctness while preserving session isolation.
+
 ## Run locally
 
 **Requirements:** Python 3.11, uv, a C/C++ compiler for the CPU build and a Hugging
@@ -378,8 +402,7 @@ tool trace. See the [serving guide](docs/PHASE6_DEMO.md) for runtime details.
 [Dataset card](docs/cards/dataset/README.md) ·
 [LoRA adapter card](docs/cards/adapter/README.md) ·
 [Merged model card](docs/cards/merged/README.md) ·
-[GGUF model card](docs/cards/gguf/README.md) ·
-[Evidence-based CV bullets](results/cv_bullets.md)
+[GGUF model card](docs/cards/gguf/README.md)
 
 Built on [Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct)
 and [GPT-OSS-120B](https://huggingface.co/openai/gpt-oss-120b), whose model weights
