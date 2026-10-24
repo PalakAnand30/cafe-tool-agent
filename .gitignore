@@ -36,6 +36,7 @@ results/smoke-cpu/
 results/**/.run.lock
 .ipynb_checkpoints/
 .DS_Store
+/Inspiration/
 
 # Generated data and API cache; retain curated human data and small samples
 data/*

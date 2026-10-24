@@ -333,10 +333,10 @@ access in `.env`. Prepare the deployment bundle, then deploy it:
 
 ```sh
 uv run --locked python scripts/deploy_space.py
-uv run --locked python scripts/deploy_space.py --deploy
+uv run --locked python scripts/deploy_space.py --deploy --public
 ```
 
-The deployment script creates or updates `HF_USERNAME/cafe-tool-agent` using
+The deployment script creates or updates a public `HF_USERNAME/cafe-tool-agent` using
 the Docker SDK, stores `HF_TOKEN` as a Space secret and uploads an allowlisted
 application bundle. Startup downloads and SHA-256-verifies the pinned GGUF.
 After deployment, check `/health`, open the chat interface and inspect an order's
@@ -383,3 +383,7 @@ and [GPT-OSS-120B](https://huggingface.co/openai/gpt-oss-120b), whose model weig
 use Apache-2.0. Customer paraphrases and the larger-model baseline use Groq.
 Independent benchmark messages retain Claude authorship with Codex gold labels.
 Model cards and experiment manifests retain revision and attribution details.
+
+Project code is licensed under [Apache-2.0](LICENSE). Dataset content and rights
+held by the owner use [CC BY 4.0](DATA_LICENSE.md), with Claude/Groq provenance
+preserved. See [NOTICE](NOTICE) for attribution and licence scope.

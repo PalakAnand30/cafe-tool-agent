@@ -983,6 +983,41 @@ All direct pins predate the release cutoff; transitive versions remain in
   or GitHub push. Preserve the user's existing notebook/guide/deployment edits.
   Save a local conventional commit and stop after this documentation follow-up.
 
+## Publication authorization and release preparation (2026-10-24)
+
+- Owner explicitly requested pushing the latest commits, running GitHub Actions,
+  selecting appropriate licences and deploying Hugging Face. Follow-up answers
+  authorize a public demo Space with model/dataset repositories remaining private,
+  and confirm the Claude benchmark was generated in the owner's own account.
+  This supersedes earlier no-push/deferred-deployment instructions for this release.
+- GitHub API confirms PalakAnand30/cafe-tool-agent is already public and remote
+  main is at 3fb9663d21fd64a305a3ac9ec920518700c774cf. Existing GitHub/HF tokens
+  authenticate; GitHub Actions reads work, but repository-secret management returns
+  403. Asked owner to add HF_TOKEN directly through repository Actions settings.
+  Tokens remain in process/environment memory and are never added to URLs/files.
+- Selected Apache-2.0 for original software/config/docs and CC BY 4.0 for dataset
+  content/rights held by the owner. Added official licence texts, NOTICE and
+  DATA_LICENSE.md with attribution and source review. Anthropic consumer terms
+  section 4 and Groq Services Agreement section 8 preserve/assign output rights
+  as between provider/customer, subject to terms; no copyrightability guarantee
+  or rights in unrelated third-party content are claimed. Model licences remain
+  Apache-2.0. Prepared local Hub cards now carry appropriate licence metadata;
+  private Hub revisions/cards are not uploaded or relabelled as new evaluations.
+- Added explicit --public deployment option, defaulting to the existing private/
+  preserve-visibility behavior. Public mode changes only the Space resource.
+  Licence/notice files are included in the allowlisted bundle and Docker build;
+  no dataset, weights, cache, credentials or inspiration references are bundled.
+  No hardware upgrade or paid storage is requested.
+- Git history audit scanned 387 blobs with no configured credential or token/
+  private-key-pattern matches. Inspiration/ is now ignored. Keep personalized
+  Kaggle notebook edits and the user's guide edit unstaged; retain generic
+  reproducible notebooks for publication. Backed up the existing deployment
+  dry-run receipt under .cache/release-pre-existing/ before the live release.
+- Local lint passed (119 Python files), all 291 tests passed in 11.70s, and the
+  wheel's Apache-2.0 metadata plus included licence/notice files were verified.
+  No dependency changes. Release review receipt: results/publication_release_review.json.
+  Remote push, CI and deployment outcomes will be recorded after execution.
+
 ## Known issues and user actions
 
 - Benchmark preparation and private dataset upload are complete under the
@@ -1017,10 +1052,8 @@ All direct pins predate the release cutoff; transitive versions remain in
 
 ## Next step
 
-Phases 0–7 are implemented locally with the limitations above. Review
-docs/PHASE7_PUBLICATION.md and choose code/data licensing and supplied-benchmark
-redistribution permissions before publication. Remote GitHub CI/manual smoke
-execution remains pending until the owner requests a push. Live Space deployment
-and the GIF remain deferred and are optional for local use. Preserve predictions,
-manifests, private Hub weights, checkpoints and API cache. Stop after the local
-Phase 7 commit; no GitHub push or publication is authorized.
+The owner has authorized this release, public Space deployment and remote CI.
+Finish the push and remote verification, preserving private model/data visibility,
+predictions, manifests, checkpoints and API cache. The owner must add HF_TOKEN
+through GitHub settings because the existing token cannot manage repository secrets.
+Record actual deployment/CI outcomes; a demo recording remains optional.

@@ -6,6 +6,8 @@ build-backend = "hatchling.build"
 name = "cafe-tool-agent"
 version = "0.1.0"
 description = "A reproducible café tool-calling agent and LoRA evaluation project."
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [

@@ -15,6 +15,9 @@ from cafe_agent.serve.settings import serve_settings
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--deploy", action="store_true")
+    parser.add_argument(
+        "--public", action="store_true", help="Explicitly create/make only the demo Space public"
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     directory, receipt = prepare_bundle(root, root / ".cache/space-build")
@@ -27,7 +30,9 @@ def main() -> None:
         username = os.environ.get("HF_USERNAME") or api.whoami()["name"]
         repo = username + "/" + serve_settings().space_name
         receipt.update(
-            repo=repo, revision=publish_bundle(api, repo, directory, token), published=True
+            repo=repo,
+            revision=publish_bundle(api, repo, directory, token, public=args.public),
+            published=True,
         )
     receipt["bundle"] = str(directory.relative_to(root))
     (root / "results/space_deployment.json").write_text(json.dumps(receipt, indent=2) + "\n")

@@ -231,3 +231,32 @@ def test_deploy_preserves_existing_space_visibility_and_rejects_wrong_sdk(tmp_pa
     with pytest.raises(ValueError, match="Docker"):
         publish_bundle(api, "test/cafe", tmp_path, "private-token")
     assert len(actions) == 2
+
+
+@pytest.mark.parametrize("exists", [True, False])
+def test_public_deployment_changes_only_explicit_space_without_paid_hardware(tmp_path, exists):
+    from huggingface_hub.utils import RepositoryNotFoundError
+
+    actions = []
+
+    def info(repo):
+        assert repo == "owner/demo"
+        if not exists:
+            raise RepositoryNotFoundError("Missing demo")
+        return SimpleNamespace(sdk="docker", private=True)
+
+    api = SimpleNamespace(
+        space_info=info,
+        update_repo_visibility=lambda repo, **kw: actions.append(("visibility", repo, kw)),
+        create_repo=lambda repo, **kw: actions.append(("create", repo, kw)),
+        add_space_secret=lambda repo, **kw: actions.append(("secret", repo, kw["key"])),
+        upload_folder=lambda **kw: SimpleNamespace(oid="b" * 40),
+    )
+    assert publish_bundle(api, "owner/demo", tmp_path, "token", public=True) == "b" * 40
+    expected = {"repo_type": "space", "private": False}
+    if not exists:
+        expected["space_sdk"] = "docker"
+    assert actions == [
+        ("visibility" if exists else "create", "owner/demo", expected),
+        ("secret", "owner/demo", "HF_TOKEN"),
+    ]

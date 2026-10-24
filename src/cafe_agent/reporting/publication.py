@@ -188,15 +188,17 @@ def render_publication(root: Path = Path(".")) -> dict[str, str]:
         f"The [Qwen base weights]({QWEN_LICENSE}) and "
         f"[GPT-OSS paraphraser weights]({GPT_OSS_LICENSE}) use Apache-2.0. "
         "Retain applicable upstream licenses, notices and modification attribution when "
-        "distributing derivatives. This does not establish a license for the supplied "
-        "Claude-authored benchmark or this project's code/data. Those owner decisions "
-        "remain on the publication checklist. No GPT-OSS weights are distributed here.\n"
+        "distributing derivatives. Project code uses Apache-2.0; dataset content and "
+        "rights held by the project owner use CC BY 4.0, including the owner-generated "
+        "Claude benchmark. Attribution and source review are recorded in DATA_LICENSE.md "
+        "and NOTICE. No GPT-OSS weights are distributed here.\n"
     )
     for kind, artifact in artifacts.items():
         metadata = (
             "---\nlanguage: en\nbase_model: "
             + manifest["train"]["model_id"]
-            + "\npipeline_tag: text-generation\ntags:\n- cafe\n- tool-calling\n- qlora\n"
+            + "\nlicense: apache-2.0\npipeline_tag: text-generation\n"
+            "tags:\n- cafe\n- tool-calling\n- qlora\n"
             + ("- gguf\n" if kind == "gguf" else "")
             + "---\n\n"
         )
@@ -213,7 +215,8 @@ def render_publication(root: Path = Path(".")) -> dict[str, str]:
             metadata + f"# {artifact['repo']}\n\n" + extra + common
         )
     dataset_card = (
-        "---\nlanguage: en\ntask_categories:\n- text-generation\ntags:\n- synthetic\n"
+        "---\nlanguage: en\nlicense: cc-by-4.0\ntask_categories:\n- text-generation\n"
+        "tags:\n- synthetic\n"
         "- tool-calling\nconfigs:\n- config_name: synthetic\n  data_files:\n"
         "  - split: train\n    path: data/train.jsonl\n"
         "  - split: validation\n    path: data/validation.jsonl\n"
@@ -251,11 +254,14 @@ def render_publication(root: Path = Path(".")) -> dict[str, str]:
             for name, entry in upload["verified_files"].items()
             if name.endswith(".jsonl")
         )
-        + "\n\n## License status\n\nA dataset redistribution license has not been selected. "
-        "Do not infer permission for the dataset from an upstream model's Apache-2.0 "
+        + "\n\n## License\n\nCC BY 4.0 applies to dataset content and rights held by "
+        "Palak Anand. Credit the project, preserve provenance and indicate changes; "
+        "see DATA_LICENSE.md and NOTICE in the project repository. The owner confirmed "
+        "on 2026-10-24 that the Claude benchmark was generated in their own account. "
+        "The licence is separate from each upstream model's Apache-2.0 "
         f"license. [GPT-OSS weights license]({GPT_OSS_LICENSE}); "
         f"[Qwen weights license]({QWEN_LICENSE}). "
-        "Confirm rights and attribution for the supplied Claude material before release.\n"
+        "The prepared licence/card update does not change private Hub visibility.\n"
     )
     outputs["docs/cards/dataset/README.md"] = dataset_card
     return outputs
@@ -282,6 +288,8 @@ def write_publication(root: Path = Path(".")) -> None:
         "outputs": {
             name: hashlib.sha256(content.encode()).hexdigest() for name, content in outputs.items()
         },
-        "status": "Local review copies; code/data licenses, GIF, deployment and remote CI pending.",
+        "status": (
+            "Local review cards: Apache-2.0 models/code, CC BY 4.0 data; Hub visibility unchanged."
+        ),
     }
     (root / "results/publication_docs.json").write_text(json.dumps(receipt, indent=2) + "\n")

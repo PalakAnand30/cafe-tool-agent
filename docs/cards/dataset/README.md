@@ -1,5 +1,6 @@
 ---
 language: en
+license: cc-by-4.0
 task_categories:
 - text-generation
 tags:
@@ -54,6 +55,6 @@ Do not train on either test set or tune prompts/evaluator from observed failures
 | `data/train.jsonl` | `1326a0dc1c8db4cee0f4a745e86ad9af505c7f562c9b99cdea2cafb24e3bbf84` |
 | `data/validation.jsonl` | `c83e6b580bf18b91b88c84b11eb965aae00db4aaa7d9512619d546465f08dfa8` |
 
-## License status
+## License
 
-A dataset redistribution license has not been selected. Do not infer permission for the dataset from an upstream model's Apache-2.0 license. [GPT-OSS weights license](https://huggingface.co/openai/gpt-oss-120b/blob/main/LICENSE); [Qwen weights license](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/LICENSE). Confirm rights and attribution for the supplied Claude material before release.
+CC BY 4.0 applies to dataset content and rights held by Palak Anand. Credit the project, preserve provenance and indicate changes; see DATA_LICENSE.md and NOTICE in the project repository. The owner confirmed on 2026-10-24 that the Claude benchmark was generated in their own account. The licence is separate from each upstream model's Apache-2.0 license. [GPT-OSS weights license](https://huggingface.co/openai/gpt-oss-120b/blob/main/LICENSE); [Qwen weights license](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/LICENSE). The prepared licence/card update does not change private Hub visibility.

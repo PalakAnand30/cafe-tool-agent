@@ -1,6 +1,7 @@
 ---
 language: en
 base_model: Qwen/Qwen2.5-1.5B-Instruct
+license: apache-2.0
 pipeline_tag: text-generation
 tags:
 - cafe
@@ -56,4 +57,4 @@ Use the project README and Phase 4–6 guides. Run `make setup`, `make setup-cpu
 
 ## Licenses and attribution
 
-The [Qwen base weights](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/LICENSE) and [GPT-OSS paraphraser weights](https://huggingface.co/openai/gpt-oss-120b/blob/main/LICENSE) use Apache-2.0. Retain applicable upstream licenses, notices and modification attribution when distributing derivatives. This does not establish a license for the supplied Claude-authored benchmark or this project's code/data. Those owner decisions remain on the publication checklist. No GPT-OSS weights are distributed here.
+The [Qwen base weights](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/LICENSE) and [GPT-OSS paraphraser weights](https://huggingface.co/openai/gpt-oss-120b/blob/main/LICENSE) use Apache-2.0. Retain applicable upstream licenses, notices and modification attribution when distributing derivatives. Project code uses Apache-2.0; dataset content and rights held by the project owner use CC BY 4.0, including the owner-generated Claude benchmark. Attribution and source review are recorded in DATA_LICENSE.md and NOTICE. No GPT-OSS weights are distributed here.

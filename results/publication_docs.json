@@ -7,11 +7,11 @@
     "kaggle_training_user_report.json": "b6468e4b91a4c452938dfe2f3cc2256f425eff1b6d789974d1720749768d70ae"
   },
   "outputs": {
-    "README.md": "3f52043324eb01e83d22a7480290ae317c57c269e415bd7663d2dd26bf8cc3bb",
-    "docs/cards/adapter/README.md": "329e73ceb65495e80f17267762c029621b80897a8a7b96340423de03b0c6a042",
-    "docs/cards/merged/README.md": "dfcaa56cdad54d7875a7ecd3942470ad80ed0d0512f3095615faf3c4c7ec29fa",
-    "docs/cards/gguf/README.md": "387bc1fbb61ce675bec904a79d7f642f39d2c7b9f30307cd1e48ec660eba52ba",
-    "docs/cards/dataset/README.md": "b752800c3ad700c873e247eedf540c5632696f9b30dbb1e1faba939928e859aa"
+    "README.md": "8b6b1bad29b23b6e6377aa5544e1af7e71e7dde764a359ca4506bb9d0302cc49",
+    "docs/cards/adapter/README.md": "62ef9c5153b666d8a7c5a548522c17b0ec598fb69b6c5f468fa345e09983014f",
+    "docs/cards/merged/README.md": "13ebc4303fab369b1d16f175fb5d434ac92c4c5bc5cddd88580e88522801ecfa",
+    "docs/cards/gguf/README.md": "4f667acfa38a2f579ad5287e8db554329f5ed1178a3cb0070009aa38d0b506a1",
+    "docs/cards/dataset/README.md": "9bf63f86abffc6ca526dd796b987dc06c533eea9f6be355d62809e7be2fac71b"
   },
-  "status": "Local review copies; code/data licenses, GIF, deployment and remote CI pending."
+  "status": "Local review cards: Apache-2.0 models/code, CC BY 4.0 data; Hub visibility unchanged."
 }

@@ -92,9 +92,11 @@ index omits upload dates, after its release date was independently verified.
 
 ## Prepare and deploy a Docker Space
 
-Deployment is optional for local use. The owner has deferred live Space
-deployment and the demo recording; neither is required to use `make serve`.
-The [Phase 7 checklist](PHASE7_PUBLICATION.md) tracks these publication actions.
+Deployment is optional for local use. On 2026-10-24 the owner authorized a public
+demo Space while keeping model and dataset repositories private. Use `--public`
+only when that visibility is intended; the default deployment creates a private
+Space and preserves existing visibility. The [publication guide](PHASE7_PUBLICATION.md)
+records the release steps.
 
 ```sh
 uv run --locked python scripts/deploy_space.py
@@ -111,10 +113,17 @@ When ready to create/update `HF_USERNAME/cafe-tool-agent`, run:
 uv run --locked python scripts/deploy_space.py --deploy
 ```
 
+For a recruiter-accessible public demo, add `--public`:
+
+```sh
+uv run --locked python scripts/deploy_space.py --deploy --public
+```
+
 The token in `.env` must permit creating/updating that Space and reading the
-private model. The script creates a **private Docker Space**, sets `HF_TOKEN`
+private model. The script sets `HF_TOKEN`
 as a Space secret through the SDK, and uploads the prepared bundle. Existing
-Docker Spaces keep their visibility; an existing different SDK causes an error.
+Docker Spaces keep their visibility unless `--public` explicitly makes the demo
+public; an existing different SDK causes an error.
 It never changes model/dataset visibility, requests paid hardware, or pushes to
 GitHub. Publication is a separate action; this phase only prepares the script.
 

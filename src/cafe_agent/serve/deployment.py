@@ -29,7 +29,14 @@ Set the private model's read token as the HF_TOKEN Space secret before startup.
 def bundle_files(root: Path) -> dict[str, bytes]:
     paths = [
         root / name
-        for name in ["pyproject.toml", "uv.lock", ".dockerignore", "docker/entrypoint.sh"]
+        for name in [
+            "pyproject.toml",
+            "uv.lock",
+            ".dockerignore",
+            "docker/entrypoint.sh",
+            "LICENSE",
+            "NOTICE",
+        ]
     ]
     paths += sorted((root / "src/cafe_agent").rglob("*.py"))
     for suffix in ["*.css", "*.svg"]:
@@ -66,15 +73,19 @@ def prepare_bundle(root: Path, parent: Path) -> tuple[Path, dict]:
     return directory, {"sha256": digest, "files": hashes, "published": False}
 
 
-def publish_bundle(api: HfApi, repo: str, directory: Path, token: str) -> str:
+def publish_bundle(
+    api: HfApi, repo: str, directory: Path, token: str, *, public: bool = False
+) -> str:
     from huggingface_hub.utils import RepositoryNotFoundError
 
     try:
         info = api.space_info(repo)
         if info.sdk != "docker":
             raise ValueError("Existing Space does not use Docker; no files were uploaded")
+        if public and info.private:
+            api.update_repo_visibility(repo, repo_type="space", private=False)
     except RepositoryNotFoundError:
-        api.create_repo(repo, repo_type="space", space_sdk="docker", private=True)
+        api.create_repo(repo, repo_type="space", space_sdk="docker", private=not public)
     # Tokens are transmitted through the SDK, never added to uploaded files or URLs.
     api.add_space_secret(repo, key="HF_TOKEN", value=token)
     result = api.upload_folder(

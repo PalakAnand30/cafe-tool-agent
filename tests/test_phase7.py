@@ -96,7 +96,7 @@ def test_publication_generation_is_deterministic_and_tracks_changed_metrics(tmp_
     first = render_publication(tmp_path)
     assert first == render_publication(tmp_path)
     assert "not uploaded" in first["docs/cards/dataset/README.md"]
-    assert "license:" not in first["docs/cards/dataset/README.md"].split("---")[1]
+    assert "license: cc-by-4.0" in first["docs/cards/dataset/README.md"].split("---")[1]
     path = tmp_path / "results/metrics.json"
     data = json.loads(path.read_text())
     target = next(g for g in data["groups"] if g["system"] == "S5" and g["split"] == "test")

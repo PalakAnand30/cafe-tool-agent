@@ -1,0 +1,23 @@
+{
+  "reviewed_on": "2026-10-24",
+  "code_license": "Apache-2.0",
+  "dataset_license": "CC-BY-4.0",
+  "benchmark_origin": "Owner confirmed generation in their own Claude account on 2026-10-24",
+  "history_audit": {
+    "history_blobs_scanned": 387,
+    "credential_findings": 0,
+    "excluded": [
+      ".env",
+      "Inspiration/",
+      "models/",
+      ".cache/"
+    ]
+  },
+  "tests_passed": 291,
+  "public_space_authorized": true,
+  "model_and_dataset_visibility": "Remain private",
+  "wheel_license_metadata_verified": true,
+  "reviewed_space_bundle": ".cache/space-build/156163138c89",
+  "space_bundle_sha256": "156163138c898f8c93833f30b9ee957945ccbadbff93c8234197b0893046a133",
+  "new_dependencies": []
+}

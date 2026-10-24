@@ -1,9 +1,11 @@
 # Reproducibility and publication checklist
 
-Phase 7 prepares local documentation and a manual CPU regression workflow.
-It does not push GitHub, upload cards, deploy a Space or change Hub visibility.
-The owner chose to defer Space deployment and the demo GIF; both are optional
-for local use. Remote CI is pending until a pushed commit is tested on GitHub.
+Phase 7 provides documentation and a manual CPU regression workflow. On
+2026-10-24 the owner authorized pushing GitHub, running Actions and deploying a
+public demo Space, while retaining private model/dataset repositories. Project
+code uses Apache-2.0 and owner-held dataset rights use CC BY 4.0; see LICENSE,
+DATA_LICENSE.md and NOTICE. The owner confirmed the Claude benchmark was
+generated in their own account. Actual remote outcomes are recorded in PROGRESS.md.
 
 ## Reproduce from a fresh checkout
 
@@ -97,10 +99,10 @@ be investigated with its trace, rather than lowering the threshold to pass.
 1. Review the README, report, CV bullets and cards. Preserve benchmark authorship,
    coverage, confidence intervals, synthetic/independent differences, actual
    Transformers fallback and cost assumptions. Keep all original evidence.
-2. Choose licenses for the project code and generated data. Confirm permission
-   to redistribute the supplied Claude-authored benchmark and attribution.
-   Upstream model licenses do not assign these rights. No code/data `LICENSE`
-   or Hub `license:` declaration has been invented on the owner's behalf.
+2. Retain the selected Apache-2.0 code and CC BY 4.0 dataset licences and their
+   notices. The owner confirmed the Claude benchmark's own-account origin;
+   DATA_LICENSE.md records the source review and attribution scope. Keep the
+   Claude-authored/Codex-labelled provenance intact.
 3. Review model redistribution notices. The [Qwen base](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/LICENSE)
    and [GPT-OSS paraphraser](https://huggingface.co/openai/gpt-oss-120b/blob/main/LICENSE)
    weights use Apache-2.0. Retain required license/notice files and modification
@@ -119,14 +121,14 @@ be investigated with its trace, rather than lowering the threshold to pass.
 7. Optionally deploy the prepared private Space using the demo guide, verify
    build/runtime logs, `/health`, chat and tool traces. Docker startup/UI passed
    previously, but a complete chat under emulation timed out and remains a
-   separate runtime check. Deployment is currently deferred.
-8. Optionally record the local demo: order a medium latte, expand the trace and
-   show the board. Replace the GIF placeholder with the actual recording and
-   label it as a demonstration. Recording is currently deferred.
+   separate runtime check. The current authorization is for a public Space only;
+   model and dataset repositories remain private.
+8. Optionally record the demo: order a medium latte, expand the trace and show
+   the board. Include the actual recording and label it as a demonstration.
 
 ## Completion boundary
 
-Local lint/tests, documentation generation and evidence checks are recorded in
-`PROGRESS.md`. Publication, license decisions, remote workflow execution and
-optional deployment/recording remain owner actions. They are not implied by
-Phase 7 implementation being complete.
+Local checks and actual remote execution outcomes are recorded in `PROGRESS.md`.
+Code/data licences and public Space publication were selected/authorized by the
+owner on 2026-10-24. Deployment and CI success are established by their recorded
+remote checks. A demo recording remains optional.
